@@ -4,6 +4,42 @@ The cake is not a lie.
 
 Computer Vision project.
 
+## Build instructions
+
+Clone repository:
+
+    git clone git@github.com:it-workshop/caroline.git
+
+Install third-party libraries (you need svn).
+
+    ./build/install_third_party.sh
+
+Create build directory and walk into it.
+
+    mkdir out && chdir out
+
+Run CMake to generate build files.
+
+    cmake ..
+
+or
+
+    cmake -G Ninja ..
+
+if you want to build project with ninja build system.
+
+Build project.
+
+    make
+
+or
+
+    ninja
+
+You can run unit tests.
+
+    ./unit_tests
+
 ## Workflow
 
 Each tracker issue is assigned to collaborator. Work on feature must be
@@ -26,7 +62,7 @@ line.
 
 ## Code Conventions
 
-Code conventions is based on the Google C++ Style guilde:
+Code conventions is based on the Google C++ Style guide:
 http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml
 
 Additions:

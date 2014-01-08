@@ -8,3 +8,9 @@ install_manifest.txt
 # Sublime text project files.
 *.sublime-project
 *.sublime-workspace
+
+# OSX files
+.DS_Store
+
+# Third-party
+third_party/gtest/
