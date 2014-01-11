@@ -10,9 +10,10 @@ Clone repository:
 
     git clone git@github.com:it-workshop/caroline.git
 
-Install third-party libraries (you need svn).
+Install third-party libraries.
 
-    ./build/install_third_party.sh
+    git submodule init
+    git submodule update
 
 Create build directory and walk into it.
 

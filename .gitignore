@@ -12,5 +12,3 @@ install_manifest.txt
 # OSX files
 .DS_Store
 
-# Third-party
-third_party/gtest/
