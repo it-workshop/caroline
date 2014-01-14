@@ -21,9 +21,20 @@ foreach (definition IN LISTS definitions)
 endforeach ()
 set (cxx11_flag)
 cxx11_compiler_flag(cxx11_flag)
-if ("${cxx11_flag}")
-  add_definitions("-D${cxx11_flag}")
+if (DEFINED cxx11_flag)
+  add_definitions("${cxx11_flag}")
 endif ()
+
+include_directories("${CMAKE_SOURCE_DIR}")
+
+add_module(base
+  base/command_line.cc
+  )
+
+add_application(caroline
+  main.cc
+  )
+target_link_libraries(caroline base)
 
 enable_testing()
 include_directories(third_party/gtest/include)
