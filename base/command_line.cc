@@ -65,6 +65,7 @@ CommandLine::CommandLine(const char* argv[])
 
 CommandLine::CommandLine(const CommandLine& command_line)
   : impl_(new Impl()) {
+  *this = command_line;
 }
 
 CommandLine::~CommandLine() {}
@@ -92,7 +93,7 @@ void CommandLine::ParseArgs(const char* argv[], CommandLine* command_line) {
       last_key = arg_str;
     } else {
       impl->AddSwitch(last_key, arg_str);
-      last_key.clear();
+      last_key = "";
     }
     if (!*(arg + 1) && !last_key.empty())
       impl->AddSwitch(last_key, std::string());
