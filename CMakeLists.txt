@@ -30,6 +30,8 @@ include_directories("${CMAKE_SOURCE_DIR}")
 add_module(base
   base/command_line.cc
   base/command_line.h
+  base/json.cc
+  base/json.h
   base/values.cc
   base/values.h
   )
@@ -45,6 +47,7 @@ enable_testing()
 include_directories(third_party/gtest/include)
 add_application(unit_tests
   base/command_line_unittest.cc
+  base/json_unittest.cc
   base/values_unittest.cc
   unit_tests_main.cc
   )
