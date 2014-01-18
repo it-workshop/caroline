@@ -27,7 +27,7 @@ endif ()
 
 include_directories("${CMAKE_SOURCE_DIR}")
 
-add_module(base
+add_module(base OBJECT
   base/command_line.cc
   base/command_line.h
   base/json.cc
@@ -36,11 +36,18 @@ add_module(base
   base/values.h
   )
 
+
+add_module(core OBJECT
+  core/config.cc
+  core/config.h
+  core/switches.cc
+  core/switches.h
+  )
+
 add_application(caroline
   main.cc
-  )
-target_link_libraries(caroline
-  base
+  $<TARGET_OBJECTS:base>
+  $<TARGET_OBJECTS:core>
   )
 
 enable_testing()
@@ -50,8 +57,10 @@ add_application(unit_tests
   base/json_unittest.cc
   base/values_unittest.cc
   unit_tests_main.cc
+  $<TARGET_OBJECTS:base>
+  $<TARGET_OBJECTS:core>
   )
-target_link_libraries(unit_tests gtest
-  base
+target_link_libraries(unit_tests
+  gtest
   )
 add_test(unit_tests unit_tests)
