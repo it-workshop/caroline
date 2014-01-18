@@ -8,6 +8,7 @@
 
 #include <cstddef>
 #include <string>
+#include <memory>
 
 namespace base {
 
