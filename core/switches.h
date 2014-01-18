@@ -3,10 +3,17 @@
 // LICENSE file.
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 
+#ifndef CORE_SWITCHES_H_
+#define CORE_SWITCHES_H_
 
-#include "gtest/gtest.h"
+namespace core {
 
-int main(int argc, char* argv[]) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+namespace switches {
+
+extern const char kConfigSwitch[];
+
+}  // namespace switches
+
+}  // namespace core
+
+#endif  // CORE_SWITCHES_H_

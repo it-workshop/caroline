@@ -21,14 +21,46 @@ foreach (definition IN LISTS definitions)
 endforeach ()
 set (cxx11_flag)
 cxx11_compiler_flag(cxx11_flag)
-if ("${cxx11_flag}")
-  add_definitions("-D${cxx11_flag}")
+if (DEFINED cxx11_flag)
+  add_definitions("${cxx11_flag}")
 endif ()
+
+include_directories("${CMAKE_SOURCE_DIR}")
+
+add_module(base OBJECT
+  base/command_line.cc
+  base/command_line.h
+  base/json.cc
+  base/json.h
+  base/values.cc
+  base/values.h
+  )
+
+
+add_module(core OBJECT
+  core/config.cc
+  core/config.h
+  core/switches.cc
+  core/switches.h
+  )
+
+add_application(caroline
+  main.cc
+  $<TARGET_OBJECTS:base>
+  $<TARGET_OBJECTS:core>
+  )
 
 enable_testing()
 include_directories(third_party/gtest/include)
 add_application(unit_tests
+  base/command_line_unittest.cc
+  base/json_unittest.cc
+  base/values_unittest.cc
   unit_tests_main.cc
+  $<TARGET_OBJECTS:base>
+  $<TARGET_OBJECTS:core>
   )
-target_link_libraries(unit_tests gtest)
+target_link_libraries(unit_tests
+  gtest
+  )
 add_test(unit_tests unit_tests)
