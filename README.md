@@ -39,6 +39,10 @@ You can run unit tests.
 
     ./unit_tests
 
+Remember to install git hooks before your first commit.
+
+    ./build/install_hooks.sh
+
 ## Workflow
 
 Each tracker issue is assigned to a collaborator. The work on each feature must be

@@ -6,6 +6,7 @@
 #ifndef BASE_VALUES_H_
 #define BASE_VALUES_H_
 
+#include <utility>
 #include <cstddef>
 #include <cstdint>
 #include <map>
@@ -51,7 +52,7 @@ class Value {
 
 class IntegerValue : public Value {
  public:
-  IntegerValue(int64_t value);
+  explicit IntegerValue(int64_t value);
   IntegerValue();
   virtual ~IntegerValue();
 
@@ -73,7 +74,7 @@ class IntegerValue : public Value {
 
 class StringValue : public Value {
  public:
-  StringValue(const std::string& value);
+  explicit StringValue(const std::string& value);
   StringValue();
   virtual ~StringValue();
 
@@ -95,7 +96,7 @@ class StringValue : public Value {
 
 class FloatValue : public Value {
  public:
-  FloatValue(double value);
+  explicit FloatValue(double value);
   FloatValue();
   virtual ~FloatValue();
 
@@ -117,7 +118,7 @@ class FloatValue : public Value {
 
 class BooleanValue : public Value {
  public:
-  BooleanValue(bool value);
+  explicit BooleanValue(bool value);
   BooleanValue();
   virtual ~BooleanValue();
 
@@ -128,7 +129,7 @@ class BooleanValue : public Value {
   virtual Value* DeepCopy() const override;
 
   void set_value(bool value) { value_ = value; }
-  bool value() const { return value_; };
+  bool value() const { return value_; }
 
  private:
   bool value_;

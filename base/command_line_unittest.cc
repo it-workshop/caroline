@@ -3,8 +3,11 @@
 // LICENSE file.
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 
-#include <base/command_line.h>
-#include <gtest/gtest.h>
+#include <algorithm>
+
+#include "gtest/gtest.h"
+
+#include "base/command_line.h"
 
 namespace {
 

@@ -3,11 +3,14 @@
 // LICENSE file.
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 
+#include <algorithm>
 #include <cmath>
 #include <memory>
+#include <utility>
 
-#include <base/values.h>
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
+
+#include "base/values.h"
 
 TEST(ValuesTest, IntegerValueTest) {
   std::unique_ptr<base::Value> value(new base::IntegerValue(42));

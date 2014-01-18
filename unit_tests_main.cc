@@ -4,7 +4,7 @@
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
