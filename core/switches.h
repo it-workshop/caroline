@@ -11,6 +11,8 @@ namespace core {
 namespace switches {
 
 extern const char kConfigSwitch[];
+extern const char kEnableLogging[];
+extern const char kLogFile[];
 
 }  // namespace switches
 

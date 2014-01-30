@@ -35,6 +35,9 @@ add_module(base OBJECT
   base/command_line.h
   base/json.cc
   base/json.h
+  base/logging.cc
+  base/logging.h
+  base/logging_posix.cc
   base/values.cc
   base/values.h
   )

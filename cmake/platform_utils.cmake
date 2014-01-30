@@ -39,9 +39,9 @@ function (platform_file_exclude_regexps regexps)
   endif ()
 
   if ("${UNIX}")
-    list (APPEND list "_posix.(h|cc)$")
-  else ()
     list (APPEND list "_notposix.(h|cc)$")
+  else ()
+    list (APPEND list "_posix.(h|cc)$")
   endif ()
 
   set ("${regexps}" "${list}" PARENT_SCOPE)
