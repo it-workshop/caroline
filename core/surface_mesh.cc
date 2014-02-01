@@ -10,4 +10,12 @@ namespace core {
 SurfaceMesh::SurfaceMesh() {
 }
 
+SurfaceMesh::SurfaceMesh(const PointCloud &cloud) {
+  SetVertexes(cloud.Points());
+}
+
+void SurfaceMesh::FillFaces() {
+  // Any algo for polygonize. Fill faces vector.
+}
+
 }  // namespace core

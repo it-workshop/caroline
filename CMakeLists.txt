@@ -76,6 +76,8 @@ add_module(core OBJECT
   core/mesh.cc
   core/point3d.h
   core/point3d.cc
+  core/point_cloud.h
+  core/point_cloud.cc
   core/scene3d.h
   core/scene3d.cc
   core/scene_element.h

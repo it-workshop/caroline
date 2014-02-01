@@ -39,6 +39,10 @@ class Mesh {
   std::vector<Point3D> Vertexes() const { return vertexes_; }
   std::vector<Triangle> Faces() const { return faces_; }
 
+ protected:
+  void SetVertexes(const std::vector<Point3D> vertexes);
+  void SetFaces(const std::vector<Triangle> faces);
+
  private:
   std::vector<Point3D> vertexes_;
   std::vector<Triangle> faces_;
