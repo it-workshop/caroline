@@ -11,6 +11,22 @@ namespace core {
 class Point3D {
  public:
   Point3D();
+  Point3D(const int& x, const int& y, const int& z);
+
+  void SetX(const int& x) { x_ = x; }
+  void SetY(const int& y) { y_ = y; }
+  void SetZ(const int& z) { z_ = z; }
+
+  void Set(const int& x, const int& y, const int& z);
+
+  int X() const { return x_; }
+  int Y() const { return y_; }
+  int Z() const { return z_; }
+
+ private:
+  int x_;
+  int y_;
+  int z_;
 };
 
 }  // namespace core

@@ -7,7 +7,20 @@
 
 namespace core {
 
-Point3D::Point3D() {
+Point3D::Point3D() :
+  x_(0),
+  y_(0),
+  z_(0) {}
+
+Point3D::Point3D(const int& x, const int& y, const int& z) :
+  x_(x),
+  y_(y),
+  z_(z) {}
+
+void Point3D::Set(const int &x, const int &y, const int &z) {
+  SetX(x);
+  SetY(y);
+  SetZ(z);
 }
 
 }  // namespace core
