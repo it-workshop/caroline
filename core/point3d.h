@@ -11,22 +11,22 @@ namespace core {
 class Point3D {
  public:
   Point3D();
-  Point3D(const int& x, const int& y, const int& z);
+  Point3D(const double &x, const double &y, const double &z);
 
-  void SetX(const int& x) { x_ = x; }
-  void SetY(const int& y) { y_ = y; }
-  void SetZ(const int& z) { z_ = z; }
+  void SetX(const double& x) { x_ = x; }
+  void SetY(const double& y) { y_ = y; }
+  void SetZ(const double& z) { z_ = z; }
 
-  void Set(const int& x, const int& y, const int& z);
+  void Set(const double& x, const double& y, const double& z);
 
-  int X() const { return x_; }
-  int Y() const { return y_; }
-  int Z() const { return z_; }
+  double X() const { return x_; }
+  double Y() const { return y_; }
+  double Z() const { return z_; }
 
  private:
-  int x_;
-  int y_;
-  int z_;
+  double x_;
+  double y_;
+  double z_;
 };
 
 }  // namespace core

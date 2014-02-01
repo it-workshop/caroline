@@ -12,12 +12,12 @@ Point3D::Point3D() :
   y_(0),
   z_(0) {}
 
-Point3D::Point3D(const int& x, const int& y, const int& z) :
+Point3D::Point3D(const double &x, const double &y, const double &z) :
   x_(x),
   y_(y),
   z_(z) {}
 
-void Point3D::Set(const int &x, const int &y, const int &z) {
+void Point3D::Set(const double& x, const double& y, const double& z) {
   SetX(x);
   SetY(y);
   SetZ(z);
