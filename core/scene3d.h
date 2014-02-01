@@ -6,11 +6,25 @@
 #ifndef CORE_SCENE3D_H_
 #define CORE_SCENE3D_H_
 
+#include <vector>
+
+#include "core/scene_element.h"
+
 namespace core {
 
 class Scene3D {
  public:
   Scene3D();
+
+  void AddElement(const SceneElement& element);
+
+  int NumberOfElements() const;
+
+  // Number must be less then NumberOfElements.
+  SceneElement ElementAt(const int& number) const;
+
+ private:
+  std::vector<SceneElement> scene_elements_;
 };
 
 }  // namespace core

@@ -3,16 +3,19 @@
 // LICENSE file.
 // Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#ifndef CORE_SCENE_MESH_H_
-#define CORE_SCENE_MESH_H_
+#include "core/mesh.h"
 
 namespace core {
 
-class SceneMesh {
- public:
-  SceneMesh();
-};
+Mesh::Mesh() {
+}
+
+void Mesh::AddVertex(const Point3D &point) {
+  vertexes_.push_back(point);
+}
+
+void Mesh::AddFace(const Triangle &face) {
+  faces_.push_back(face);
+}
 
 }  // namespace core
-
-#endif  // CORE_SCENE_MESH_H_
