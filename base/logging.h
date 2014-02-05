@@ -15,7 +15,7 @@ class Logger {
  public:
   enum class Level {
     NONE,
-    ERROR,
+    ERR,
     WARNING,
     INFO,
     DEBUG
@@ -84,7 +84,7 @@ class Logger {
 
 // Use this macro if you want to log something.
 // LOG(level) << "Hello!";
-// Whele level is: ERROR, WARNING, INFO, DEBUG.
+// Whele level is: ERR, WARNING, INFO, DEBUG.
 #define LOG(level) \
     base::Logger::GetInstance()->AddMessage(Level::level, __LOG_PREFIX(level))
 

@@ -99,7 +99,8 @@ Currently, the project must be tested on Linux, Windows, and Mac OS X.
 We supported the following toolkits:
 
  * GCC 4.8;
- * CLang 3.3.
+ * CLang 3.3;
+ * Microsoft Visual Studio 2013.
 
 ## Scripting
 

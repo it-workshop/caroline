@@ -16,33 +16,34 @@ namespace json {
 namespace {
 
 void SkipSpaces(const std::string& json, off_t* offset) {
-  while (isspace(json[*offset]) && *offset < json.size())
+  while (isspace(json[*offset]) && *offset < static_cast<off_t>(json.size()))
     (*offset)++;
 }
 
 int64_t ParseInteger(const std::string& json, off_t* offset) {
   int64_t ret = 0;
   bool positive = true;
-  if (*offset >= json.size())
+  if (*offset >= static_cast<off_t>(json.size()))
     return 0;
   if ('-' == json[*offset]) {
     (*offset)++;
     positive = false;
   }
-  while (*offset < json.size() && isdigit(json[*offset]))
+  while (*offset < static_cast<off_t>(json.size()) && isdigit(json[*offset]))
     ret = ret * 10 + (json[(*offset)++] - '0');
   return positive ? ret : -ret;
 }
 
 long double ParseFractional(const std::string& json, off_t* offset) {
-  if (*offset >= json.size())
+  if (*offset >= static_cast<off_t>(json.size()))
     return 0.0;
   if (json[*offset] != '.')
     return 0.0;
   (*offset)++;
   long double ret = 0.0;
   int denominator = 10;
-  while (*offset < json.size() && isdigit(json[*offset])) {
+  while (*offset < static_cast<off_t>(json.size()) &&
+      isdigit(json[*offset])) {
     long double numerator = static_cast<long double>(json[(*offset)++] - '0');
     ret += numerator / denominator;
     denominator *= 10;
@@ -110,7 +111,7 @@ std::string Generator::GenerateImpl(const Value* value,
       last_separator.append(newline).append(indentation);
     }
 
-    for (int i = 0; i < list->size(); ++i)
+    for (unsigned int i = 0; i < list->size(); ++i)
       ret.append(i != 0 ? "," : "").append(separator).
           append(GenerateImpl(list->GetValueAt(i), level + 1));
 
@@ -131,7 +132,7 @@ std::string Generator::GenerateImpl(const Value* value,
       last_separator.append(newline).append(indentation);
     }
 
-    for (int i = 0; i < dict->size(); ++i) {
+    for (unsigned int i = 0; i < dict->size(); ++i) {
       auto pair = dict->GetValueAt(i);
       ret.append(i != 0 ? separator : "").
           append(quote).append(pair.first).append(quote).append(":").
@@ -216,17 +217,17 @@ Parser::ValueType Parser::WhatIsStarts(char c) const {
 }
 
 base::Value* Parser::ParseImpl(const std::string& json, off_t* offset) const {
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
 
   SkipSpaces(json, offset);
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   std::unique_ptr<Value> value;
   switch (WhatIsStarts(json[*offset])) {
     case INTEGER: {
       int64_t integral = ParseInteger(json, offset);
-      if (json.size() > *offset && json[*offset] != '.') {
+      if (static_cast<off_t>(json.size()) > *offset && json[*offset] != '.') {
         value.reset(new IntegerValue(integral));
         break;
       }
@@ -258,18 +259,18 @@ base::Value* Parser::ParseImpl(const std::string& json, off_t* offset) const {
 }
 
 StringValue* Parser::ParseString(const std::string& json, off_t* offset) const {
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   char quote = json[*offset];
   if (quote != '"' && allow_single_quote_ == (quote != '\''))
     return nullptr;
   (*offset)++;
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   std::string ret;
   bool escape = false;
   bool quote_meet = false;
-  while (!quote_meet && json.size() > *offset) {
+  while (!quote_meet && static_cast<off_t>(json.size()) > *offset) {
     char c = json[*offset];
     if (escape) {
       switch (c) {
@@ -308,7 +309,7 @@ StringValue* Parser::ParseString(const std::string& json, off_t* offset) const {
 }
 
 ListValue* Parser::ParseList(const std::string& json, off_t* offset) const {
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   if (json[*offset] != '[')
     return nullptr;
@@ -319,7 +320,7 @@ ListValue* Parser::ParseList(const std::string& json, off_t* offset) const {
 
 check_end:
   SkipSpaces(json, offset);
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   if (json[*offset] == ']') {
     (*offset)++;
@@ -334,7 +335,7 @@ parse_item:
   list->AddValue(item.release());
 
   SkipSpaces(json, offset);
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   if (json[*offset] == ',') {
     (*offset)++;
@@ -350,7 +351,7 @@ parse_item:
 
 DictionaryValue* Parser::ParseDictionary(const std::string& json,
     off_t* offset) const {
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   if (json[*offset] != '{')
     return nullptr;
@@ -362,7 +363,7 @@ DictionaryValue* Parser::ParseDictionary(const std::string& json,
 
 check_end:
   SkipSpaces(json, offset);
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   if (json[*offset] == '}') {
     (*offset)++;
@@ -373,7 +374,7 @@ parse_item:
   SkipSpaces(json, offset);
   key.reset(ParseString(json, offset));
   SkipSpaces(json, offset);
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   if (':' != json[*offset])
     return nullptr;
@@ -386,7 +387,7 @@ parse_item:
   dict->InsertValue(key->value(), item.release());
 
   SkipSpaces(json, offset);
-  if (json.size() < *offset)
+  if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
   if (json[*offset] == ',') {
     (*offset)++;

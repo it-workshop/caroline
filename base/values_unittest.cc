@@ -4,7 +4,6 @@
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 
 #include <algorithm>
-#include <cmath>
 #include <memory>
 #include <utility>
 
@@ -25,9 +24,9 @@ TEST(ValuesTest, StringValueTest) {
 }
 
 TEST(ValuesTest, FloatValueTest) {
-  std::unique_ptr<base::Value> value(new base::FloatValue(M_PI));
+  std::unique_ptr<base::Value> value(new base::FloatValue(0.0));
   EXPECT_TRUE(value->IsFloat());
-  EXPECT_EQ(M_PI, value->AsFloat()->value());
+  EXPECT_EQ(0.0, value->AsFloat()->value());
 }
 
 TEST(ValueTest, BooleanValueTest) {
@@ -87,7 +86,7 @@ TEST(ValuesTest, DeepCopyTest) {
     base::DictionaryValue* dict = value->AsDictionary();
     dict->InsertValue("int", new base::IntegerValue(42));
     dict->InsertValue("string", new base::StringValue("abc"));
-    dict->InsertValue("float", new base::FloatValue(M_PI));
+    dict->InsertValue("float", new base::FloatValue(0.0));
     {
       base::ListValue* list = new base::ListValue();
       for (int i = 0; i < 10; ++i)
@@ -108,7 +107,7 @@ TEST(ValuesTest, DeepCopyTest) {
 
     check_item("int", IsInteger, AsInteger, 42);
     check_item("string", IsString, AsString, "abc");
-    check_item("float", IsFloat, AsFloat, M_PI);
+    check_item("float", IsFloat, AsFloat, 0.0);
 #undef check_item
 
     EXPECT_NE(nullptr, dict->GetValue("list"));

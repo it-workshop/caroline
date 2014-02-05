@@ -38,6 +38,7 @@ add_module(base OBJECT
   base/logging.cc
   base/logging.h
   base/logging_posix.cc
+  base/logging_win.cc
   base/values.cc
   base/values.h
   )
