@@ -25,6 +25,9 @@ if (DEFINED cxx11_flag)
   add_definitions("${cxx11_flag}")
 endif ()
 
+find_package(OpenCV REQUIRED)
+include_directories("${OpenCV_INCLUDE_DIRS}")
+
 include_directories("${CMAKE_SOURCE_DIR}")
 
 add_module(base OBJECT
@@ -49,6 +52,9 @@ add_application(caroline
   $<TARGET_OBJECTS:base>
   $<TARGET_OBJECTS:core>
   )
+target_link_libraries(caroline
+  ${OpenCV_LIBS}
+  )
 
 enable_testing()
 include_directories(third_party/gtest/include)
@@ -62,5 +68,6 @@ add_application(unit_tests
   )
 target_link_libraries(unit_tests
   gtest
+  ${OpenCV_LIBS}
   )
 add_test(unit_tests unit_tests)

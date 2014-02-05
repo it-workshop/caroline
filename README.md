@@ -6,6 +6,18 @@ Computer Vision project.
 
 ## Build instructions
 
+Install dependencies:
+
+ * OpenCV library. You can use any version from the repository for your system.
+   On OSX you must build it yourself.
+
+    cd /tmp
+    git clone git@github.com/Itseez/opencv.git
+    cd opencv
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/Celluar/opencv
+    make
+    make install
+
 Clone repository:
 
     git clone git@github.com:it-workshop/caroline.git
@@ -26,6 +38,10 @@ Run CMake to generate build files.
 or, if you want to build project with ninja build system.
 
     cmake -G Ninja ..
+
+Probably you will need to say to the cmake location of OpenCV files:
+
+    cmake -DOpenCV_DIR=/usr/local/Celluar/opencv/share/OpenCV/ ..
 
 Build project.
 
