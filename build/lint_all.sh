@@ -18,6 +18,7 @@ function exclude {
 
 exclude third_party
 exclude cpplint
+exclude out
 
-$1/build/cpplint/cpplint.py --root=$1 --extensions=h,cc,m,mm \
+python $1/build/cpplint/cpplint.py --root=$1 --extensions=h,cc,m,mm \
     ${sources_to_lint}
