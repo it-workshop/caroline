@@ -7,9 +7,6 @@
 
 namespace core {
 
-SurfaceMesh::SurfaceMesh() {
-}
-
 SurfaceMesh::SurfaceMesh(const PointCloud &cloud) {
   SetVertexes(cloud.Points());
 }

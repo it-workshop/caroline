@@ -13,7 +13,6 @@ namespace core {
 
 class SurfaceMesh : public Mesh {
  public:
-  SurfaceMesh();
   explicit SurfaceMesh(const PointCloud& cloud);
 
   void FillFaces();
