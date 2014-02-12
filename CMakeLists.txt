@@ -26,6 +26,7 @@ if (DEFINED cxx11_flag)
 endif ()
 
 find_package(OpenCV REQUIRED)
+
 include_directories("${OpenCV_INCLUDE_DIRS}")
 
 include_directories("${CMAKE_SOURCE_DIR}")
@@ -66,6 +67,7 @@ add_application(unit_tests
   base/command_line_unittest.cc
   base/json_unittest.cc
   base/values_unittest.cc
+  core/opencv_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
   $<TARGET_OBJECTS:core>
