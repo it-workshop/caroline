@@ -74,6 +74,8 @@ add_module(core OBJECT
   core/image_capture.h
   core/mesh.h
   core/mesh.cc
+  core/ply_saver.h
+  core/ply_saver.cc
   core/point3d.h
   core/point3d.cc
   core/point_cloud.h
