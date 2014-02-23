@@ -6,6 +6,16 @@
 cmake_minimum_required(VERSION 2.8.12)
 project (Caroline CXX)
 
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+  set (default_use_own_opencv OFF)
+else ()
+  set (default_use_own_opencv ON)
+endif ()
+
+option(use_own_opencv
+  "Own sources of opencv will be used on the non-linux systems."
+  ${default_use_own_opencv})
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(cxx11_support)
 include(platform_utils)
@@ -25,8 +35,17 @@ if (DEFINED cxx11_flag)
   add_definitions("${cxx11_flag}")
 endif ()
 
-find_package(OpenCV REQUIRED)
-
+if (NOT use_own_opencv)
+  find_package(OpenCV REQUIRED)
+else ()
+  file (GLOB OpenCV_INCLUDE_DIRS
+      "${CMAKE_SOURCE_DIR}/third_party/opencv/modules/*/include")
+  list (APPEND OpenCV_INCLUDE_DIRS
+      "${CMAKE_SOURCE_DIR}/third_party/opencv/include")
+  set (OpenCV_LIBS
+    opencv_core
+    )
+endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
 
 include_directories("${CMAKE_SOURCE_DIR}")

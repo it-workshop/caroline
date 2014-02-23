@@ -12,3 +12,5 @@ install_manifest.txt
 # OSX files
 .DS_Store
 
+out
+
