@@ -8,5 +8,9 @@ cmake_minimum_required(VERSION 2.8.12)
 add_subdirectory(gtest)
 
 if (use_own_opencv)
+  if (MSVC)
+    set (BUILD_WITH_STATIC_CRT OFF)
+  endif ()
   add_subdirectory(opencv)
 endif ()
+
