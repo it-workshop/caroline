@@ -20,11 +20,11 @@ base::Value* GenerateTestData() {
 }
 
 void CheckData(base::Value* parsed) {
-  EXPECT_NE(nullptr, parsed);
+  ASSERT_NE(nullptr, parsed);
   EXPECT_TRUE(parsed->IsDictionary());
   EXPECT_EQ(5, parsed->AsDictionary()->size());
 #define check_item(key, type_check, type_cast, val) \
-    EXPECT_NE(nullptr, parsed->AsDictionary()->GetValue(key)); \
+    ASSERT_NE(nullptr, parsed->AsDictionary()->GetValue(key)); \
     EXPECT_TRUE(parsed->AsDictionary()->GetValue(key)->type_check()); \
     EXPECT_EQ(val, parsed->AsDictionary()->GetValue(key)->type_cast()->value())
 
@@ -34,7 +34,7 @@ void CheckData(base::Value* parsed) {
   check_item("d", IsBoolean, AsBoolean, true);
 #undef check_item
 
-  EXPECT_NE(nullptr, parsed->AsDictionary()->GetValue("e"));
+  ASSERT_NE(nullptr, parsed->AsDictionary()->GetValue("e"));
   EXPECT_TRUE(parsed->AsDictionary()->GetValue("e")->IsList());
   EXPECT_TRUE(parsed->AsDictionary()->GetValue("e")->AsList()->empty());
 }
@@ -58,4 +58,13 @@ TEST(JSONTest, SingleQuotesTest) {
   parser.set_allow_single_quote(true);
   std::unique_ptr<base::Value> parsed(parser.Parse(json));
   CheckData(parsed.get());
+}
+
+TEST(JSONTest, FloatWithExpTest) {
+  base::json::Parser parser;
+  std::unique_ptr<base::Value> parsed(parser.Parse("0.1E1"));
+  ASSERT_NE(nullptr, parsed.get());
+  EXPECT_TRUE(parsed->IsFloat());
+  EXPECT_GT(parsed->AsFloat()->value(), 0.9);
+  EXPECT_LT(parsed->AsFloat()->value(), 1.1);
 }
