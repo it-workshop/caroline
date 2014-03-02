@@ -6,6 +6,7 @@
 #include "base/json.h"
 
 #include <cstdlib>
+#include <cmath>
 
 #include "base/values.h"
 
@@ -34,7 +35,8 @@ int64_t ParseInteger(const std::string& json, off_t* offset) {
   return positive ? ret : -ret;
 }
 
-long double ParseFractional(const std::string& json, off_t* offset) {
+long double ParseFractional(const std::string& json, off_t* offset, int* exp) {
+  *exp = 0;
   if (*offset >= static_cast<off_t>(json.size()))
     return 0.0;
   if (json[*offset] != '.')
@@ -47,6 +49,25 @@ long double ParseFractional(const std::string& json, off_t* offset) {
     long double numerator = static_cast<long double>(json[(*offset)++] - '0');
     ret += numerator / denominator;
     denominator *= 10;
+  }
+  if (*offset < static_cast<off_t>(json.size()) &&
+      (json[*offset] == 'e' || json[*offset] == 'E')) {
+    ++(*offset);
+    if (*offset >= static_cast<off_t>(json.size()))
+      return ret;
+    bool negative_exp = false;
+    if (json[*offset] == '-')
+      negative_exp = true;
+    if (json[*offset] == '-' || json[*offset] == '+')
+      ++(*offset);
+    while (*offset < static_cast<off_t>(json.size()) &&
+      isdigit(json[*offset])) {
+      *exp *= 10;
+      *exp += json[*offset] - '0';
+      ++(*offset);
+    }
+    if (negative_exp)
+      *exp = -*exp;
   }
   return ret;
 }
@@ -231,15 +252,21 @@ base::Value* Parser::ParseImpl(const std::string& json, off_t* offset) const {
         value.reset(new IntegerValue(integral));
         break;
       }
-      long double fractional = ParseFractional(json, offset);
+      int exp = 0;
+      long double fractional = ParseFractional(json, offset, &exp);
+      fractional = pow(10, exp) *
+          (integral < 0 ? integral - fractional : integral + fractional);
       value.reset(new FloatValue(integral < 0 ?
           integral - fractional : integral + fractional));
       break;
     }
-    case FLOAT:
+    case FLOAT: {
       // WhatIsStarts() can return float only if it written as fractional part.
-      value.reset(new FloatValue(ParseFractional(json, offset)));
+      int exp = 0;
+      long double fractional = ParseFractional(json, offset, &exp);
+      value.reset(new FloatValue(fractional * pow(10, exp)));
       break;
+    }
     case STRING:
       value.reset(ParseString(json, offset));
       break;
