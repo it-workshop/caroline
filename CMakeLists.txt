@@ -68,7 +68,9 @@ add_module(core OBJECT
   core/config.cc
   core/config.h
   core/switches.cc
-  core/switches.h
+  core/switches.h  
+  core/image_capture.cc
+  core/image_capture.h
   )
 
 add_application(caroline

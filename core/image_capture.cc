@@ -8,27 +8,25 @@
 #include "core/image_capture.h"
 
 namespace core {
-  ImageCapture::~ImageCapture() {}
 
-  cv::Mat ImageCapture::getNextImage() {
-    cv::Mat frame;
-    cap >> frame;
-    if (frame.empty()) {
-      this->errorNumber = 2;
-      exit(0);
-    }
-    return frame;
+ImageCapture::~ImageCapture() {}
+
+cv::Mat ImageCapture::GetNextImage() {
+  cv::Mat frame;
+  if (cap_.read(frame)) {
+    return cv::Mat();
   }
-  bool ImageCapture::hasNextImage() {
-    if (errorNumber == 1) {
-      std::cout << "Error when reading" << std::endl;
-      return false;
-    }
-    if (errorNumber == 2) {
-      std::cout << "Can't read frame" << std::endl;
-      return false;
-    }
-    return true;
+  cap_ >> frame;
+  return frame;
+}
+
+bool ImageCapture::HasNextImage() const {
+  if (error_ == true) {
+    std::cout << "error_ when reading" << std::endl;
+    return false;
   }
+  return true;
+}
+
 }  // namespace core
 
