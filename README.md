@@ -61,23 +61,25 @@ Remember to install git hooks before your first commit.
 
 ## Workflow
 
-Each tracker issue is assigned to a collaborator. The work on each feature must be
-subdivided into work packages (wp). Each wp has its own branch that must be merged
-into upstream branch after review i.e. you must create a pull request for each new
-work package. The branch can't be merged into the upstream if it has compilation
-errors or failed unit tests on any platform.
+Each tracker issue is assigned to a collaborator. The work on each feature
+must be subdivided into work packages (wp). Each wp has its own branch that
+must be merged into upstream branch after review i.e. you must create a pull
+request for each new work package. The branch can't be merged into the
+upstream if it has compilation errors or failed unit tests on any platform.
 
 ### Names of branches
 
-Each workpackage must be in a branch called ``wp/${issue-number}/${wp-number}``.
-i.e. if issue#1357 has 3 workpackages, names of the branches would be:
-``wp/1357/1``,
-``wp/1357/2``,
-``wp/1357/3``.
+Each workpackage must be in a branch called
+```wp/${issue-number}/${wp-number}```. I.e. if issue #1357 has 3 workpackages,
+names of the branches would be:
+
+ * ```wp/1357/1```;
+ * ```wp/1357/2```;
+ * ```wp/1357/3```.
 
 ### Commit message
 
-The commit messages must begin from ``#${issue-number}: ``. It must be
+The commit messages must begin from ```#${issue-number}: ```. It must be
 either a single line (up to 80 characters) or multiline text with an empty
 string after the first line.
 
@@ -105,5 +107,6 @@ We supported the following toolkits:
 ## Scripting
 
 If you need to write a script you are to use bash, perl, or python.
-Development tools must be saved in the ``tools`` directory, which you should
-create in the ``build`` directory.
+Development tools must be saved in the ```tools``` directory, which you should
+create in the ```build``` directory.
+
