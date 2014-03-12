@@ -71,6 +71,8 @@ add_module(core OBJECT
   core/switches.h  
   core/image_capture.cc
   core/image_capture.h
+  core/stereo_depth_map.cc
+  core/stereo_depth_map.h
   )
 
 add_application(caroline
@@ -89,6 +91,7 @@ add_application(unit_tests
   base/json_unittest.cc
   base/values_unittest.cc
   core/opencv_unittest.cc
+  core/stereo_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
   $<TARGET_OBJECTS:core>
