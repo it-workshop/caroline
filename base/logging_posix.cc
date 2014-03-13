@@ -4,6 +4,7 @@
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 
 #include <fcntl.h>
+#include <sys/file.h>
 #include <unistd.h>
 
 #include <iostream>  // NOLINT
@@ -42,9 +43,16 @@ void LoggerPosix::PostMessage(const std::string& message) {
     return;
 
   int fd = open(file().c_str(),
-      O_APPEND | O_CREAT | O_EXLOCK | O_SYMLINK | O_CLOEXEC);
+      O_APPEND | O_CREAT | O_CLOEXEC);
   if (fd < 0) {
     perror("Can't open log file: ");
+    return;
+  }
+
+  if (flock(fd, LOCK_EX) == -1) {
+    perror("Can't lock log file: ");
+    if (close(fd) == -1)
+      perror("Can't close log: ");
     return;
   }
 
