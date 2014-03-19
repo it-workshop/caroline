@@ -13,9 +13,13 @@ namespace core {
 
 class DepthMesh : public Mesh {
  public:
-  DepthMesh(const DepthMap& depth_map, const int& min, const int& max);
+  DepthMesh(const DepthMap& depth_map, int min, int max);
 
  protected:
+  // For every four points verified can we connect them by triangles.
+  // If all 4 points correct, then connect by two triangles.
+  // If only one of the points is not correct, then connect the remaining.
+  // If more then one is not correct, then we can not connect these points.
   enum FaceType {
     ALL_RIGHT = 0,
     BAD_FACE,
@@ -25,14 +29,13 @@ class DepthMesh : public Mesh {
     RIGHT_BOTTOM
   };
 
-  void AddDepthVertex(const int& x, const int& y, const double& depth);
-  void AddDepthFace(const int& v1, const int& v2, const int& v3);
-  void AddDepthFaces(const int& v1,
-    const int& v2, const int& v3, const int& v4);
+  void AddDepthVertex(int x, int y, double depth);
+  void AddDepthFace(int v1, int v2, int v3);
+  void AddDepthFaces(int v1, int v2, int v3, int v4);
 
-  FaceType Type(const int& v1, const int& v2, const int& v3, const int& v4);
+  FaceType Type(int v1, int v2, int v3, int v4);
 
-  bool IsCorrectDepth(const double& depth) const;
+  bool IsCorrectDepth(double depth) const;
 
  private:
   double min_;

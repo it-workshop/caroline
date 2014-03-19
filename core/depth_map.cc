@@ -7,23 +7,20 @@
 
 namespace core {
 
-DepthMap::DepthMap(const int& height, const int&  width) {
+DepthMap::DepthMap(int height, int width) {
   height_ = height;
   width_ = width;
 
-  depth_map_.resize(height_);
-  for (int i = 0; i < height_; i++) {
-    depth_map_[i].resize(width_);
-  }
+  depth_map_.resize(width_ * height_);
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      depth_map_[i][j] = bad_depth;
+      depth_map_[width_ * i + j] = kBadDepth;
     }
   }
 }
 
-void DepthMap::SetDepth(const int &x, const int &y, const double &depth) {
+void DepthMap::SetDepth(int x, int y, double depth) {
   if (x < 0 || y < 0) {
     return;
   }
@@ -32,19 +29,19 @@ void DepthMap::SetDepth(const int &x, const int &y, const double &depth) {
     return;
   }
 
-  depth_map_[y][x] = depth;
+  depth_map_[width_ * y + x] = depth;
 }
 
-double DepthMap::Depth(const int &x, const int &y) const {
+double DepthMap::Depth(int x, int y) const {
   if (x < 0 || y < 0) {
-    return bad_depth;
+    return kBadDepth;
   }
 
   if ((x > width_) || (y > height_)) {
-    return bad_depth;
+    return kBadDepth;
   }
 
-  return depth_map_[y][x];
+  return depth_map_[width_ * y + x];
 }
 
 }  // namespace core

@@ -21,7 +21,7 @@ class Scene3D {
   int NumberOfElements() const;
 
   // Number must be less then NumberOfElements.
-  SceneElement ElementAt(const int& number) const;
+  SceneElement ElementAt(int number) const;
 
  private:
   std::vector<SceneElement> scene_elements_;

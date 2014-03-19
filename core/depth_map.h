@@ -10,23 +10,23 @@
 
 namespace core {
 
-const int bad_depth = -1;
-
 class DepthMap {
  public:
-  DepthMap(const int& height, const int &width);
+  static const int kBadDepth = -1;
 
-  int Height() const { return height_; }
-  int Width() const { return width_; }
+  DepthMap(int height, int width);
 
-  void SetDepth(const int& x, const int& y, const double& depth);
-  double Depth(const int& x, const int& y) const;
+  int height() const { return height_; }
+  int width() const { return width_; }
+
+  void SetDepth(int x, int y, double depth);
+  double Depth(int x, int y) const;
 
  private:
   int height_;
   int width_;
 
-  std::vector<std::vector<double> > depth_map_;
+  std::vector<double> depth_map_;
 };
 
 }  // namespace core

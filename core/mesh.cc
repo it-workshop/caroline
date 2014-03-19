@@ -18,11 +18,11 @@ void Mesh::AddFace(const Triangle &face) {
   faces_.push_back(face);
 }
 
-void Mesh::SetVertexes(const std::vector<Point3D> vertexes) {
+void Mesh::SetVertexes(const std::vector<Point3D>& vertexes) {
   vertexes_ = vertexes;
 }
 
-void Mesh::SetFaces(const std::vector<Triangle> faces) {
+void Mesh::SetFaces(const std::vector<Triangle>& faces) {
   faces_ = faces;
 }
 

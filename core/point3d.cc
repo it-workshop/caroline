@@ -12,15 +12,15 @@ Point3D::Point3D() :
   y_(0),
   z_(0) {}
 
-Point3D::Point3D(const double &x, const double &y, const double &z) :
+Point3D::Point3D(double x, double y, double z) :
   x_(x),
   y_(y),
   z_(z) {}
 
-void Point3D::Set(const double& x, const double& y, const double& z) {
-  SetX(x);
-  SetY(y);
-  SetZ(z);
+void Point3D::Set(double x, double y, double z) {
+  set_x(x);
+  set_y(y);
+  set_z(z);
 }
 
 }  // namespace core

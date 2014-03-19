@@ -11,17 +11,17 @@ namespace core {
 class Point3D {
  public:
   Point3D();
-  Point3D(const double &x, const double &y, const double &z);
+  Point3D(double x, double y, double z);
 
-  void SetX(const double& x) { x_ = x; }
-  void SetY(const double& y) { y_ = y; }
-  void SetZ(const double& z) { z_ = z; }
+  void set_x(double x) { x_ = x; }
+  void set_y(double y) { y_ = y; }
+  void set_z(double z) { z_ = z; }
 
-  void Set(const double& x, const double& y, const double& z);
+  void Set(double x, double y, double z);
 
-  double X() const { return x_; }
-  double Y() const { return y_; }
-  double Z() const { return z_; }
+  double x() const { return x_; }
+  double y() const { return y_; }
+  double z() const { return z_; }
 
  private:
   double x_;

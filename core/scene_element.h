@@ -20,32 +20,31 @@ class SceneElement {
 
   void SetMesh(Mesh *mesh);
 
-  void SetX(const double& x) { pos_x_ = x; }
-  void SetY(const double& y) { pos_y_ = y; }
-  void SetZ(const double& z) { pos_z_ = z; }
-  void SetPos(const double& x, const double& y, const double& z);
+  void set_x(double x) { pos_x_ = x; }
+  void set_y(double y) { pos_y_ = y; }
+  void set_z(double z) { pos_z_ = z; }
+  void SetPos(double x, double y, double z);
 
-  void SetXScale(const double& scale_x) { scale_x_ = scale_x; }
-  void SetYScale(const double& scale_y) { scale_y_ = scale_y; }
-  void SetZScale(const double& scale_z) { scale_z_ = scale_z; }
-  void SetScale(const double& scale_x,
-    const double& scale_y, const double& scale_z);
+  void set_scale_x(double scale) { scale_x_ = scale; }
+  void set_scale_y(double scale) { scale_y_ = scale; }
+  void set_scale_z(double scale) { scale_z_ = scale; }
+  void SetScale(double scale_x, double scale_y, double scale_z);
 
-  void SetRotationX(const double& rotation_x) { rotation_x_ = rotation_x; }
-  void SetRotationY(const double& rotation_y) { rotation_y_ = rotation_y; }
-  void SetRotationZ(const double& rotation_z) { rotation_z_ = rotation_z; }
+  void set_rotation_x(double rotation) { rotation_x_ = rotation; }
+  void set_rotation_y(double rotation) { rotation_y_ = rotation; }
+  void set_rotation_z(double rotation) { rotation_z_ = rotation; }
 
-  double X() const { return pos_x_; }
-  double Y() const { return pos_y_; }
-  double Z() const { return pos_z_; }
+  double x() const { return pos_x_; }
+  double y() const { return pos_y_; }
+  double z() const { return pos_z_; }
 
-  double XScale() const { return scale_x_; }
-  double YScale() const { return scale_y_; }
-  double ZScale() const { return scale_z_; }
+  double scale_x() const { return scale_x_; }
+  double scale_y() const { return scale_y_; }
+  double scale_z() const { return scale_z_; }
 
-  double RotationX() const { return rotation_x_; }
-  double RotationY() const { return rotation_y_; }
-  double RotationZ() const { return rotation_z_; }
+  double rotation_x() const { return rotation_x_; }
+  double rotation_y() const { return rotation_y_; }
+  double rotation_z() const { return rotation_z_; }
 
   std::vector<Point3D> Vertexes() const;
   std::vector<Triangle> Faces() const;
@@ -53,7 +52,7 @@ class SceneElement {
  protected:
   Point3D Transform(Point3D point) const;
 
-  void SetStandartTransform();
+  void SetStandardTransform();
 
  private:
   Mesh *mesh_;

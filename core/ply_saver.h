@@ -14,16 +14,16 @@ namespace core {
 
 class PlySaver {
  public:
-  PlySaver(const std::string& name = "mesh", const std::string& comment = "");
+  PlySaver();
 
   void Save(Mesh *mesh);
   void Save(const std::string& name, const std::string& comment,
       const std::string &author, Mesh *mesh);
 
-  void SetPath(const std::string& path) { path_ = path; }
-  void SetAuthor(const std::string& author) { author_ = author; }
-  void SetName(const std::string& name) { name_ = name; }
-  void SetComment(const std::string& comment) { comment_ = comment; }
+  void set_path(const std::string& path) { path_ = path; }
+  void set_author(const std::string& author) { author_ = author; }
+  void set_name(const std::string& name) { name_ = name; }
+  void set_comment(const std::string& comment) { comment_ = comment; }
 
  protected:
   void SetDefaultProperties();

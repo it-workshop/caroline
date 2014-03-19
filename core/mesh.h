@@ -14,7 +14,7 @@ namespace core {
 
 class Triangle {
  public:
-  Triangle(const int& point1, const int& point2, const int& point3) :
+  Triangle(int point1, int point2, int point3) :
     point1_(point1),
     point2_(point2),
     point3_(point3) {}
@@ -40,8 +40,8 @@ class Mesh {
   std::vector<Triangle> Faces() const { return faces_; }
 
  protected:
-  void SetVertexes(const std::vector<Point3D> vertexes);
-  void SetFaces(const std::vector<Triangle> faces);
+  void SetVertexes(const std::vector<Point3D>& vertexes);
+  void SetFaces(const std::vector<Triangle>& faces);
 
  private:
   std::vector<Point3D> vertexes_;

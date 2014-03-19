@@ -8,11 +8,11 @@
 namespace core {
 
 SceneElement::SceneElement() {
-  SetStandartTransform();
+  SetStandardTransform();
 }
 
 SceneElement::SceneElement(Mesh *mesh) {
-  SetStandartTransform();
+  SetStandardTransform();
 
   mesh_ = mesh;
 }
@@ -21,14 +21,13 @@ void SceneElement::SetMesh(Mesh *mesh) {
   mesh_ = mesh;
 }
 
-void SceneElement::SetPos(const double &x, const double &y, const double &z) {
+void SceneElement::SetPos(double x, double y, double z) {
   pos_x_ = x;
   pos_y_ = y;
   pos_z_ = z;
 }
 
-void SceneElement::SetScale(const double &scale_x,
-    const double &scale_y, const double &scale_z) {
+void SceneElement::SetScale(double scale_x, double scale_y, double scale_z) {
   scale_x_ = scale_x;
   scale_y_ = scale_y;
   scale_z_ = scale_z;
@@ -41,6 +40,8 @@ std::vector<Point3D> SceneElement::Vertexes() const {
   for (int i = 0; i < old_vertexes.size(); i++) {
     new_vertexes.push_back(Transform(old_vertexes.at(i)));
   }
+
+  return new_vertexes;
 }
 
 std::vector<Triangle> SceneElement::Faces() const {
@@ -50,13 +51,13 @@ std::vector<Triangle> SceneElement::Faces() const {
 Point3D SceneElement::Transform(Point3D point) const {
   Point3D new_point;
 
-  new_point.Set(point.X() + pos_x_, point.Y() + pos_y_, point.Z() + pos_z_);
+  new_point.Set(point.x() + pos_x_, point.y() + pos_y_, point.z() + pos_z_);
 
   // DO LATER
   // Rotation and scaling
 }
 
-void SceneElement::SetStandartTransform() {
+void SceneElement::SetStandardTransform() {
   pos_x_ = 0;
   pos_y_ = 0;
   pos_z_ = 0;

@@ -3,16 +3,16 @@
 // LICENSE file.
 // Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#include <fstream>
+#include <fstream> // NOLINT
 #include <vector>
 
 #include "core/ply_saver.h"
 
 namespace core {
 
-PlySaver::PlySaver(const std::string &name, const std::string &comment) {
-  name_ = name;
-  comment_ = comment;
+PlySaver::PlySaver() {
+  name_ = "mesh";
+  comment_ = "";
 }
 
 void PlySaver::Save(Mesh *mesh) {
@@ -55,9 +55,9 @@ void PlySaver::Save(Mesh *mesh) {
   for (int i = 0; i < vertexes.size(); i++) {
     Point3D point = vertexes.at(i);
 
-    outfile << point.X() << " "
-            << point.Y() << " "
-            << point.Z() << "\n";
+    outfile << point.x() << " "
+            << point.y() << " "
+            << point.z() << "\n";
   }
 
   for (int i = 0; i < faces.size(); i++) {

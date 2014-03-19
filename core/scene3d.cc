@@ -18,7 +18,7 @@ int Scene3D::NumberOfElements() const {
   return scene_elements_.size();
 }
 
-SceneElement Scene3D::ElementAt(const int &number) const {
+SceneElement Scene3D::ElementAt(int number) const {
   return scene_elements_.at(number);
 }
 
