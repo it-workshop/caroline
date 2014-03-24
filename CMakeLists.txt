@@ -84,8 +84,6 @@ add_module(core OBJECT
   core/scene3d.cc
   core/scene_element.h
   core/scene_element.cc
-  core/scene_mesh.h
-  core/scene_mesh.cc
   core/surface_mesh.h
   core/surface_mesh.cc
   core/switches.cc
