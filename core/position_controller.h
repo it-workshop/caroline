@@ -11,12 +11,26 @@ namespace core {
 class Point3D;
 class Quaternion;
 
+class TimeController;
+
 class PositionController {
  public:
+  explicit PositionController(TimeController* time_controller);
   virtual ~PositionController();
 
   virtual Point3D GetLocation() const = 0;
   virtual Quaternion GetRotation() const = 0;
+
+  TimeController* time_controller() const {
+    return time_controller_;
+  }
+
+  void set_time_controller(TimeController* time_controller) {
+    time_controller_ = time_controller;
+  }
+
+ private:
+  TimeController* time_controller_;
 };
 
 }  // namespace core
