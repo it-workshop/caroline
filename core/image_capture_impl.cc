@@ -3,29 +3,44 @@
 // LICENSE file.
 // Author: Konstantin Bormotov <bormotovk@gmail.com>
 
+#include "core/image_capture_impl.h"
+
 #include "opencv2/opencv.hpp"
 
-#include "core/image_capture_impl.h"
+#include "core/position_controller.h"
 
 namespace core {
 
+ImageCaptureImpl::ImageCaptureImpl(
+    std::unique_ptr<PositionController>&& position_controller,
+    const std::string& source_name)
+  : ImageCapture(std::move(position_controller)),
+    capture_(new cv::VideoCapture(source_name)) {
+  if (!capture_->isOpened())
+    capture_.reset();
+}
+
+ImageCaptureImpl::ImageCaptureImpl(
+    std::unique_ptr<PositionController>&& position_controller,
+    int camera_id)
+  : ImageCapture(std::move(position_controller)),
+    capture_(new cv::VideoCapture(camera_id)) {
+  if (!capture_->isOpened())
+    capture_.reset();
+}
+
 ImageCaptureImpl::~ImageCaptureImpl() {}
 
-cv::Mat ImageCapture::GetNextImage() {
+cv::Mat ImageCaptureImpl::GetNextImage() {
   cv::Mat frame;
-  if (cap_.read(frame)) {
+  if (!capture_->retrieve(frame)) {
     return cv::Mat();
   }
-  cap_ >> frame;
   return frame;
 }
 
-bool ImageCaptureImpl::HasNextImage() const {
-  if (error_ == true) {
-    std::cout << "error_ when reading" << std::endl;
-    return false;
-  }
-  return true;
+bool ImageCaptureImpl::GrabNextImage() {
+  return capture_ && capture_->grab();
 }
 
 }  // namespace core

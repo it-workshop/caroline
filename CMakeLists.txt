@@ -71,6 +71,8 @@ add_module(core OBJECT
   core/depth_map.cc
   core/depth_mesh.h
   core/depth_mesh.cc
+  core/image_capture.cc
+  core/image_capture.h
   core/image_capture_impl.cc
   core/image_capture_impl.h
   core/mesh.h
@@ -81,6 +83,8 @@ add_module(core OBJECT
   core/point3d.cc
   core/point_cloud.h
   core/point_cloud.cc
+  core/position_controller.cc
+  core/position_controller.h
   core/scene3d.h
   core/scene3d.cc
   core/scene_element.h

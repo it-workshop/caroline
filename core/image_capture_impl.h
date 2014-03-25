@@ -6,30 +6,33 @@
 #ifndef CORE_IMAGE_CAPTURE_IMPL_H_
 #define CORE_IMAGE_CAPTURE_IMPL_H_
 
-#include "opencv2/opencv.hpp"
+#include "core/image_capture.h"
+
+namespace cv {
+
+class VideoCapture;
+
+}  // namespace cv
 
 namespace core {
 
   // For capturing images from camera or file
-class ImageCaptureImpl {
+class ImageCaptureImpl : public ImageCapture {
  public:
-  // source_name is file or camera id
-  template <typename T>
-  explicit ImageCaptureImpl(const T& source_name) {
-    cap_ = cv::VideoCapture(source_name);
-    error_ = false;
-    if (!cap_.isOpened())
-      error_ = true;
-  }
+  ImageCaptureImpl(std::unique_ptr<PositionController>&& position_controller,
+      const std::string& source_name);
+  ImageCaptureImpl(std::unique_ptr<PositionController>&& position_controller,
+      int camera_id);
   virtual ~ImageCaptureImpl();
 
   // Can return empty matrix.
-  cv::Mat GetNextImage();
-  bool HasNextImage() const;
+  virtual cv::Mat GetNextImage() override;
+  bool GrabNextImage() override;
+
+  cv::VideoCapture* capture() const { return capture_.get(); }
 
  private:
-  bool error_;
-  cv::VideoCapture cap_;
+  std::unique_ptr<cv::VideoCapture> capture_;
 };
 
 }  // namespace core
