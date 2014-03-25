@@ -9,7 +9,8 @@
 
 namespace core {
 
-ImageCapture::ImageCapture(std::unique_ptr<PositionController>&& position_controller)
+ImageCapture::ImageCapture(
+    std::unique_ptr<PositionController>&& position_controller)
   : position_controller_(std::move(position_controller)) {}
 
 ImageCapture::~ImageCapture() {}
