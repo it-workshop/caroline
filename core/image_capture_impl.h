@@ -6,6 +6,8 @@
 #ifndef CORE_IMAGE_CAPTURE_IMPL_H_
 #define CORE_IMAGE_CAPTURE_IMPL_H_
 
+#include <string>
+
 #include "core/image_capture.h"
 
 namespace cv {
