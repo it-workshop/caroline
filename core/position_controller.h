@@ -8,9 +8,15 @@
 
 namespace core {
 
+class Point3D;
+class Quaternion;
+
 class PositionController {
  public:
   virtual ~PositionController();
+
+  virtual Point3D GetLocation() const = 0;
+  virtual Quaternion GetRotation() const = 0;
 };
 
 }  // namespace core

@@ -93,6 +93,8 @@ add_module(core OBJECT
   core/surface_mesh.cc
   core/switches.cc
   core/switches.h
+  core/quaternion.cc
+  core/quaternion.h
   )
 
 add_application(caroline
