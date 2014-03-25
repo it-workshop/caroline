@@ -3,25 +3,25 @@
 // LICENSE file.
 // Author: Konstantin Bormotov <bormotovk@gmail.com>
 
-#ifndef CORE_IMAGE_CAPTURE_H_
-#define CORE_IMAGE_CAPTURE_H_
+#ifndef CORE_IMAGE_CAPTURE_IMPL_H_
+#define CORE_IMAGE_CAPTURE_IMPL_H_
 
 #include "opencv2/opencv.hpp"
 
 namespace core {
 
   // For capturing images from camera or file
-class ImageCapture {
+class ImageCaptureImpl {
  public:
   // source_name is file or camera id
   template <typename T>
-  explicit ImageCapture(const T& source_name) {
+  explicit ImageCaptureImpl(const T& source_name) {
     cap_ = cv::VideoCapture(source_name);
     error_ = false;
     if (!cap_.isOpened())
       error_ = true;
   }
-  virtual ~ImageCapture();
+  virtual ~ImageCaptureImpl();
 
   // Can return empty matrix.
   cv::Mat GetNextImage();
@@ -34,4 +34,4 @@ class ImageCapture {
 
 }  // namespace core
 
-#endif  // CORE_IMAGE_CAPTURE_H_
+#endif  // CORE_IMAGE_CAPTURE_IMPL_H_

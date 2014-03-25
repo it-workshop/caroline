@@ -71,8 +71,8 @@ add_module(core OBJECT
   core/depth_map.cc
   core/depth_mesh.h
   core/depth_mesh.cc
-  core/image_capture.cc
-  core/image_capture.h
+  core/image_capture_impl.cc
+  core/image_capture_impl.h
   core/mesh.h
   core/mesh.cc
   core/ply_saver.h

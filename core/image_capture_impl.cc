@@ -5,11 +5,11 @@
 
 #include "opencv2/opencv.hpp"
 
-#include "core/image_capture.h"
+#include "core/image_capture_impl.h"
 
 namespace core {
 
-ImageCapture::~ImageCapture() {}
+ImageCaptureImpl::~ImageCaptureImpl() {}
 
 cv::Mat ImageCapture::GetNextImage() {
   cv::Mat frame;
@@ -20,7 +20,7 @@ cv::Mat ImageCapture::GetNextImage() {
   return frame;
 }
 
-bool ImageCapture::HasNextImage() const {
+bool ImageCaptureImpl::HasNextImage() const {
   if (error_ == true) {
     std::cout << "error_ when reading" << std::endl;
     return false;
