@@ -12,79 +12,36 @@ const char Logger::kLevelWarning[] = "warning";
 const char Logger::kLevelInfo[] = "info";
 const char Logger::kLevelDebug[] = "debug";
 
-Logger::Message::~Message() {}
+Logger::Message::Message(std::shared_ptr<Logger> logger, bool visible)
+  : logger_(std::move(logger)),
+    visible_(visible),
+    stream_(new std::ostringstream()) {}
 
-Logger::Message& Logger::Message::operator<<(int64_t i64) { return *this; }
-Logger::Message& Logger::Message::operator<<(uint64_t u64) { return *this; }
-Logger::Message& Logger::Message::operator<<(long double ld) { return *this; }
-Logger::Message& Logger::Message::operator<<(char c) { return *this; }
-Logger::Message& Logger::Message::operator<<(void* ptr) { return *this; }
-Logger::Message& Logger::Message::operator<<(const std::string& str) {
-  return *this;
-}
-
-Logger::NormalMessage::NormalMessage(std::shared_ptr<Logger> logger,
-    const std::string& prefix, Level level)
-  : logger_(logger),
-    buffer_(prefix),
-    level_(level) {}
-
-Logger::NormalMessage::~NormalMessage() {
-  buffer_.append("\n");
-  logger_->PostMessage(buffer_);
-}
-
-Logger::Message& Logger::NormalMessage::operator<<(int64_t i64) {
-  buffer_.append(std::to_string(i64));
-  return *this;
-}
-
-Logger::Message& Logger::NormalMessage::operator<<(uint64_t u64) {
-  buffer_.append(std::to_string(u64));
-  return *this;
-}
-
-Logger::Message& Logger::NormalMessage::operator<<(long double ld) {
-  buffer_.append(std::to_string(ld));
-  return *this;
-}
-
-Logger::Message& Logger::NormalMessage::operator<<(char c) {
-  buffer_.append(1, c);
-  return *this;
-}
-
-Logger::Message& Logger::NormalMessage::operator<<(void* ptr) {
-  const char hex_alphabet[] = "0123456789ABCDEF";
-  buffer_.append("0x");
-  for (int i = sizeof(ptr) * 8 - 4; i >= 0; i -= 4)
-    buffer_.append(1,
-        hex_alphabet[(reinterpret_cast<size_t>(ptr) >> i) & 0x0f]);
-  return *this;
-}
-
-Logger::Message& Logger::NormalMessage::operator<<(const std::string& str) {
-  buffer_.append(str);
-  return *this;
+Logger::Message::~Message() {
+  if (visible_ && !stream_->str().empty()) {
+    *stream_ << '\n';
+    logger_->PostMessage(stream_->str());
+  }
 }
 
 Logger::Logger()
-  : minimum_level_(Level::NONE) {}
+  : minimum_level_(Level::LOG_NONE) {}
 
 Logger::~Logger() {}
 
 // static
 void Logger::Init(const std::string& file, Level minimum_level) {
-  GetInstance()->InitInstance(file, minimum_level);
+  std::shared_ptr<Logger> instance = GetInstance();
+  instance->InitInstance(instance, file, minimum_level);
 }
 
-Logger::Message Logger::AddMessage(Level level, const std::string& prefix) {
-  if (level > minimum_level_)
-    return Message();
-  return NormalMessage(GetInstance(), prefix, level);
+Logger::Message Logger::AddMessage(Level level) {
+  return Message(self(), level <= minimum_level_);
 }
 
-void Logger::InitInstance(const std::string& file, Level minimum_level) {
+void Logger::InitInstance(std::shared_ptr<Logger> self,
+    const std::string& file, Level minimum_level) {
+  self_ = self;
   file_ = file;
   minimum_level_ = minimum_level;
 }
@@ -93,3 +50,4 @@ void Logger::InitInstance(const std::string& file, Level minimum_level) {
 
 // Instance shared pointer here.
 template class std::shared_ptr<base::Logger>;
+

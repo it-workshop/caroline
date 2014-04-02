@@ -7,18 +7,19 @@
 #define BASE_LOGGING_H_
 
 #include <memory>
+#include <sstream>
 #include <string>
 
 namespace base {
 
 class Logger {
  public:
-  enum class Level {
-    NONE,
-    ERR,
-    WARNING,
-    INFO,
-    DEBUG
+  enum Level {
+    LOG_NONE,
+    LOG_ERROR,
+    LOG_WARNING,
+    LOG_INFO,
+    LOG_DEBUG
   };
   static const char kLevelError[];
   static const char kLevelWarning[];
@@ -27,33 +28,15 @@ class Logger {
 
   class Message {
    public:
+    Message(std::shared_ptr<Logger> logger, bool visible);
     virtual ~Message();
 
-    virtual Message& operator<<(int64_t i64);
-    virtual Message& operator<<(uint64_t u64);
-    virtual Message& operator<<(long double d);
-    virtual Message& operator<<(char c);
-    virtual Message& operator<<(void* ptr);
-    virtual Message& operator<<(const std::string& str);
-  };
-
-  class NormalMessage : public Message {
-   public:
-    NormalMessage(std::shared_ptr<Logger> logger, const std::string& prefix,
-        Level level);
-    virtual ~NormalMessage();
-
-    virtual Message& operator<<(int64_t i64) override;
-    virtual Message& operator<<(uint64_t u64) override;
-    virtual Message& operator<<(long double d) override;
-    virtual Message& operator<<(char c) override;
-    virtual Message& operator<<(void* ptr) override;
-    virtual Message& operator<<(const std::string& str) override;
+    std::ostream& stream() { return *stream_; }
 
    private:
-    std::string buffer_;
+    std::shared_ptr<std::ostringstream> stream_;
     std::shared_ptr<Logger> logger_;
-    Level level_;
+    const bool visible_;
   };
 
   Logger();
@@ -62,7 +45,7 @@ class Logger {
   static void Init(const std::string& file, Level minimum_level);
   static std::shared_ptr<Logger> GetInstance();
 
-  Message AddMessage(Level level, const std::string& prefix);
+  Message AddMessage(Level level);
 
   std::string file() const { return file_; }
 
@@ -70,23 +53,41 @@ class Logger {
   virtual void PostMessage(const std::string& message) = 0;
 
  private:
-  void InitInstance(const std::string& file, Level minimum_level);
+  void InitInstance(std::shared_ptr<Logger> self,
+      const std::string& file, Level minimum_level);
+  std::shared_ptr<Logger> self() const {
+    return self_.lock();
+  }
 
   Level minimum_level_;
   std::string file_;
+  std::weak_ptr<Logger> self_;
 
   Logger(const Logger&);
   Logger& operator=(const Logger&);
 };
 
+#if defined(OS_WINDOWS)
+// MSVC does not support for __func__.
+#define __func__ __FUNCTION__
+#endif
+
+#define __LOG_STRINGIZE2(v) #v
+#define __LOG_STRINGIZE(v) __LOG_STRINGIZE2(v)
+
 #define __LOG_PREFIX(level) \
-    __FILE__  ":" __LINE__ ":" __func__ ":" #level ": "
+    std::string(__FILE__  ":" \
+    __LOG_STRINGIZE(__LINE__) ":" \
+    __LOG_STRINGIZE(level) ":") +\
+    __func__ + "(): "
 
 // Use this macro if you want to log something.
 // LOG(level) << "Hello!";
-// Whele level is: ERR, WARNING, INFO, DEBUG.
+// Whele level is: ERROR, WARNING, INFO, DEBUG.
 #define LOG(level) \
-    base::Logger::GetInstance()->AddMessage(Level::level, __LOG_PREFIX(level))
+    (base::Logger::GetInstance()\
+        ->AddMessage(base::Logger::LOG_ ## level)\
+        .stream() << __LOG_PREFIX(level))
 
 }  // namespace base
 

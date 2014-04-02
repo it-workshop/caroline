@@ -21,15 +21,15 @@ int main(int argc, const char* argv[]) {
   if (command_line->HasSwitch(core::switches::kEnableLogging)) {
     std::string level =
         command_line->GetSwitchData(core::switches::kEnableLogging);
-    base::Logger::Level minimal_level = base::Logger::Level::NONE;
+    base::Logger::Level minimal_level = base::Logger::LOG_NONE;
     if (base::Logger::kLevelError == level)
-      minimal_level = base::Logger::Level::ERR;
+      minimal_level = base::Logger::LOG_ERROR;
     else if (base::Logger::kLevelWarning == level)
-      minimal_level = base::Logger::Level::WARNING;
+      minimal_level = base::Logger::LOG_WARNING;
     else if (base::Logger::kLevelInfo == level)
-      minimal_level = base::Logger::Level::INFO;
+      minimal_level = base::Logger::LOG_INFO;
     else if (base::Logger::kLevelDebug == level)
-      minimal_level = base::Logger::Level::DEBUG;
+      minimal_level = base::Logger::LOG_DEBUG;
     std::string file =
         command_line->GetSwitchData(core::switches::kLogFile);
     base::Logger::GetInstance()->Init(file, minimal_level);

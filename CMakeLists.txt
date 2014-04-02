@@ -44,6 +44,7 @@ else ()
       "${CMAKE_SOURCE_DIR}/third_party/opencv/include")
   set (OpenCV_LIBS
     opencv_core
+    opencv_highgui
     )
 endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
