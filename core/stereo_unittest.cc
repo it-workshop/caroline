@@ -13,10 +13,10 @@
 TEST(StereoTest, CreateAndSaveMesh) {
   core::StereoDepthMap stereo;
 
-  cv::Mat map = stereo.BuildMap("left image", "right image");
+  cv::Mat map = stereo.BuildMap("/home/rayman/Downloads/ALL-2views/Bowling2/view1.png", "/home/rayman/Downloads/ALL-2views/Bowling2/view5.png");
 
-//  cv::imshow( "Display window", map);
-//  cv::waitKey(0);
+  cv::imshow( "Display window", map);
+  cv::waitKey(0);
 
   EXPECT_NE(map.cols, 0);
   EXPECT_NE(map.rows, 0);

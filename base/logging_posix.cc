@@ -42,7 +42,7 @@ void LoggerPosix::PostMessage(const std::string& message) {
     return;
 
   int fd = open(file().c_str(),
-      O_APPEND | O_CREAT | O_EXLOCK | O_SYMLINK | O_CLOEXEC);
+      O_APPEND | O_CREAT | O_CLOEXEC);
   if (fd < 0) {
     perror("Can't open log file: ");
     return;
