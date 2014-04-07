@@ -3,7 +3,7 @@
 # LICENSE file.
 # Author: Aleksandr Derbenev <13alexac@gmail.com>
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 2.8)
 project (Caroline CXX)
 
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
@@ -44,6 +44,7 @@ else ()
       "${CMAKE_SOURCE_DIR}/third_party/opencv/include")
   set (OpenCV_LIBS
     opencv_core
+    opencv_highgui
     )
 endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
@@ -115,3 +116,4 @@ target_link_libraries(unit_tests
   ${OpenCV_LIBS}
   )
 add_test(unit_tests unit_tests)
+
