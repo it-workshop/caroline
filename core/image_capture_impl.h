@@ -22,6 +22,7 @@ namespace core {
 class ImageCaptureImpl : public ImageCapture {
  public:
   ImageCaptureImpl(std::unique_ptr<PositionController>&& position_controller,
+      Type type,
       const std::string& source_name);
   ImageCaptureImpl(std::unique_ptr<PositionController>&& position_controller,
       int camera_id);
@@ -29,7 +30,7 @@ class ImageCaptureImpl : public ImageCapture {
 
   // Can return empty matrix.
   virtual cv::Mat GetNextImage() override;
-  bool GrabNextImage() override;
+  virtual bool GrabNextImage() override;
 
   cv::VideoCapture* capture() const { return capture_.get(); }
 

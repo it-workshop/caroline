@@ -5,12 +5,25 @@
 
 #include "core/time_controller.h"
 
+#include "core/image_capture_impl.h"
+
 namespace core {
 
 TimeController::~TimeController() {}
 
 time_t TimeController::GetGlobalTime() const {
   return ::time(nullptr);
+}
+
+bool TimeController::Grab() {
+  if (captures_.empty())
+    return false;
+
+  for (auto capture : captures_)
+    if (!capture->GrabNextImage())
+      return false;
+
+  return true;
 }
 
 }  // namespace core

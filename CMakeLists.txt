@@ -75,6 +75,8 @@ add_module(core OBJECT
   core/image_capture.h
   core/image_capture_impl.cc
   core/image_capture_impl.h
+  core/image_time_controller.cc
+  core/image_time_controller.h
   core/mesh.h
   core/mesh.cc
   core/ply_saver.h
@@ -97,6 +99,8 @@ add_module(core OBJECT
   core/time_controller.h
   core/quaternion.cc
   core/quaternion.h
+  core/video_time_controller.cc
+  core/video_time_controller.h
   )
 
 add_application(caroline

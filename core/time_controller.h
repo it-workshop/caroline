@@ -8,8 +8,11 @@
 
 #include <ctime>
 #include <cinttypes>
+#include <vector>
 
 namespace core {
+
+class ImageCaptureImpl;
 
 class TimeController {
  public:
@@ -20,6 +23,15 @@ class TimeController {
 
   // Time from the UNIX epoch (01/01/1970 00:00:00 UTC) in seconds.
   virtual time_t GetGlobalTime() const;
+
+  // Add Image Capture for tracking.
+  virtual bool AddCapture(ImageCaptureImpl* capture) = 0;
+
+  // Call Grab on all tracked captures. Increase current time if needed.
+  virtual bool Grab();
+
+ protected:
+  std::vector<ImageCaptureImpl*> captures_;
 };
 
 }  // namespace core

@@ -13,8 +13,9 @@ namespace core {
 
 ImageCaptureImpl::ImageCaptureImpl(
     std::unique_ptr<PositionController>&& position_controller,
+    Type type,
     const std::string& source_name)
-  : ImageCapture(std::move(position_controller)),
+  : ImageCapture(std::move(position_controller), type),
     capture_(new cv::VideoCapture(source_name)) {
   if (!capture_->isOpened())
     capture_.reset();
@@ -23,7 +24,7 @@ ImageCaptureImpl::ImageCaptureImpl(
 ImageCaptureImpl::ImageCaptureImpl(
     std::unique_ptr<PositionController>&& position_controller,
     int camera_id)
-  : ImageCapture(std::move(position_controller)),
+  : ImageCapture(std::move(position_controller), Type::CAPTURE),
     capture_(new cv::VideoCapture(camera_id)) {
   if (!capture_->isOpened())
     capture_.reset();

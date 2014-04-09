@@ -20,8 +20,15 @@ class PositionController;
 
 class ImageCapture {
  public:
+  enum class Type {
+    IMAGE,
+    VIDEO,
+    CAPTURE
+  };
+
   explicit ImageCapture(
-      std::unique_ptr<PositionController>&& position_controller);
+      std::unique_ptr<PositionController>&& position_controller,
+      Type type);
   virtual ~ImageCapture();
 
   PositionController* position_controller() const {
@@ -31,8 +38,11 @@ class ImageCapture {
   virtual bool GrabNextImage() = 0;
   virtual cv::Mat GetNextImage() = 0;
 
+  Type type() const { return type_; }
+
  private:
   std::unique_ptr<PositionController> position_controller_;
+  const Type type_;
 };
 
 }  // namespace core

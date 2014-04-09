@@ -192,27 +192,27 @@ class DictionaryValue : public Value {
 };
 
 inline IntegerValue* ToInteger(Value* value) {
-  return value ? value->AsInteger() : value;
+  return value ? value->AsInteger() : nullptr;
 }
 
 inline BooleanValue* ToBoolean(Value* value) {
-  return value ? value->AsBoolean() : value;
+  return value ? value->AsBoolean() : nullptr;
 }
 
 inline StringValue* ToString(Value* value) {
-  return value ? value->AsString() : value;
+  return value ? value->AsString() : nullptr;
 }
 
 inline FloatValue* ToFloat(Value* value) {
-  return value ? value->AsFloat() : value;
+  return value ? value->AsFloat() : nullptr;
 }
 
 inline DictionaryValue* ToDictionary(Value* value) {
-  return value ? value->AsDictionary() : value;
+  return value ? value->AsDictionary() : nullptr;
 }
 
 inline ListValue* ToList(Value* value) {
-  return value ? value->AsList() : value;
+  return value ? value->AsList() : nullptr;
 }
 
 }  // namespace base
