@@ -5,7 +5,7 @@
 
 #include <math.h>
 
-#include "depth_map_builder.h"
+#include "core/depth_map_builder.h"
 
 namespace core {
 
@@ -18,6 +18,9 @@ const int iterations = 10;
 DepthMapBuilder::DepthMapBuilder() {
 }
 
+
+
+// From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
 cv::Mat_<double> DepthMapBuilder::LinearTriangulation(cv::Point3d x1,
                                               cv::Matx34d P1,
                                               cv::Point3d x2,
@@ -39,6 +42,7 @@ cv::Mat_<double> DepthMapBuilder::LinearTriangulation(cv::Point3d x1,
   return X;
 }
 
+// From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
 cv::Mat_<double> DepthMapBuilder::IterativeTriangulation(cv::Point3d x1,
                                                          cv::Matx34d P1,
                                                          cv::Point3d x2,
@@ -72,9 +76,9 @@ cv::Mat_<double> DepthMapBuilder::IterativeTriangulation(cv::Point3d x1,
 
     cv::Mat_<double> B =
         (cv::Mat_<double>(4,1) << -(x1.x*P1(2,3) -P1(0,3))/wi1,
-                                  -(x1.y*P1(2,3)  -P1(1,3))/wi1,
-                                  -(x2.x*P2(2,3)    -P2(0,3))/wi2,
-                                  -(x2.y*P2(2,3)    -P2(1,3))/wi2
+                                  -(x1.y*P1(2,3) -P1(1,3))/wi1,
+                                  -(x2.x*P2(2,3) -P2(0,3))/wi2,
+                                  -(x2.y*P2(2,3) -P2(1,3))/wi2
         );
 
     cv::solve(A,B,X_,cv::DECOMP_SVD);
