@@ -53,8 +53,8 @@ Point3D SceneElement::Transform(Point3D point) const {
 
   new_point.Set(point.x() + pos_x_, point.y() + pos_y_, point.z() + pos_z_);
 
-  // DO LATER
-  // Rotation and scaling
+  // TODO(VladimirGl): Rotation and scaling
+  return new_point;
 }
 
 void SceneElement::SetStandardTransform() {
