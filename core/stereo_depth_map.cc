@@ -9,10 +9,14 @@
 
 #include "gtest/gtest.h"
 
+#include "depth_map.h"
+#include "depth_mesh.h"
+#include "ply_saver.h"
+
 namespace core {
 
 cv::Mat StereoDepthMap::BuildMap(const std::string &leftImage, const std::string &rightImage) {
-  cv::StereoSGBM stereo(0, 128, 13);
+  cv::StereoSGBM stereo(0, 256, 13);
 
   cv::Mat leftIm = cv::imread(leftImage, CV_LOAD_IMAGE_GRAYSCALE);
   cv::Mat rightIm = cv::imread(rightImage, CV_LOAD_IMAGE_GRAYSCALE);
@@ -71,6 +75,20 @@ cv::Mat StereoDepthMap::BuildMap(const std::string &leftImage, const std::string
 
   cv::imwrite("/home/rayman/Downloads/ALL-2views/Bowling2/claster.png", new_image);
 */
+  DepthMap map(h, w);
+  for (int y = 0; y < h; y++) {
+    for (int x = 0; x < w; x++) {
+      map.SetDepth(x, y, (int)disp8U.at<uchar>(y, x));
+    }
+  }
+
+  DepthMesh mesh(map, 16, 240);
+
+  PlySaver saver;
+  saver.set_path("/home/rayman/Downloads/");
+  saver.set_name("mesh2");
+  saver.Save(&mesh);
+
 
 //  return new_image;
   return disp8U;

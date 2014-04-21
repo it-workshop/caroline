@@ -63,16 +63,33 @@ add_module(base OBJECT
   base/values.h
   )
 
-
 add_module(core OBJECT
   core/config.cc
   core/config.h
-  core/switches.cc
-  core/switches.h  
+  core/depth_map.h
+  core/depth_map.cc
+  core/depth_mesh.h
+  core/depth_mesh.cc
   core/image_capture.cc
   core/image_capture.h
   core/stereo_depth_map.cc
   core/stereo_depth_map.h
+  core/mesh.h
+  core/mesh.cc
+  core/ply_saver.h
+  core/ply_saver.cc
+  core/point3d.h
+  core/point3d.cc
+  core/point_cloud.h
+  core/point_cloud.cc
+  core/scene3d.h
+  core/scene3d.cc
+  core/scene_element.h
+  core/scene_element.cc
+  core/surface_mesh.h
+  core/surface_mesh.cc
+  core/switches.cc
+  core/switches.h
   )
 
 add_application(caroline
