@@ -90,6 +90,8 @@ add_module(core OBJECT
   core/surface_mesh.cc
   core/switches.cc
   core/switches.h
+  core/triangulation.cc
+  core/triangulation.h
   )
 
 add_application(caroline
@@ -108,6 +110,7 @@ add_application(unit_tests
   base/json_unittest.cc
   base/values_unittest.cc
   core/opencv_unittest.cc
+  core/triangulation_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
   $<TARGET_OBJECTS:core>

@@ -19,7 +19,6 @@ DepthMapBuilder::DepthMapBuilder() {
 }
 
 
-
 // From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
 cv::Mat_<double> DepthMapBuilder::LinearTriangulation(cv::Point3d x1,
                                               cv::Matx34d P1,
@@ -31,10 +30,12 @@ cv::Mat_<double> DepthMapBuilder::LinearTriangulation(cv::Point3d x1,
                 x2.y*P2(2,0)-P2(1,0), x2.y*P2(2,1)-P2(1,1), x2.y*P2(2,2)-P2(1,2)
                 );
 
-  cv::Mat_<double> B = (cv::Mat_<double>(4,1) << -(x1.x*P1(2,3) -P1(0,3)),
-                             -(x1.y*P1(2,3) -P1(1,3)),
-                             -(x2.x*P2(2,3) -P2(0,3)),
-                             -(x2.y*P2(2,3) -P2(1,3)));
+  cv::Mat_<double> B = (cv::Mat_<double>(4,1) << 
+                          -(x1.x*P1(2,3) -P1(0,3)),
+                          -(x1.y*P1(2,3) -P1(1,3)),
+                          -(x2.x*P2(2,3) -P2(0,3)),
+                          -(x2.y*P2(2,3) -P2(1,3))
+                        );
 
   cv::Mat_<double> X;
   cv::solve(A, B, X, cv::DECOMP_SVD);
