@@ -10,6 +10,14 @@
 
 namespace core {
 
+class Triangulation
+{
+ public:
+  Triangulation();
+
+
+};
+
 class DepthMapBuilder
 {
  public:

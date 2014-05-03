@@ -15,7 +15,7 @@ namespace core {
 class Triangulation
 {
  public:
-  Triangulation(int iterations, double epsilon);
+  Triangulation(int iterations = 10, double epsilon = 0.05);
 
   void SetCameraMatrices(const cv::Matx33d& K1, const cv::Matx33d& K2,
                          const cv::Matx34d& P1, const cv::Matx34d& P2);
