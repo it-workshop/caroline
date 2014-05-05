@@ -16,7 +16,7 @@
 namespace core {
 
 cv::Mat StereoDepthMap::BuildMap(const std::string &leftImage, const std::string &rightImage) {
-  cv::StereoSGBM stereo(0, 256, 13);
+	cv::StereoSGBM stereo(0, 256, 9);
 
   cv::Mat leftIm = cv::imread(leftImage, CV_LOAD_IMAGE_GRAYSCALE);
   cv::Mat rightIm = cv::imread(rightImage, CV_LOAD_IMAGE_GRAYSCALE);
@@ -78,7 +78,7 @@ cv::Mat StereoDepthMap::BuildMap(const std::string &leftImage, const std::string
   DepthMap map(h, w);
   for (int y = 0; y < h; y++) {
     for (int x = 0; x < w; x++) {
-      map.SetDepth(x, y, (int)disp8U.at<uchar>(y, x));
+	  map.SetDepth(x, y, 255 - (int)disp8U.at<uchar>(y, x));
     }
   }
 
