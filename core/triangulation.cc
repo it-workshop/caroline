@@ -22,6 +22,10 @@ void Triangulation::SetCameraMatrices(const cv::Matx33d &K1, const cv::Matx33d &
   p_2_ = P2;
 }
 
+void Triangulation::SetCameraMatrices(const Cameras &cameras) {
+  SetCameraMatrices(cameras.K1(), cameras.K2(), cameras.P1(), cameras.P2());
+}
+
 cv::Point3d Triangulation::Triangulate(const cv::Point2d &x1, const cv::Point2d& x2) const {
   cv::Point3d point_one(x1.x, x1.y, 1.0);
   point_one = k_1_inv_ * point_one;
@@ -47,7 +51,8 @@ double Triangulation::TriangulateDepth(const cv::Point2d &x1, const cv::Point2d 
 }
 
 // From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
-cv::Mat_<double> Triangulation::LinearTriangulation(const cv::Point3d& x1, cv::Point3d x2) {
+cv::Mat_<double> Triangulation::LinearTriangulation(
+            const cv::Point3d& x1, cv::Point3d x2) const {
   cv::Matx43d A(x1.x*p_1_(2,0)-p_1_(0,0), x1.x*p_1_(2,1)-p_1_(0,1), x1.x*p_1_(2,2)-p_1_(0,2),
                 x1.y*p_1_(2,0)-p_1_(1,0), x1.y*p_1_(2,1)-p_1_(1,1), x1.y*p_1_(2,2)-p_1_(1,2),
                 x2.x*p_2_(2,0)-p_2_(0,0), x2.x*p_2_(2,1)-p_2_(0,1), x2.x*p_2_(2,2)-p_2_(0,2),
@@ -68,7 +73,8 @@ cv::Mat_<double> Triangulation::LinearTriangulation(const cv::Point3d& x1, cv::P
 }
 
 // From "Triangulation", Hartley, R.I. and Sturm, P., Computer vision and image understanding, 1997
-cv::Mat_<double> Triangulation::IterativeTriangulation(const cv::Point3d& x1, const cv::Point3d& x2) {
+cv::Mat_<double> Triangulation::IterativeTriangulation(
+            const cv::Point3d& x1, const cv::Point3d& x2) const {
   double wi1 = 1;
   double wi2 = 1;
 

@@ -6,12 +6,11 @@
 #include <math.h>
 
 #include "core/depth_map_builder.h"
-
-#include "triangulation.h"
+#include "core/triangulation.h"
 
 namespace core {
 
-DepthMap *DepthMapBuilder::BuildMap(const OpticalFlow &flow, int w, int h) {
+DepthMap *DepthMapBuilder::BuildMap(const OpticalFlow &flow, const Cameras &cam, int w, int h) {
   int size = flow.Size();
 
   if ((w * h) != size) {
@@ -20,14 +19,15 @@ DepthMap *DepthMapBuilder::BuildMap(const OpticalFlow &flow, int w, int h) {
 
   DepthMap *map = new DepthMap(h, w);
   Triangulation triangulator;
-  trian
+  triangulator.SetCameraMatrices(cam);
 
   for (int i = 0; i < size; i++) {
     cv::Point2d p = flow.ImageOnePoint(i);
 
-    map->SetDepth(p.x, p.y,
-                  );
+    map->SetDepth(p.x, p.y, triangulator.TriangulateDepth(p, flow.ImageTwoPoint(i)));
   }
+
+  return map;
 }
 
 }  // namespace core

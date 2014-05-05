@@ -8,6 +8,8 @@
 
 #include "opencv2/opencv.hpp"
 
+#include "core/cameras.h"
+
 namespace core {
 
 // For more information about the algorithm, see
@@ -19,12 +21,14 @@ class Triangulation {
   void SetCameraMatrices(const cv::Matx33d& K1, const cv::Matx33d& K2,
                          const cv::Matx34d& P1, const cv::Matx34d& P2);
 
+  void SetCameraMatrices(const Cameras& cameras);
+
   cv::Point3d Triangulate(const cv::Point2d &x1, const cv::Point2d& x2) const;
   double TriangulateDepth(const cv::Point2d &x1, const cv::Point2d &x2) const;
 
  protected:
-  cv::Mat_<double> LinearTriangulation(const cv::Point3d &x1, cv::Point3d x2);
-  cv::Mat_<double> IterativeTriangulation(const cv::Point3d& x1, const cv::Point3d& x2);
+  cv::Mat_<double> LinearTriangulation(const cv::Point3d &x1, cv::Point3d x2) const;
+  cv::Mat_<double> IterativeTriangulation(const cv::Point3d& x1, const cv::Point3d& x2) const;
 
  private:
   int iterations_;

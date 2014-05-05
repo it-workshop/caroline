@@ -64,6 +64,8 @@ add_module(base OBJECT
   )
 
 add_module(core OBJECT
+  core/cameras.cc
+  core/cameras.h
   core/config.cc
   core/config.h
   core/depth_map.h
