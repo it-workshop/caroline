@@ -76,6 +76,8 @@ add_module(core OBJECT
   core/image_capture.h
   core/mesh.h
   core/mesh.cc
+  core/optical_flow.h
+  core/optical_flow.cc
   core/ply_saver.h
   core/ply_saver.cc
   core/point3d.h

@@ -12,8 +12,7 @@ namespace core {
 
 // For more information about the algorithm, see
 // www.morethantechnical.com/2012/01/04/simple-triangulation-with-opencv-from-harley-zisserman-w-code/
-class Triangulation
-{
+class Triangulation {
  public:
   Triangulation(int iterations = 10, double epsilon = 0.05);
 
