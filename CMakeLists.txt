@@ -75,6 +75,10 @@ add_module(core OBJECT
   core/image_capture.h
   core/image_capture_impl.cc
   core/image_capture_impl.h
+  core/image_capture_manager.cc
+  core/image_capture_manager.h
+  core/image_capture_manager_impl.cc
+  core/image_capture_manager_impl.h
   core/image_time_controller.cc
   core/image_time_controller.h
   core/mesh.h
@@ -87,6 +91,10 @@ add_module(core OBJECT
   core/point_cloud.cc
   core/position_controller.cc
   core/position_controller.h
+  core/position.cc
+  core/position.h
+  core/predefined_position_controller.cc
+  core/predefined_position_controller.h
   core/scene3d.h
   core/scene3d.cc
   core/scene_element.h
@@ -99,6 +107,8 @@ add_module(core OBJECT
   core/time_controller.h
   core/quaternion.cc
   core/quaternion.h
+  core/undefined_position_controller.cc
+  core/undefined_position_controller.h
   core/video_time_controller.cc
   core/video_time_controller.h
   )
