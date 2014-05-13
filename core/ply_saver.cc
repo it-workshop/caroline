@@ -7,8 +7,11 @@
 #include <vector>
 
 #include "core/ply_saver.h"
+#include "core/mesh.h"
 
 namespace core {
+
+const int kNumOfPointsInFace = 3;
 
 PlySaver::PlySaver() {
   name_ = "mesh";
@@ -63,10 +66,10 @@ void PlySaver::Save(Mesh *mesh) {
   for (int i = 0; i < faces.size(); i++) {
     Triangle face = faces.at(i);
 
-    outfile << 3 << " "
-            << face.Point1() << " "
-            << face.Point2() << " "
-            << face.Point3() << "\n";
+    outfile << kNumOfPointsInFace << " "
+            << face.Point1()      << " "
+            << face.Point2()      << " "
+            << face.Point3()      << "\n";
   }
 
   outfile.close();

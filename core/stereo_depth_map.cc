@@ -16,7 +16,18 @@
 namespace core {
 
 cv::Mat StereoDepthMap::BuildMap(const std::string &leftImage, const std::string &rightImage) {
-	cv::StereoSGBM stereo(0, 256, 9);
+  cv::StereoSGBM stereo;
+  stereo.SADWindowSize = 5;
+  stereo.numberOfDisparities = 192;
+  stereo.preFilterCap = 4;
+  stereo.minDisparity = -64;
+  stereo.uniquenessRatio = 1;
+  stereo.speckleWindowSize = 150;
+  stereo.speckleRange = 2;
+  stereo.disp12MaxDiff = 10;
+  stereo.fullDP = false;
+  stereo.P1 = 8*5*5;
+  stereo.P2 = 32*5*5;
 
   cv::Mat leftIm = cv::imread(leftImage, CV_LOAD_IMAGE_GRAYSCALE);
   cv::Mat rightIm = cv::imread(rightImage, CV_LOAD_IMAGE_GRAYSCALE);

@@ -8,9 +8,9 @@
 
 #include <string>
 
-#include "core/mesh.h"
-
 namespace core {
+
+class Mesh;
 
 class PlySaver {
  public:

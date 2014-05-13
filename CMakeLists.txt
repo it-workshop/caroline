@@ -76,6 +76,8 @@ add_module(core OBJECT
   core/stereo_depth_map.h
   core/mesh.h
   core/mesh.cc
+  core/ply_reader.h
+  core/ply_reader.cc
   core/ply_saver.h
   core/ply_saver.cc
   core/point3d.h
@@ -86,6 +88,8 @@ add_module(core OBJECT
   core/scene3d.cc
   core/scene_element.h
   core/scene_element.cc
+  core/mesh_primitives.h
+  core/mesh_primitives.cc
   core/surface_mesh.h
   core/surface_mesh.cc
   core/switches.cc
