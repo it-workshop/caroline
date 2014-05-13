@@ -44,5 +44,13 @@ bool ImageCaptureImpl::GrabNextImage() {
   return capture_ && capture_->grab();
 }
 
+double ImageCaptureImpl::GetFocusLength() const {
+  return focus_length_;
+}
+
+int ImageCaptureImpl::GetDpm() const {
+  return dpm_;
+}
+
 }  // namespace core
 

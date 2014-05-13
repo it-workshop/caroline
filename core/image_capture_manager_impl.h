@@ -24,6 +24,7 @@ class ImageCaptureManagerImpl : public ImageCaptureManager {
   virtual size_t GetCapturesCount() const override;
   virtual TimeController* GetTimeController() const override;
   virtual std::vector<std::pair<cv::Mat, Position>> GetNextFrameset() override;
+  virtual const std::vector<ImageCapture*> GetCaptures() const override;
 
  private:
   std::unique_ptr<TimeController> time_controller_;

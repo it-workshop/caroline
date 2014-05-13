@@ -40,6 +40,10 @@ class ImageCapture {
 
   Type type() const { return type_; }
 
+  virtual double GetFocusLength() const = 0;
+  // Dots per meter.
+  virtual int GetDpm() const = 0;
+
  private:
   std::unique_ptr<PositionController> position_controller_;
   const Type type_;

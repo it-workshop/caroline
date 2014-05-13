@@ -27,6 +27,7 @@ class ImageCaptureManager {
   virtual size_t GetCapturesCount() const = 0;
   virtual TimeController* GetTimeController() const = 0;
   virtual std::vector<std::pair<cv::Mat, Position>> GetNextFrameset() = 0;
+  virtual const std::vector<ImageCapture*> GetCaptures() const = 0;
 };
 
 }  // namespace core

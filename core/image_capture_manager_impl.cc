@@ -37,6 +37,9 @@ const char kCaptureTypeNode[] = "type";
 const char kCaptureSourceNode[] = "source";
 const char kCaptureIdNode[] = "id";
 const char kCapturePositionSettingsNode[] = "position";
+const char kCaptureFocusLengthNode[] = "focus_length";
+const char kCaptureDpmNode[] = "dpm";
+const char kCaptureDpiNode[] = "dpi";
 //     "type":
 const char kCaptureTypeDevice[] = "device";
 const char kCaptureTypeVideo[] = "video";
@@ -44,6 +47,11 @@ const char kCaptureTypeImage[] = "image";
 //   }
 //   ]
 // }
+
+const double kDefaultFocusLength = 1.0;
+
+const int kDefaultDpi = 96;
+const double kDpiToDpmMultiplier = 39.37;
 
 }  // namespace
 
@@ -94,6 +102,12 @@ ImageCaptureManager::Create(Config* config) {
         capture_source ? capture_source->value() : std::string();
     auto capture_id = base::ToInteger(capture->GetValue(kCaptureIdNode));
 
+    auto focus_length =
+        base::ToFloat(capture->GetValue(kCaptureFocusLengthNode));
+
+    auto dpm = base::ToInteger(capture->GetValue(kCaptureDpmNode));
+    auto dpi = base::ToInteger(capture->GetValue(kCaptureDpiNode));
+
     auto position_settings =
         base::ToDictionary(capture->GetValue(kCapturePositionSettingsNode));
 
@@ -106,17 +120,33 @@ ImageCaptureManager::Create(Config* config) {
           new ImageCaptureImpl(std::move(position_controller),
               capture_id->value()));
 
+    int dpm_value = kDefaultDpi * kDpiToDpmMultiplier;
+    if (!image_capture) {
+      if (dpm)
+        dpm_value = dpm->value();
+      else if (dpi)
+        dpm_value = dpi->value() * kDpiToDpmMultiplier;
+    }
+
     if (!image_capture && capture_type_string == kCaptureTypeVideo &&
-        !capture_source_string.empty())
+        !capture_source_string.empty()) {
       image_capture.reset(
           new ImageCaptureImpl(std::move(position_controller),
               ImageCapture::Type::VIDEO, capture_source_string));
+      image_capture->set_dpm(dpm_value);
+      image_capture->set_focus_length(focus_length ?
+          focus_length->value() : kDefaultFocusLength);
+    }
 
     if (!image_capture && capture_type_string == kCaptureTypeImage &&
-        !capture_source_string.empty())
+        !capture_source_string.empty()) {
       image_capture.reset(
           new ImageCaptureImpl(std::move(position_controller),
               ImageCapture::Type::IMAGE, capture_source_string));
+      image_capture->set_dpm(dpm_value);
+      image_capture->set_focus_length(focus_length ?
+          focus_length->value() : kDefaultFocusLength);
+    }
 
     if (!image_capture)
       continue;
@@ -157,6 +187,17 @@ ImageCaptureManagerImpl::GetNextFrameset() {
             capture->position_controller()->position());
       });
   return frameset;
+}
+
+const std::vector<ImageCapture*>
+ImageCaptureManagerImpl::GetCaptures() const {
+  std::vector<ImageCapture*> captures(captures_.size());
+  std::transform(captures_.begin(), captures_.end(), captures.begin(),
+      [] (const std::unique_ptr<ImageCapture>& capture)
+      -> ImageCapture* {
+        return capture.get();
+      });
+  return captures;
 }
 
 }  // namespace core

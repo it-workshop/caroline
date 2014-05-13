@@ -32,10 +32,21 @@ class ImageCaptureImpl : public ImageCapture {
   virtual cv::Mat GetNextImage() override;
   virtual bool GrabNextImage() override;
 
+  virtual double GetFocusLength() const override;
+  virtual int GetDpm() const override;
+
   cv::VideoCapture* capture() const { return capture_.get(); }
+  void set_focus_length(double focus_length) {
+    focus_length_ = focus_length;
+  }
+  void set_dpm(int dpm) {
+    dpm_ = dpm;
+  }
 
  private:
   std::unique_ptr<cv::VideoCapture> capture_;
+  double focus_length_;
+  int dpm_;
 };
 
 }  // namespace core

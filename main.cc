@@ -41,6 +41,12 @@ int main(int argc, const char* argv[]) {
   if (!image_capture_manager || image_capture_manager->GetCapturesCount() < 2)
     return -1;
 
+  // auto captures = image_capture_manager->GetCaptures();
+  // for (auto capture : captures)
+  //   double focus_length_in_px =
+  //       capture->GetFocusLength() * capture->GetDpm()
+  // TODO(VladimirGl): Add Cameras initialisation here.
+
   while (image_capture_manager->GetTimeController()->Grab()) {
     // auto frameset = image_capture_manager->GetNextFrameset();
     // TODO(VladimirGl): Use frameset here to build depth map.
