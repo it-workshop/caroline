@@ -66,6 +66,8 @@ add_module(base OBJECT
 add_module(core OBJECT
   core/config.cc
   core/config.h
+  core/cluster_saver.cc
+  core/cluster_saver.h
   core/depth_map.h
   core/depth_map.cc
   core/depth_mesh.h
