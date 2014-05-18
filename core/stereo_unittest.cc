@@ -13,7 +13,7 @@
 TEST(StereoTest, CreateAndSaveMesh) {
   core::StereoDepthMap stereo;
 
-  cv::Mat map = stereo.BuildMap("/home/rayman/Downloads/stereo_test/left_x05.png", "/home/rayman/Downloads/stereo_test/right_x05.png");
+  cv::Mat map = stereo.BuildMap("/home/rayman/Pictures/Webcam/left.jpg", "/home/rayman/Pictures/Webcam/right.jpg");
 
   cv::imshow( "Display window", map);
   cv::waitKey(0);
