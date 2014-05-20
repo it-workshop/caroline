@@ -6,14 +6,16 @@
 #include "base/command_line.h"
 #include "base/logging.h"
 #include "core/config.h"
+#include "core/image_capture_manager.h"
 #include "core/switches.h"
+#include "core/time_controller.h"
 
 int main(int argc, const char* argv[]) {
   auto command_line(base::CommandLine::GetForCurrentProcess());
   base::CommandLine::ParseArgs(argv, command_line.get());
 
+  auto config = core::Config::GetInstance();
   if (command_line->HasSwitch(core::switches::kConfigSwitch)) {
-    auto config = core::Config::GetInstance();
     config->LoadFromFile(
         command_line->GetSwitchData(core::switches::kConfigSwitch));
   }
@@ -33,6 +35,21 @@ int main(int argc, const char* argv[]) {
     std::string file =
         command_line->GetSwitchData(core::switches::kLogFile);
     base::Logger::GetInstance()->Init(file, minimal_level);
+  }
+
+  auto image_capture_manager(core::ImageCaptureManager::Create(config.get()));
+  if (!image_capture_manager || image_capture_manager->GetCapturesCount() < 2)
+    return -1;
+
+  // auto captures = image_capture_manager->GetCaptures();
+  // for (auto capture : captures)
+  //   double focus_length_in_px =
+  //       capture->GetFocusLength() * capture->GetDpm()
+  // TODO(VladimirGl): Add Cameras initialisation here.
+
+  while (image_capture_manager->GetTimeController()->Grab()) {
+    // auto frameset = image_capture_manager->GetNextFrameset();
+    // TODO(VladimirGl): Use frameset here to build depth map.
   }
 
   return 0;
