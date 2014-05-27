@@ -195,7 +195,15 @@ inline IntegerValue* ToInteger(Value* value) {
   return value ? value->AsInteger() : nullptr;
 }
 
+inline const IntegerValue* ToInteger(const Value* value) {
+  return value ? value->AsInteger() : nullptr;
+}
+
 inline BooleanValue* ToBoolean(Value* value) {
+  return value ? value->AsBoolean() : nullptr;
+}
+
+inline const BooleanValue* ToBoolean(const Value* value) {
   return value ? value->AsBoolean() : nullptr;
 }
 
@@ -203,7 +211,15 @@ inline StringValue* ToString(Value* value) {
   return value ? value->AsString() : nullptr;
 }
 
+inline const StringValue* ToString(const Value* value) {
+  return value ? value->AsString() : nullptr;
+}
+
 inline FloatValue* ToFloat(Value* value) {
+  return value ? value->AsFloat() : nullptr;
+}
+
+inline const FloatValue* ToFloat(const Value* value) {
   return value ? value->AsFloat() : nullptr;
 }
 
@@ -211,7 +227,15 @@ inline DictionaryValue* ToDictionary(Value* value) {
   return value ? value->AsDictionary() : nullptr;
 }
 
+inline const DictionaryValue* ToDictionary(const Value* value) {
+  return value ? value->AsDictionary() : nullptr;
+}
+
 inline ListValue* ToList(Value* value) {
+  return value ? value->AsList() : nullptr;
+}
+
+inline const ListValue* ToList(const Value* value) {
   return value ? value->AsList() : nullptr;
 }
 
