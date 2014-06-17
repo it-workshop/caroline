@@ -65,8 +65,6 @@ add_module(base OBJECT
   )
 
 add_module(core OBJECT
-  core/quaternion.h
-  core/quaternion.cc
   core/cameras.cc
   core/cameras.h
   core/config.cc
