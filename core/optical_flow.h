@@ -23,6 +23,8 @@ class OpticalFlow {
 
   int Size() const;
 
+  ~OpticalFlow() {}
+
  private:
   std::vector<std::pair<cv::Point2d, cv::Point2d>> optical_flow_;
 };

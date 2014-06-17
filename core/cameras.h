@@ -10,9 +10,15 @@
 
 namespace core {
 
+class Quaternion;
+
 class Cameras {
  public:
   Cameras();
+
+  static cv::Matx33d CameraMatrix(int dpm, double focus_length, int w, int h);
+  static cv::Matx34d ProjectiveMatrix(const Quaternion& quat,
+                                      const cv::Point3d& pos);
 
   void set_K1(const cv::Matx33d& K1) { K1_ = K1; }
   void set_K2(const cv::Matx33d& K2) { K2_ = K2; }
@@ -23,6 +29,8 @@ class Cameras {
   cv::Matx33d K2() const { return K2_; }
   cv::Matx34d P1() const { return P1_; }
   cv::Matx34d P2() const { return P2_; }
+
+  virtual ~Cameras() {}
 
  private:
   // camera one matrix

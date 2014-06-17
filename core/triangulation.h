@@ -26,6 +26,8 @@ class Triangulation {
   cv::Point3d Triangulate(const cv::Point2d &x1, const cv::Point2d& x2) const;
   double TriangulateDepth(const cv::Point2d &x1, const cv::Point2d &x2) const;
 
+  ~Triangulation() {}
+
  protected:
   cv::Mat_<double> LinearTriangulation(const cv::Point3d &x1,
                                        const cv::Point3d x2) const;
