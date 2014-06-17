@@ -64,6 +64,8 @@ add_module(base OBJECT
   )
 
 add_module(core OBJECT
+  core/quaternion.h
+  core/quaternion.cc
   core/cameras.cc
   core/cameras.h
   core/config.cc
@@ -113,6 +115,7 @@ add_application(unit_tests
   base/command_line_unittest.cc
   base/json_unittest.cc
   base/values_unittest.cc
+  core/cameras_unittest.cc
   core/opencv_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
