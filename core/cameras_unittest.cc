@@ -12,7 +12,6 @@
 
 #include "iostream"
 
-// This file is needed to make sure that opencv is linked correctly.
 TEST(CamerasPropertiesTest, InitTest) {
   core::Cameras cams;
 

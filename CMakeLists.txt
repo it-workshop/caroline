@@ -3,7 +3,7 @@
 # LICENSE file.
 # Author: Aleksandr Derbenev <13alexac@gmail.com>
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 2.8)
 project (Caroline CXX)
 
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
@@ -44,6 +44,7 @@ else ()
       "${CMAKE_SOURCE_DIR}/third_party/opencv/include")
   set (OpenCV_LIBS
     opencv_core
+    opencv_highgui
     )
 endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
@@ -78,6 +79,14 @@ add_module(core OBJECT
   core/depth_mesh.cc
   core/image_capture.cc
   core/image_capture.h
+  core/image_capture_impl.cc
+  core/image_capture_impl.h
+  core/image_capture_manager.cc
+  core/image_capture_manager.h
+  core/image_capture_manager_impl.cc
+  core/image_capture_manager_impl.h
+  core/image_time_controller.cc
+  core/image_time_controller.h
   core/mesh.h
   core/mesh.cc
   core/optical_flow.h
@@ -88,6 +97,12 @@ add_module(core OBJECT
   core/point3d.cc
   core/point_cloud.h
   core/point_cloud.cc
+  core/position_controller.cc
+  core/position_controller.h
+  core/position.cc
+  core/position.h
+  core/predefined_position_controller.cc
+  core/predefined_position_controller.h
   core/scene3d.h
   core/scene3d.cc
   core/scene_element.h
@@ -98,6 +113,14 @@ add_module(core OBJECT
   core/switches.h
   core/triangulation.cc
   core/triangulation.h
+  core/time_controller.cc
+  core/time_controller.h
+  core/quaternion.cc
+  core/quaternion.h
+  core/undefined_position_controller.cc
+  core/undefined_position_controller.h
+  core/video_time_controller.cc
+  core/video_time_controller.h
   )
 
 add_application(caroline
@@ -126,3 +149,4 @@ target_link_libraries(unit_tests
   ${OpenCV_LIBS}
   )
 add_test(unit_tests unit_tests)
+

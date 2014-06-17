@@ -191,6 +191,30 @@ class DictionaryValue : public Value {
   DictionaryValue& operator=(const DictionaryValue&);
 };
 
+inline IntegerValue* ToInteger(Value* value) {
+  return value ? value->AsInteger() : nullptr;
+}
+
+inline BooleanValue* ToBoolean(Value* value) {
+  return value ? value->AsBoolean() : nullptr;
+}
+
+inline StringValue* ToString(Value* value) {
+  return value ? value->AsString() : nullptr;
+}
+
+inline FloatValue* ToFloat(Value* value) {
+  return value ? value->AsFloat() : nullptr;
+}
+
+inline DictionaryValue* ToDictionary(Value* value) {
+  return value ? value->AsDictionary() : nullptr;
+}
+
+inline ListValue* ToList(Value* value) {
+  return value ? value->AsList() : nullptr;
+}
+
 }  // namespace base
 
 #endif  // BASE_VALUES_H_
