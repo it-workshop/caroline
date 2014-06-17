@@ -10,8 +10,6 @@
 #include "core/cameras.h"
 #include "core/quaternion.h"
 
-#include "iostream"
-
 TEST(CamerasPropertiesTest, InitTest) {
   core::Cameras cams;
 

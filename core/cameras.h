@@ -16,6 +16,8 @@ class Cameras {
  public:
   Cameras();
 
+  virtual ~Cameras() {}
+
   static cv::Matx33d CameraMatrix(int dpm, double focus_length, int w, int h);
   static cv::Matx34d ProjectiveMatrix(const Quaternion& quat,
                                       const cv::Point3d& pos);
@@ -29,8 +31,6 @@ class Cameras {
   cv::Matx33d K2() const { return K2_; }
   cv::Matx34d P1() const { return P1_; }
   cv::Matx34d P2() const { return P2_; }
-
-  virtual ~Cameras() {}
 
  private:
   // camera one matrix

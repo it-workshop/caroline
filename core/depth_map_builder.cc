@@ -3,7 +3,7 @@
 // LICENSE file.
 // Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#include <math.h>
+#include <cmath>
 
 #include "core/depth_map_builder.h"
 #include "core/triangulation.h"

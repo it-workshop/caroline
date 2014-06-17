@@ -18,6 +18,8 @@ class Triangulation {
  public:
   Triangulation(int iterations = 10, double epsilon = 0.05);
 
+  ~Triangulation() {}
+
   void SetCameraMatrices(const cv::Matx33d& K1, const cv::Matx33d& K2,
                          const cv::Matx34d& P1, const cv::Matx34d& P2);
 
@@ -25,8 +27,6 @@ class Triangulation {
 
   cv::Point3d Triangulate(const cv::Point2d &x1, const cv::Point2d& x2) const;
   double TriangulateDepth(const cv::Point2d &x1, const cv::Point2d &x2) const;
-
-  ~Triangulation() {}
 
  protected:
   cv::Mat_<double> LinearTriangulation(const cv::Point3d &x1,
