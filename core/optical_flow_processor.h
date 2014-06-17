@@ -7,6 +7,8 @@
 #define CORE_OPTICAL_FLOW_PROCESSOR_H_
 
 #include <memory>
+#include <utility>
+#include <vector>
 
 #include "opencv2/core/types.hpp"
 
