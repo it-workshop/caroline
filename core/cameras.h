@@ -10,8 +10,7 @@
 
 namespace core {
 
-class Cameras
-{
+class Cameras {
  public:
   Cameras();
 
@@ -38,4 +37,4 @@ class Cameras
 
 }  // namespace core
 
-#endif // CORE_CAMERAS_H_
+#endif  // CORE_CAMERAS_H_

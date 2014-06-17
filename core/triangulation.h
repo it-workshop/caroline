@@ -13,7 +13,7 @@
 namespace core {
 
 // For more information about the algorithm, see
-// www.morethantechnical.com/2012/01/04/simple-triangulation-with-opencv-from-harley-zisserman-w-code/
+// www.morethantechnical.com/2012/01/04/simple-triangulation-with-opencv-from-harley-zisserman-w-code  /NOLINT
 class Triangulation {
  public:
   Triangulation(int iterations = 10, double epsilon = 0.05);
@@ -27,8 +27,10 @@ class Triangulation {
   double TriangulateDepth(const cv::Point2d &x1, const cv::Point2d &x2) const;
 
  protected:
-  cv::Mat_<double> LinearTriangulation(const cv::Point3d &x1, cv::Point3d x2) const;
-  cv::Mat_<double> IterativeTriangulation(const cv::Point3d& x1, const cv::Point3d& x2) const;
+  cv::Mat_<double> LinearTriangulation(const cv::Point3d &x1,
+                                       const cv::Point3d x2) const;
+  cv::Mat_<double> IterativeTriangulation(const cv::Point3d& x1,
+                                          const cv::Point3d& x2) const;
 
  private:
   int iterations_;
@@ -45,4 +47,4 @@ class Triangulation {
 
 }  // namespace core
 
-#endif // CORE_TRIANGULATION_H_
+#endif  // CORE_TRIANGULATION_H_

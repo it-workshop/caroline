@@ -14,9 +14,11 @@ namespace core {
 
 class DepthMapBuilder {
  public:
-  static DepthMap *BuildMap(const OpticalFlow& flow, const Cameras& cam, int w, int h);
+  static DepthMap *BuildMap(const OpticalFlow& flow,
+                            const Cameras& cam,
+                            int w, int h);
 };
 
 }  // namespace core
 
-#endif // CORE_DEPTH_MAP_BUILDER_H_
+#endif  // CORE_DEPTH_MAP_BUILDER_H_

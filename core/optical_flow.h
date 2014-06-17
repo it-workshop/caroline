@@ -6,14 +6,14 @@
 #ifndef CORE_OPTICAL_FLOW_H_
 #define CORE_OPTICAL_FLOW_H_
 
+#include <utility>
 #include <vector>
 
 #include "opencv2/opencv.hpp"
 
 namespace core {
 
-class OpticalFlow
-{
+class OpticalFlow {
  public:
   OpticalFlow();
 
@@ -24,10 +24,9 @@ class OpticalFlow
   int Size() const;
 
  private:
-  std::vector<cv::Point2d> image_one_;
-  std::vector<cv::Point2d> image_two_;
+  std::vector<std::pair<cv::Point2d, cv::Point2d>> optical_flow_;
 };
 
 }  // namespace core
 
-#endif // CORE_OPTICAL_FLOW_H_
+#endif  // CORE_OPTICAL_FLOW_H_

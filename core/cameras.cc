@@ -7,8 +7,7 @@
 
 namespace core {
 
-Cameras::Cameras()
-{
+Cameras::Cameras() {
 }
 
 }  // namespace core

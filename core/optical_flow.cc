@@ -3,17 +3,17 @@
 // LICENSE file.
 // Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
+#include <utility>
+
 #include "core/optical_flow.h"
 
 namespace core {
 
-OpticalFlow::OpticalFlow()
-{
+OpticalFlow::OpticalFlow() {
 }
 
 void OpticalFlow::AddPoint(const cv::Point2d &x1, const cv::Point2d &x2) {
-  image_one_.push_back(x1);
-  image_two_.push_back(x2);
+  optical_flow_.push_back(std::pair<cv::Point2d, cv::Point2d>(x1, x2));
 }
 
 cv::Point2d OpticalFlow::ImageOnePoint(int num) const {
@@ -21,7 +21,7 @@ cv::Point2d OpticalFlow::ImageOnePoint(int num) const {
     return cv::Point2d(0, 0);
   }
 
-  return image_one_.at(num);
+  return optical_flow_.at(num).first;
 }
 
 cv::Point2d OpticalFlow::ImageTwoPoint(int num) const {
@@ -29,11 +29,11 @@ cv::Point2d OpticalFlow::ImageTwoPoint(int num) const {
     return cv::Point2d(0, 0);
   }
 
-  return image_two_.at(num);
+  return optical_flow_.at(num).second;
 }
 
 int OpticalFlow::Size() const {
-  return image_one_.size();
+  return optical_flow_.size();
 }
 
 }  // namespace core

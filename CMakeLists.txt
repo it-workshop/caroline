@@ -114,7 +114,6 @@ add_application(unit_tests
   base/json_unittest.cc
   base/values_unittest.cc
   core/opencv_unittest.cc
-  core/triangulation_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
   $<TARGET_OBJECTS:core>

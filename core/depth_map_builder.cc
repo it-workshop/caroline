@@ -10,7 +10,9 @@
 
 namespace core {
 
-DepthMap *DepthMapBuilder::BuildMap(const OpticalFlow &flow, const Cameras &cam, int w, int h) {
+DepthMap *DepthMapBuilder::BuildMap(const OpticalFlow &flow,
+                                    const Cameras &cam,
+                                    int w, int h) {
   int size = flow.Size();
 
   if ((w * h) != size) {
@@ -24,7 +26,8 @@ DepthMap *DepthMapBuilder::BuildMap(const OpticalFlow &flow, const Cameras &cam,
   for (int i = 0; i < size; i++) {
     cv::Point2d p = flow.ImageOnePoint(i);
 
-    map->SetDepth(p.x, p.y, triangulator.TriangulateDepth(p, flow.ImageTwoPoint(i)));
+    map->SetDepth(p.x, p.y,
+                  triangulator.TriangulateDepth(p, flow.ImageTwoPoint(i)));
   }
 
   return map;
