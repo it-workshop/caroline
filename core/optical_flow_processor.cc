@@ -9,6 +9,7 @@
 
 #include "base/values.h"
 #include "core/config.h"
+#include "core/lucas_kanade_optical_flow_processor.h"
 
 namespace core {
 
@@ -41,7 +42,7 @@ OpticalFlowProcessor::Create(const Config* config) {
     std::string algorithm_name = algorithm_node->value();
 
     if (kLucasKanadeAlgorithmName == algorithm_name) {
-      // return LucasKanadeOpticalFrowProcessor::Create(settings);
+      return LucasKanadeOpticalFlowProcessor::Create(settings);
     }
 
     if (kFarnebackAlgorithmName == algorithm_name) {

@@ -45,6 +45,8 @@ else ()
   set (OpenCV_LIBS
     opencv_core
     opencv_highgui
+    opencv_imgproc
+    opencv_video
     )
 endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
@@ -83,6 +85,8 @@ add_module(core OBJECT
   core/image_capture_manager_impl.h
   core/image_time_controller.cc
   core/image_time_controller.h
+  core/lucas_kanade_optical_flow_processor.cc
+  core/lucas_kanade_optical_flow_processor.h
   core/mesh.h
   core/mesh.cc
   core/optical_flow_processor.cc
