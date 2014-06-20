@@ -72,8 +72,6 @@ add_module(core OBJECT
   core/config.h
   core/depth_map.h
   core/depth_map.cc
-  core/depth_map_builder.cc
-  core/depth_map_builder.h
   core/depth_mesh.h
   core/depth_mesh.cc
   core/image_capture.cc

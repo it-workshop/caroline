@@ -10,17 +10,26 @@
 
 namespace core {
 
+class OpticalFlow;
+class Cameras;
+
 class DepthMap {
  public:
   static const int kBadDepth = -1;
 
   DepthMap(int height, int width);
 
+  ~DepthMap() {}
+
   int height() const { return height_; }
   int width() const { return width_; }
 
   void SetDepth(int x, int y, double depth);
   double Depth(int x, int y) const;
+
+  static DepthMap *BuildMap(const OpticalFlow& flow,
+                            const Cameras& cam,
+                            int w, int h);
 
  private:
   int height_;
