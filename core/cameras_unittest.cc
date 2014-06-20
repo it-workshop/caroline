@@ -20,9 +20,9 @@ TEST(CamerasPropertiesTest, InitTest) {
                           0, 1, 0,
                           0, 0, 1));
 
-  ASSERT_TRUE(cams.K1()(0, 0) == 1);
-  ASSERT_TRUE(cams.K1()(1, 2) == 0);
-  ASSERT_TRUE(cams.K1()(2, 2) == 1);
+  ASSERT_EQ(cams.K1()(0, 0), 1);
+  ASSERT_EQ(cams.K1()(1, 2), 0);
+  ASSERT_EQ(cams.K1()(2, 2), 1);
 }
 
 TEST(CamerasPropertiesTest, CameraMatrixCompute) {
@@ -34,12 +34,12 @@ TEST(CamerasPropertiesTest, CameraMatrixCompute) {
 
   cv::Matx33d K = core::Cameras::CameraMatrix(dpm, focus_length, w, h);
 
-  ASSERT_TRUE(K(0, 0) == 50);
-  ASSERT_TRUE(K(1, 1) == 50);
-  ASSERT_TRUE(K(2, 2) == 1);
-  ASSERT_TRUE(K(0, 1) == 0);
-  ASSERT_TRUE(K(0, 2) = 256);
-  ASSERT_TRUE(K(1, 2) = 128);
+  ASSERT_EQ(K(0, 0), 50);
+  ASSERT_EQ(K(1, 1), 50);
+  ASSERT_EQ(K(2, 2), 1);
+  ASSERT_EQ(K(0, 1), 0);
+  ASSERT_EQ(K(0, 2), 256);
+  ASSERT_EQ(K(1, 2), 128);
 }
 
 TEST(CamerasPropertiesTest, ProjectiveMatrixCompute) {
@@ -57,6 +57,6 @@ TEST(CamerasPropertiesTest, ProjectiveMatrixCompute) {
   ASSERT_TRUE(fabs(P(0, 0) - 1) < epsilon);
   ASSERT_TRUE(fabs(P(1, 1) - (-1)) < epsilon);
   ASSERT_TRUE(fabs(P(2, 2) - (-1)) < epsilon);
-  ASSERT_TRUE(P(0, 3) == 10);
+  ASSERT_EQ(P(0, 3), 10);
   ASSERT_TRUE(P(1, 0) < epsilon);
 }
