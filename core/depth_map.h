@@ -7,6 +7,7 @@
 #define CORE_DEPTH_MAP_H_
 
 #include <vector>
+#include <memory>
 
 namespace core {
 
@@ -27,9 +28,10 @@ class DepthMap {
   void SetDepth(int x, int y, double depth);
   double Depth(int x, int y) const;
 
-  static DepthMap *BuildMap(const OpticalFlow& flow,
-                            const Cameras& cam,
-                            int w, int h);
+  static std::unique_ptr<DepthMap> BuildMap(
+      const OpticalFlow& flow,
+      const Cameras& cam,
+      int w, int h);
 
  private:
   int height_;

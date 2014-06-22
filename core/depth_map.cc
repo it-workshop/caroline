@@ -48,18 +48,20 @@ double DepthMap::Depth(int x, int y) const {
   return depth_map_[width_ * y + x];
 }
 
-DepthMap *DepthMap::BuildMap(const OpticalFlow &flow,
-                             const Cameras &cam,
-                             int w, int h) {
+std::unique_ptr<DepthMap> DepthMap::BuildMap(
+    const OpticalFlow &flow,
+    const Cameras &cam,
+    int w, int h) {
   int size = flow.Size();
 
   if ((w * h) != size) {
     return nullptr;
   }
 
-  DepthMap *map = new DepthMap(h, w);
+  std::unique_ptr<DepthMap> map(new DepthMap(h, w));
   Triangulation triangulator;
   triangulator.SetCameraMatrices(cam);
+
 
   for (int i = 0; i < size; i++) {
     cv::Point2d p = flow.ImageOnePoint(i);
