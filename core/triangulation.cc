@@ -7,9 +7,12 @@
 
 namespace core {
 
-Triangulation::Triangulation(int iterations, double epsilon) {
-  iterations_ = iterations;
-  epsilon_ = epsilon;
+const int kIter = 10;
+const double kEps = 0.05;
+
+Triangulation::Triangulation() :
+  iterations_(kIter),
+  epsilon_(kEps) {
 }
 
 void Triangulation::SetCameraMatrices(const cv::Matx33d &K1,

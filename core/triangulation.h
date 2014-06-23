@@ -16,12 +16,19 @@ namespace core {
 // www.morethantechnical.com/2012/01/04/simple-triangulation-with-opencv-from-harley-zisserman-w-code  /NOLINT
 class Triangulation {
  public:
-  Triangulation(int iterations = 10, double epsilon = 0.05);
+  Triangulation();
 
   ~Triangulation() {}
 
   void SetCameraMatrices(const cv::Matx33d& K1, const cv::Matx33d& K2,
                          const cv::Matx34d& P1, const cv::Matx34d& P2);
+
+
+  void SetIterations(int iter) { iterations_ = iter; }
+  void SetEpsilon(double eps) { epsilon_ = eps; }
+
+  int Iterations() const { return iterations_; }
+  double Epsilon() const { return epsilon_; }
 
   void SetCameraMatrices(const Cameras& cameras);
 
