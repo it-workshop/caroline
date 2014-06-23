@@ -14,3 +14,11 @@ install_manifest.txt
 
 out
 
+# vim temporary files
+*~
+
+# Qt project
+caroline.config
+caroline.creator
+caroline.files
+caroline.includes
