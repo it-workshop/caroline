@@ -5,10 +5,11 @@
 
 #include "core/depth_map.h"
 
+#include <utility>
+
 #include "core/cameras.h"
 #include "core/triangulation.h"
 
-#include <utility>
 
 namespace core {
 
