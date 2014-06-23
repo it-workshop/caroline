@@ -5,9 +5,11 @@
 
 #include "core/depth_map.h"
 
+#include <utility>
+
 #include "core/cameras.h"
-#include "core/optical_flow.h"
 #include "core/triangulation.h"
+
 
 namespace core {
 
@@ -52,9 +54,8 @@ std::unique_ptr<DepthMap> DepthMap::BuildMap(
     const OpticalFlow &flow,
     const Cameras &cam,
     int w, int h) {
-  int size = flow.Size();
 
-  if ((w * h) != size) {
+  if ((w * h) != flow.size()) {
     return nullptr;
   }
 
@@ -63,11 +64,12 @@ std::unique_ptr<DepthMap> DepthMap::BuildMap(
   triangulator.SetCameraMatrices(cam);
 
 
-  for (int i = 0; i < size; i++) {
-    cv::Point2d p = flow.ImageOnePoint(i);
+  for (int i = 0; i < flow.size(); i++) {
+    cv::Point2d p = flow.at(i).first;
 
-    map->SetDepth(p.x, p.y,
-                  triangulator.TriangulateDepth(p, flow.ImageTwoPoint(i)));
+    double depth = triangulator.TriangulateDepth(p, flow.at(i).second);
+
+    map->SetDepth(p.x, p.y, depth);
   }
 
   return map;

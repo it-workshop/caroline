@@ -13,21 +13,7 @@
 
 namespace core {
 
-class OpticalFlow {
- public:
-  OpticalFlow();
-
-  void AddPoint(const cv::Point2d& x1, const cv::Point2d& x2);
-  cv::Point2d ImageOnePoint(int num) const;
-  cv::Point2d ImageTwoPoint(int num) const;
-
-  int Size() const;
-
-  ~OpticalFlow() {}
-
- private:
-  std::vector<std::pair<cv::Point2d, cv::Point2d>> optical_flow_;
-};
+typedef std::vector<std::pair<cv::Point2d, cv::Point2d>> OpticalFlow;
 
 }  // namespace core
 
