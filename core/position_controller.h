@@ -7,6 +7,7 @@
 #define CORE_POSITION_CONTROLLER_H_
 
 #include <cstdint>
+#include <memory>
 
 #include "core/position.h"
 

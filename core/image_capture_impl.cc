@@ -17,7 +17,7 @@ ImageCaptureImpl::ImageCaptureImpl(
     const std::string& source_name)
   : ImageCapture(std::move(position_controller), type),
     capture_(new cv::VideoCapture(source_name)) {
-  if (!capture_->isOpened())
+  if (!capture_->isOpened() || !capture_->set(cv::CAP_PROP_FORMAT, CV_8U))
     capture_.reset();
 }
 
@@ -26,7 +26,7 @@ ImageCaptureImpl::ImageCaptureImpl(
     int camera_id)
   : ImageCapture(std::move(position_controller), Type::CAPTURE),
     capture_(new cv::VideoCapture(camera_id)) {
-  if (!capture_->isOpened())
+  if (!capture_->isOpened() || !capture_->set(cv::CAP_PROP_FORMAT, CV_8U))
     capture_.reset();
 }
 
