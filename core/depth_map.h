@@ -9,9 +9,10 @@
 #include <vector>
 #include <memory>
 
+#include "core/optical_flow.h"
+
 namespace core {
 
-class OpticalFlow;
 class Cameras;
 
 class DepthMap {
