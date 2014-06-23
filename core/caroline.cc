@@ -8,6 +8,7 @@
 #include "core/image_capture_manager.h"
 #include "core/optical_flow_processor.h"
 #include "core/position.h"
+#include "core/return_codes.h"
 #include "core/time_controller.h"
 #include "opencv2/core/mat.hpp"
 
@@ -33,13 +34,13 @@ int Caroline::Run() {
   while (image_capture_manager_->GetTimeController()->Grab()) {
     auto frameset = image_capture_manager_->GetNextFrameset();
     if (frameset.size() < 2)
-      return -2;
+      return RETURN_WRONG_FRAMES_COUNT;
 
     auto optical_flow = optical_frow_processor_->Process(
         frameset.at(0).first, frameset.at(1).first);
   }
 
-  return 0;
+  return RETURN_OK;
 }
 
 }  // namespace core

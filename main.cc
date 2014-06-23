@@ -8,6 +8,7 @@
 #include "core/caroline.h"
 #include "core/config.h"
 #include "core/switches.h"
+#include "core/return_codes.h"
 
 int main(int argc, const char* argv[]) {
   auto command_line(base::CommandLine::GetForCurrentProcess());
@@ -38,9 +39,8 @@ int main(int argc, const char* argv[]) {
 
   core::Caroline application(command_line.get(), config.get());
 
-  if (!application.Init()) {
-    return -1;
-  }
+  if (!application.Init())
+    return core::RETURN_APPLICATION_INIT_FAIL;
 
   return application.Run();
 }

@@ -99,6 +99,7 @@ add_module(core OBJECT
   core/position.h
   core/predefined_position_controller.cc
   core/predefined_position_controller.h
+  core/return_codes.h
   core/scene3d.h
   core/scene3d.cc
   core/scene_element.h
