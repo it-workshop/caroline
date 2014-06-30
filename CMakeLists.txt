@@ -131,6 +131,18 @@ target_link_libraries(caroline
   ${OpenCV_LIBS}
   )
 
+add_application(demo_flowdemo
+  demo/flowdemo/main.cc
+  demo/flowdemo/flowdemo.cc
+  demo/flowdemo/flowdemo.h
+  $<TARGET_OBJECTS:base>
+  $<TARGET_OBJECTS:core>
+  )
+
+target_link_libraries(demo_flowdemo
+  ${OpenCV_LIBS}
+  )
+
 enable_testing()
 include_directories(third_party/gtest/include)
 add_application(unit_tests
