@@ -95,9 +95,12 @@ FarnebackOpticalFlowProcessor::Process(
 
       cv::Point2d p1 = cv::Point2d(x, y);
       cv::Point2d p2 = cv::Point2d(cvRound(x + f.x), cvRound(y + f.y));
-      if (p2.y >= 0 && p2.y < second_gray.rows &&
-          p2.x >= 0 && p2.x < second_gray.cols)
-        v.push_back(std::make_pair(p1, p2));
+
+      /* if (!(p2.y >= 0 && p2.y < second_gray.rows &&
+          p2.x >= 0 && p2.x < second_gray.cols))
+        std::cerr << "overflow" << std::endl; */
+
+      v.push_back(std::make_pair(p1, p2));
     }
 
   return(v);
