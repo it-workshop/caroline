@@ -7,6 +7,8 @@
 
 #include <string>
 
+#include "core/farneback_optical_flow_processor.h"
+
 #include "base/values.h"
 #include "core/config.h"
 
@@ -45,7 +47,7 @@ OpticalFlowProcessor::Create(const Config* config) {
     }
 
     if (kFarnebackAlgorithmName == algorithm_name) {
-      // return FarnebackOpticalFlowProcessor::Create(settings);
+      return FarnebackOpticalFlowProcessor::Create(settings);
     }
   }
 
