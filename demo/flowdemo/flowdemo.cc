@@ -2,7 +2,7 @@
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
-// Author: Sergey Volodin <13alexac@gmail.com>
+// Author: Sergey Volodin <etoestja@yandex.ru>
 
 #include "demo/flowdemo/flowdemo.h"
 
@@ -10,22 +10,24 @@
 #include <algorithm>
 
 #include "base/values.h"
-
 #include "core/config.h"
 #include "core/image_capture_manager.h"
 #include "core/optical_flow_processor.h"
 #include "core/position.h"
 #include "core/time_controller.h"
-
 #include "opencv2/core/mat.hpp"
 
 namespace demo {
+
+namespace {
 
 const char kFlowDemoNode[] = "demo_flowdemo";
 const char kResizeFactorXNode[] = "resize_factor_x";
 const char kResizeFactorYNode[] = "resize_factor_x";
 const char kStepNode[] = "step";
 const char kCapNumberNode[] = "cap_number";
+
+}  // namespace
 
 void FlowDemo::DrawOptFlowMap() {
   std::pair<cv::Point2d, cv::Point2d> p;

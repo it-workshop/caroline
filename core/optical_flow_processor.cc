@@ -8,7 +8,6 @@
 #include <string>
 
 #include "core/farneback_optical_flow_processor.h"
-
 #include "base/values.h"
 #include "core/config.h"
 

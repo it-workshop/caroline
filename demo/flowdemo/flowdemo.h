@@ -2,6 +2,7 @@
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
+// Author: Sergey Volodin <etoestja@yandex.ru>
 
 #ifndef DEMO_FLOWDEMO_FLOWDEMO_H_
 #define DEMO_FLOWDEMO_FLOWDEMO_H_

@@ -6,8 +6,6 @@
 #ifndef CORE_POSITION_CONTROLLER_H_
 #define CORE_POSITION_CONTROLLER_H_
 
-#include <memory>
-
 #include <cstdint>
 #include <memory>
 

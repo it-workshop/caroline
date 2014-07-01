@@ -8,10 +8,8 @@
 #include <utility>
 #include <vector>
 
-#include "core/config.h"
-
 #include "base/values.h"
-
+#include "core/config.h"
 #include "opencv2/core/mat.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/video/video.hpp"
@@ -19,6 +17,7 @@
 namespace core {
 
 namespace {
+
 const char kPyrScaleNode[] = "pyr_scale";
 const char kLevelsNode[] = "levels";
 const char kWinsizeNode[] = "winsize";
@@ -26,7 +25,8 @@ const char kIterationsNode[] = "iterations";
 const char kPolyNNode[] = "poly_n";
 const char kPolySigmaNode[] = "poly_sigma";
 const char kFlagsNode[] = "flags";
-}
+
+}  // namespace
 
 // static
 std::unique_ptr<OpticalFlowProcessor>
@@ -80,9 +80,6 @@ FarnebackOpticalFlowProcessor::Process(
     const cv::Mat& first, const cv::Mat& second) const {
   cv::Mat first_gray = first, second_gray = second, flow;
 
-  // cv::cvtColor(first, first_gray, COLOR_BGR2GRAY);
-  // cv::cvtColor(second, second_gray, COLOR_BGR2GRAY);
-
   cv::calcOpticalFlowFarneback(first_gray, second_gray, flow,
                                pyr_scale_, levels_, winsize_, iterations_,
                                poly_n_, poly_sigma_, flags_);
@@ -95,10 +92,6 @@ FarnebackOpticalFlowProcessor::Process(
 
       cv::Point2d p1 = cv::Point2d(x, y);
       cv::Point2d p2 = cv::Point2d(cvRound(x + f.x), cvRound(y + f.y));
-
-      /* if (!(p2.y >= 0 && p2.y < second_gray.rows &&
-          p2.x >= 0 && p2.x < second_gray.cols))
-        std::cerr << "overflow" << std::endl; */
 
       v.push_back(std::make_pair(p1, p2));
     }
