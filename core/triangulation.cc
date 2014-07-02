@@ -58,8 +58,9 @@ double Triangulation::TriangulateDepth(const cv::Point2d &x1,
 
 // From "Triangulation", Hartley, R.I. and Sturm, P.
 // Computer vision and image understanding, 1997
-cv::Mat_<double> Triangulation::LinearTriangulation(const cv::Point3d& x1,
-                                                    const cv::Point3d x2) const {
+cv::Mat_<double> Triangulation::LinearTriangulation(
+    const cv::Point3d& x1,
+    const cv::Point3d x2) const {
   cv::Matx43d A(x1.x * p_1_(2, 0) - p_1_(0, 0),
                 x1.x * p_1_(2, 1) - p_1_(0, 1),
                 x1.x * p_1_(2, 2) - p_1_(0, 2),
