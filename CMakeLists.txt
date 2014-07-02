@@ -67,6 +67,8 @@ add_module(base OBJECT
 add_module(core OBJECT
   core/cameras.cc
   core/cameras.h
+  core/caroline.cc
+  core/caroline.h
   core/config.cc
   core/config.h
   core/depth_map.h
@@ -87,6 +89,8 @@ add_module(core OBJECT
   core/mesh.cc
   core/optical_flow.h
   core/optical_flow.cc
+  core/optical_flow_processor.cc
+  core/optical_flow_processor.h
   core/ply_saver.h
   core/ply_saver.cc
   core/point3d.h
@@ -99,6 +103,7 @@ add_module(core OBJECT
   core/position.h
   core/predefined_position_controller.cc
   core/predefined_position_controller.h
+  core/return_codes.h
   core/scene3d.h
   core/scene3d.cc
   core/scene_element.h

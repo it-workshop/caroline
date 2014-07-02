@@ -5,10 +5,10 @@
 
 #include "base/command_line.h"
 #include "base/logging.h"
+#include "core/caroline.h"
 #include "core/config.h"
-#include "core/image_capture_manager.h"
 #include "core/switches.h"
-#include "core/time_controller.h"
+#include "core/return_codes.h"
 
 int main(int argc, const char* argv[]) {
   auto command_line(base::CommandLine::GetForCurrentProcess());
@@ -37,20 +37,10 @@ int main(int argc, const char* argv[]) {
     base::Logger::GetInstance()->Init(file, minimal_level);
   }
 
-  auto image_capture_manager(core::ImageCaptureManager::Create(config.get()));
-  if (!image_capture_manager || image_capture_manager->GetCapturesCount() < 2)
-    return -1;
+  core::Caroline application(command_line.get(), config.get());
 
-  // auto captures = image_capture_manager->GetCaptures();
-  // for (auto capture : captures)
-  //   double focus_length_in_px =
-  //       capture->GetFocusLength() * capture->GetDpm()
-  // TODO(VladimirGl): Add Cameras initialisation here.
+  if (!application.Init())
+    return core::RETURN_APPLICATION_INIT_FAIL;
 
-  while (image_capture_manager->GetTimeController()->Grab()) {
-    // auto frameset = image_capture_manager->GetNextFrameset();
-    // TODO(VladimirGl): Use frameset here to build depth map.
-  }
-
-  return 0;
+  return application.Run();
 }
