@@ -59,19 +59,19 @@ double Triangulation::TriangulateDepth(const cv::Point2d &x1,
 // From "Triangulation", Hartley, R.I. and Sturm, P.
 // Computer vision and image understanding, 1997
 cv::Mat_<double> Triangulation::LinearTriangulation(const cv::Point3d& x1,
-                                                  const cv::Point3d x2) const {
+                                                    const cv::Point3d x2) const {
   cv::Matx43d A(x1.x * p_1_(2, 0) - p_1_(0, 0),
-                  x1.x * p_1_(2, 1) - p_1_(0, 1),
-                  x1.x * p_1_(2, 2) - p_1_(0, 2),
+                x1.x * p_1_(2, 1) - p_1_(0, 1),
+                x1.x * p_1_(2, 2) - p_1_(0, 2),
                 x1.y * p_1_(2, 0) - p_1_(1, 0),
-                  x1.y * p_1_(2, 1) - p_1_(1, 1),
-                  x1.y * p_1_(2, 2) - p_1_(1, 2),
+                x1.y * p_1_(2, 1) - p_1_(1, 1),
+                x1.y * p_1_(2, 2) - p_1_(1, 2),
                 x2.x * p_2_(2, 0) - p_2_(0, 0),
-                  x2.x * p_2_(2, 1) - p_2_(0, 1),
-                  x2.x * p_2_(2, 2) - p_2_(0, 2),
+                x2.x * p_2_(2, 1) - p_2_(0, 1),
+                x2.x * p_2_(2, 2) - p_2_(0, 2),
                 x2.y * p_2_(2, 0) - p_2_(1, 0),
-                  x2.y * p_2_(2, 1) - p_2_(1, 1),
-                  x2.y * p_2_(2, 2) - p_2_(1, 2));
+                x2.y * p_2_(2, 1) - p_2_(1, 1),
+                x2.y * p_2_(2, 2) - p_2_(1, 2));
 
   cv::Mat_<double> B = (cv::Mat_<double>(4, 1) <<
                           -(x1.x * p_1_(2, 3) - p_1_(0, 3)),
@@ -112,23 +112,24 @@ cv::Mat_<double> Triangulation::IterativeTriangulation(
     // reweight equations
     cv::Matx43d A(
           (x1.x * p_1_(2, 0) - p_1_(0, 0)) / wi1,
-            (x1.x * p_1_(2, 1) - p_1_(0, 1)) / wi1,
-            (x1.x * p_1_(2, 2) - p_1_(0, 2)) / wi1,
+          (x1.x * p_1_(2, 1) - p_1_(0, 1)) / wi1,
+          (x1.x * p_1_(2, 2) - p_1_(0, 2)) / wi1,
           (x1.y * p_1_(2, 0) - p_1_(1, 0)) / wi1,
-            (x1.y * p_1_(2, 1) - p_1_(1, 1)) / wi1,
-            (x1.y * p_1_(2, 2) - p_1_(1, 2)) / wi1,
+          (x1.y * p_1_(2, 1) - p_1_(1, 1)) / wi1,
+          (x1.y * p_1_(2, 2) - p_1_(1, 2)) / wi1,
           (x2.x * p_2_(2, 0) - p_2_(0, 0)) / wi2,
-            (x2.x * p_2_(2, 1) - p_2_(0, 1)) / wi2,
-            (x2.x * p_2_(2, 2) - p_2_(0, 2)) / wi2,
+          (x2.x * p_2_(2, 1) - p_2_(0, 1)) / wi2,
+          (x2.x * p_2_(2, 2) - p_2_(0, 2)) / wi2,
           (x2.y * p_2_(2, 0) - p_2_(1, 0)) / wi2,
-            (x2.y * p_2_(2, 1) - p_2_(1, 1)) / wi2,
-            (x2.y * p_2_(2, 2) - p_2_(1, 2)) / wi2);
+          (x2.y * p_2_(2, 1) - p_2_(1, 1)) / wi2,
+          (x2.y * p_2_(2, 2) - p_2_(1, 2)) / wi2);
 
     cv::Mat_<double> B =
-        (cv::Mat_<double>(4, 1) << -(x1.x * p_1_(2, 3) - p_1_(0, 3)) / wi1,
-                                  -(x1.y * p_1_(2, 3) - p_1_(1, 3)) / wi1,
-                                  -(x2.x * p_2_(2, 3) - p_2_(0, 3)) / wi2,
-                                  -(x2.y * p_2_(2, 3) - p_2_(1, 3)) / wi2);
+        (cv::Mat_<double>(4, 1) <<
+         -(x1.x * p_1_(2, 3) - p_1_(0, 3)) / wi1,
+         -(x1.y * p_1_(2, 3) - p_1_(1, 3)) / wi1,
+         -(x2.x * p_2_(2, 3) - p_2_(0, 3)) / wi2,
+         -(x2.y * p_2_(2, 3) - p_2_(1, 3)) / wi2);
 
     cv::solve(A, B, X_, cv::DECOMP_SVD);
     X(0) = X_(0); X(1) = X_(1); X(2) = X_(2); X_(3) = 1.0;
