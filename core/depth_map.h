@@ -7,8 +7,13 @@
 #define CORE_DEPTH_MAP_H_
 
 #include <vector>
+#include <memory>
+
+#include "core/optical_flow.h"
 
 namespace core {
+
+class Cameras;
 
 class DepthMap {
  public:
@@ -16,11 +21,18 @@ class DepthMap {
 
   DepthMap(int height, int width);
 
+  ~DepthMap() {}
+
   int height() const { return height_; }
   int width() const { return width_; }
 
   void SetDepth(int x, int y, double depth);
   double Depth(int x, int y) const;
+
+  static std::unique_ptr<DepthMap> BuildMap(
+      const OpticalFlow& flow,
+      const Cameras& cam,
+      int w, int h);
 
  private:
   int height_;

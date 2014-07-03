@@ -65,6 +65,8 @@ add_module(base OBJECT
   )
 
 add_module(core OBJECT
+  core/cameras.cc
+  core/cameras.h
   core/caroline.cc
   core/caroline.h
   core/config.cc
@@ -85,6 +87,8 @@ add_module(core OBJECT
   core/image_time_controller.h
   core/mesh.h
   core/mesh.cc
+  core/optical_flow.h
+  core/optical_flow.cc
   core/optical_flow_processor.cc
   core/optical_flow_processor.h
   core/ply_saver.h
@@ -108,6 +112,8 @@ add_module(core OBJECT
   core/surface_mesh.cc
   core/switches.cc
   core/switches.h
+  core/triangulation.cc
+  core/triangulation.h
   core/time_controller.cc
   core/time_controller.h
   core/quaternion.cc
@@ -133,6 +139,7 @@ add_application(unit_tests
   base/command_line_unittest.cc
   base/json_unittest.cc
   base/values_unittest.cc
+  core/cameras_unittest.cc
   core/opencv_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
