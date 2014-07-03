@@ -31,6 +31,7 @@ directories = [
     'core',
     'main.cc',
     'unit_tests_main.cc',
+    'demo',
   ]
 
 root = os.path.join(__directory, '..')

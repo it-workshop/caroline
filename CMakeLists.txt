@@ -45,6 +45,8 @@ else ()
   set (OpenCV_LIBS
     opencv_core
     opencv_highgui
+    opencv_imgproc
+    opencv_video
     )
 endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
@@ -91,6 +93,8 @@ add_module(core OBJECT
   core/optical_flow.cc
   core/optical_flow_processor.cc
   core/optical_flow_processor.h
+  core/farneback_optical_flow_processor.cc
+  core/farneback_optical_flow_processor.h
   core/ply_saver.h
   core/ply_saver.cc
   core/point3d.h
@@ -130,6 +134,18 @@ add_application(caroline
   $<TARGET_OBJECTS:core>
   )
 target_link_libraries(caroline
+  ${OpenCV_LIBS}
+  )
+
+add_application(demo_flowdemo
+  demo/flowdemo/main.cc
+  demo/flowdemo/flowdemo.cc
+  demo/flowdemo/flowdemo.h
+  $<TARGET_OBJECTS:base>
+  $<TARGET_OBJECTS:core>
+  )
+
+target_link_libraries(demo_flowdemo
   ${OpenCV_LIBS}
   )
 
