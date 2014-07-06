@@ -6,7 +6,7 @@
 #include "core/video_time_controller.h"
 
 #include "core/image_capture_impl.h"
-#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
 
 namespace core {
 
