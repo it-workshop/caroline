@@ -30,10 +30,14 @@ class SceneElement {
   void set_scale_z(double scale) { scale_z_ = scale; }
   void SetScale(double scale_x, double scale_y, double scale_z);
 
-  void set_rotation_x(double rotation) { rotation_x_ = rotation; }
-  void set_rotation_y(double rotation) { rotation_y_ = rotation; }
-  void set_rotation_z(double rotation) { rotation_z_ = rotation; }
+  void set_rotation_xy(double rotation) { rotation_xy_ = rotation; }
+  void set_rotation_xz(double rotation) { rotation_xz_ = rotation; }
+  void set_rotation_yz(double rotation) { rotation_yz_ = rotation; }
 
+  void set_rotation_center_x(double x) { rotation_center_x_ = x; }
+  void set_rotation_center_y(double y) { rotation_center_y_ = y; }
+  void set_rotation_center_z(double z) { rotation_center_z_ = z; }  
+  
   double x() const { return pos_x_; }
   double y() const { return pos_y_; }
   double z() const { return pos_z_; }
@@ -42,10 +46,14 @@ class SceneElement {
   double scale_y() const { return scale_y_; }
   double scale_z() const { return scale_z_; }
 
-  double rotation_x() const { return rotation_x_; }
-  double rotation_y() const { return rotation_y_; }
-  double rotation_z() const { return rotation_z_; }
+  double rotation_xy() const { return rotation_xy_; }
+  double rotation_xz() const { return rotation_xz_; }
+  double rotation_yz() const { return rotation_yz_; }
 
+  double rotation_center_x() const { return rotation_center_x_; }  
+  double rotation_center_y() const { return rotation_center_y_; }  
+  double rotation_center_z() const { return rotation_center_z_; }  
+  
   std::vector<Point3D> Vertexes() const;
   std::vector<Triangle> Faces() const;
 
@@ -65,9 +73,13 @@ class SceneElement {
   double scale_y_;
   double scale_z_;
 
-  double rotation_x_;
-  double rotation_y_;
-  double rotation_z_;
+  double rotation_xy_;
+  double rotation_xz_;
+  double rotation_yz_;
+  
+  double rotation_center_x_;
+  double rotation_center_y_;
+  double rotation_center_z_;
 };
 
 }  // namespace core
