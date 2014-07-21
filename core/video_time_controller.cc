@@ -43,7 +43,7 @@ bool VideoTimeController::Grab() {
       return false;
     first = false;
   }
-  return current_time_;
+  return !!current_time_;
 }
 
 }  // namespace core

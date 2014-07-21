@@ -40,31 +40,31 @@ class FarnebackOpticalFlowProcessor : public OpticalFlowProcessor {
     pyr_scale_ = v;
   }
 
-  int levels() const {
+  int64_t levels() const {
     return(levels_);
   }
-  void set_levels(int v) {
+  void set_levels(int64_t v) {
     levels_ = v;
   }
 
-  int winsize() const {
+  int64_t winsize() const {
     return(winsize_);
   }
-  void set_winsize(int v) {
+  void set_winsize(int64_t v) {
     winsize_ = v;
   }
 
-  int iterations() const {
+  int64_t iterations() const {
     return(iterations_);
   }
-  void set_iterations(int v) {
+  void set_iterations(int64_t v) {
     iterations_ = v;
   }
 
-  int poly_n() const {
+  int64_t poly_n() const {
     return(poly_n_);
   }
-  void set_poly_n(int v) {
+  void set_poly_n(int64_t v) {
     poly_n_ = v;
   }
 
@@ -75,21 +75,21 @@ class FarnebackOpticalFlowProcessor : public OpticalFlowProcessor {
     poly_sigma_ = v;
   }
 
-  int flags() const {
+  int64_t flags() const {
     return(flags_);
   }
-  void set_flags(int v) {
+  void set_flags(int64_t v) {
     flags_ = v;
   }
 
  private:
   double pyr_scale_;
-  int levels_;
-  int winsize_;
-  int iterations_;
-  int poly_n_;
+  int64_t levels_;
+  int64_t winsize_;
+  int64_t iterations_;
+  int64_t poly_n_;
   double poly_sigma_;
-  int flags_;
+  int64_t flags_;
 };
 
 }  // namespace core
