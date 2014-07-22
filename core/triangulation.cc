@@ -90,8 +90,8 @@ cv::Mat_<double> Triangulation::LinearTriangulation(
 // Computer vision and image understanding, 1997
 cv::Mat_<double> Triangulation::IterativeTriangulation(
             const cv::Point3d& x1, const cv::Point3d& x2) const {
-  double wi1 = 1;
-  double wi2 = 1;
+  float wi1 = 1;
+  float wi2 = 1;
 
   cv::Mat_<double> X(4, 1);
 
@@ -100,8 +100,8 @@ cv::Mat_<double> Triangulation::IterativeTriangulation(
     X(0) = X_(0); X(1) = X_(1); X(2) = X_(2); X_(3) = 1.0;
 
     // calculate weights
-    double p_2_x1 = cv::Mat_<double>(cv::Mat_<double>(p_1_).row(2)*X)(0);
-    double p_2_x2 = cv::Mat_<double>(cv::Mat_<double>(p_2_).row(2)*X)(0);
+    float p_2_x1 = (float) cv::Mat_<double>(cv::Mat_<double>(p_1_).row(2)*X)(0);
+    float p_2_x2 = (float) cv::Mat_<double>(cv::Mat_<double>(p_2_).row(2)*X)(0);
 
     // breaking point
     if (fabsf(wi1 - p_2_x1) <= epsilon_ && fabsf(wi2 - p_2_x2) <= epsilon_)

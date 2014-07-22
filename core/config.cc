@@ -29,7 +29,7 @@ bool Config::LoadFromFile(const std::string& filename) {
     return false;
 
   file.seekg(0, std::ios_base::end);
-  size_t size = file.tellg();
+  size_t size = (size_t) file.tellg();
   file.seekg(0, std::ios_base::beg);
 
   std::unique_ptr<char[]> buffer(new char[size]);

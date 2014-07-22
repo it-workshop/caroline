@@ -25,7 +25,7 @@ DepthMesh::DepthMesh(const DepthMap& depth_map, int min, int max) {
     for (int j = 0; j < width; j++) {
       vertex_counter_matrix[width * i + j] = DepthMap::kBadDepth;
 
-      int depth = depth_map.Depth(i, j);
+      double depth = depth_map.Depth(i, j);
 
       if (IsCorrectDepth(depth)) {
         vertex_counter_matrix[width * i + j] = counter;

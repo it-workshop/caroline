@@ -9,10 +9,10 @@
 
 namespace core {
 
-ImageTimeController::ImageTimeController(unsigned int fps)
+ImageTimeController::ImageTimeController(int64_t fps)
   : fps_(fps ? fps : 1),
     us_delta_(1000000ul / (fps ? fps : 1)),
-    current_time_(0) {}
+    current_time_(static_cast<int64_t>(0)) {}
 
 ImageTimeController::~ImageTimeController() {}
 

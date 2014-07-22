@@ -37,7 +37,7 @@ bool VideoTimeController::Grab() {
     if (!capture->GrabNextImage())
       return false;
     if (first)
-      current_time_ = capture->capture()->get(cv::CAP_PROP_POS_MSEC);
+      current_time_ = (int64_t) capture->capture()->get(cv::CAP_PROP_POS_MSEC);
     else if (current_time_ !=
         capture->capture()->get(cv::CAP_PROP_POS_MSEC))
       return false;

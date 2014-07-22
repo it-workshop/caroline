@@ -23,9 +23,9 @@ ImageCaptureImpl::ImageCaptureImpl(
 
 ImageCaptureImpl::ImageCaptureImpl(
     std::unique_ptr<PositionController>&& position_controller,
-    int camera_id)
+    int64_t camera_id)
   : ImageCapture(std::move(position_controller), Type::CAPTURE),
-    capture_(new cv::VideoCapture(camera_id)) {
+    capture_(new cv::VideoCapture((int) camera_id)) {
   if (!capture_->isOpened() || !capture_->set(cv::CAP_PROP_FORMAT, CV_8U))
     capture_.reset();
 }
@@ -48,7 +48,7 @@ double ImageCaptureImpl::GetFocusLength() const {
   return focus_length_;
 }
 
-int ImageCaptureImpl::GetDpm() const {
+int64_t ImageCaptureImpl::GetDpm() const {
   return dpm_;
 }
 

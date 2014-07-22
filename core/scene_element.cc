@@ -37,7 +37,7 @@ std::vector<Point3D> SceneElement::Vertexes() const {
   std::vector<Point3D> new_vertexes;
   std::vector<Point3D> old_vertexes = mesh_->Vertexes();
 
-  for (int i = 0; i < old_vertexes.size(); i++) {
+  for (size_t i = 0; i < old_vertexes.size(); i++) {
     new_vertexes.push_back(Transform(old_vertexes.at(i)));
   }
 

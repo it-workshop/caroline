@@ -12,7 +12,7 @@ namespace core {
 
 class ImageTimeController : public TimeController {
  public:
-  explicit ImageTimeController(unsigned int fps);
+  explicit ImageTimeController(int64_t fps);
   virtual ~ImageTimeController();
 
   virtual uint64_t GetCurrentTime() const override;
@@ -23,7 +23,7 @@ class ImageTimeController : public TimeController {
 
  private:
   const uint64_t us_delta_;
-  const unsigned int fps_;
+  const uint64_t fps_;
   uint64_t current_time_;
 };
 

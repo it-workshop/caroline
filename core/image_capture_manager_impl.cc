@@ -67,7 +67,7 @@ ImageCaptureManager::Create(Config* config) {
     return manager;
 
   std::unique_ptr<TimeController> time_controller;
-  ImageCapture::Type type;
+  ImageCapture::Type;
   auto time_settings =
       base::ToDictionary(config_root->GetValue(kTimeSettingsNode));
   if (time_settings) {
@@ -89,7 +89,7 @@ ImageCaptureManager::Create(Config* config) {
     return manager;
 
   std::vector<std::unique_ptr<ImageCapture>> captures;
-  for (int i = 0; i < captures_list->size(); ++i) {
+  for (size_t i = 0; i < captures_list->size(); ++i) {
     auto capture = base::ToDictionary(captures_list->GetValueAt(i));
     if (!capture)
       continue;
@@ -120,12 +120,12 @@ ImageCaptureManager::Create(Config* config) {
           new ImageCaptureImpl(std::move(position_controller),
               capture_id->value()));
 
-    int dpm_value = kDefaultDpi * kDpiToDpmMultiplier;
+    int64_t dpm_value = kDefaultDpi * static_cast<int64_t>(kDpiToDpmMultiplier);
     if (!image_capture) {
       if (dpm)
         dpm_value = dpm->value();
       else if (dpi)
-        dpm_value = dpi->value() * kDpiToDpmMultiplier;
+        dpm_value = dpi->value() * static_cast<int64_t>(kDpiToDpmMultiplier);
     }
 
     if (!image_capture && capture_type_string == kCaptureTypeVideo &&
