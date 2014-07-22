@@ -48,7 +48,7 @@ TEST(SceneTest, ObjectTranslationTest) {
 
 TEST(SceneTest, ObjectRotationTest) {
   core::Point3D point1(1, 0, 0);
-  core::Point3D point2(3 ,1, -2);
+  core::Point3D point2(3, 1, -2);
   core::Mesh line;
   line.AddVertex(point1);
   line.AddVertex(point2);

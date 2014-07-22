@@ -43,7 +43,7 @@ Rotation_Matrix::Rotation_Matrix(double angle, double x, double y, double z) {
   }
 }
 
-Point3D Rotation_Matrix::Rotate (const Point3D& point) {
+Point3D Rotation_Matrix::Rotate(const Point3D& point) {
   Point3D new_point;
   new_point.set_x(a_xx()*point.x() + a_xy()*point.y() + a_xz()*point.z());
   new_point.set_y(a_yx()*point.x() + a_yy()*point.y() + a_yz()*point.z());

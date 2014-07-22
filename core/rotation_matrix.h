@@ -3,8 +3,8 @@
 // LICENSE file.
 // Author: Mlodik Mikhail <mlodik_m@mail.com>
 
-#ifndef CORE_ROTATION_MATRIX_H
-#define CORE_ROTATION_MATRIX_H
+#ifndef CORE_ROTATION_MATRIX_H_
+#define CORE_ROTATION_MATRIX_H_
 
 #include "core/point3d.h"
 
@@ -41,6 +41,6 @@ class Rotation_Matrix {
   double a_zz_;
 };
 
-}  //namespace core
+}  // namespace core
 
-#endif  // CORE_ROTATION_MATRIX_H
+#endif  // CORE_ROTATION_MATRIX_H_
