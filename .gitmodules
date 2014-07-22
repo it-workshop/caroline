@@ -1,9 +1,9 @@
 [submodule "third_party/gtest"]
 	path = third_party/gtest
-	url = https://github.com/it-workshop/caroline-thirdparty-gtest-mirror.git
+	url = http://192.168.1.116/scm/caroline/thirdparty-gtest.git
 [submodule "build/cpplint"]
 	path = build/cpplint
-	url = https://github.com/it-workshop/caroline-thirdparty-cpplint-mirror.git
+	url = http://192.168.1.116/scm/caroline/thirdparty-cpplint.git
 [submodule "third_party/opencv"]
 	path = third_party/opencv
-	url = https://github.com/it-workshop/caroline-thirdparty-opencv-mirror.git
+	url = http://192.168.1.116/scm/caroline/thirdparty-opencv.git
