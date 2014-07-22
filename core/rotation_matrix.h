@@ -1,17 +1,21 @@
-#ifndef ROTATION_MATRIX_H
-#define ROTATION_MATRIX_H
+// Copyright (c) 2014 The Caroline authors. All rights reserved.
+// Use of this source file is governed by a MIT license that can be found in the
+// LICENSE file.
+// Author: Mlodik Mikhail <mlodik_m@mail.com>
+
+#ifndef CORE_ROTATION_MATRIX_H
+#define CORE_ROTATION_MATRIX_H
 
 #include "core/point3d.h"
 
 namespace core {
 
-class Rotation_Matrix
-{
+class Rotation_Matrix {
  public:
   Rotation_Matrix();
   Rotation_Matrix(double angle, double axis_x, double axis_y, double axis_z);
 
-  void Rotate(Point3D& point);
+  Point3D Rotate(const Point3D& point);
 
   virtual ~Rotation_Matrix();
 
@@ -35,9 +39,8 @@ class Rotation_Matrix
   double a_zx_;
   double a_zy_;
   double a_zz_;
-
 };
 
-} // namespace core
+}  //namespace core
 
-#endif // ROTATION_MATRIX_H
+#endif  // CORE_ROTATION_MATRIX_H

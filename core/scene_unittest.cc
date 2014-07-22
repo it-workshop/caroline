@@ -1,15 +1,20 @@
+// Copyright (c) 2014 The Caroline authors. All rights reserved.
+// Use of this source file is governed by a MIT license that can be found in the
+// LICENSE file.
+// Author: Mlodik Mikhail <mlodik_m@mail.com>
+
 #include <memory>
+#include <cmath>
 
 #include "gtest/gtest.h"
 
-#include <cmath>
 #include "core/scene_element.h"
 #include "core/scene3d.h"
 #include "core/rotation_matrix.h"
 
 TEST(SceneTest, ObjectTranslationTest) {
-  core::Point3D point1(1,0,0);
-  core::Point3D point2(1,1,0);
+  core::Point3D point1(1, 0, 0);
+  core::Point3D point2(1, 1, 0);
   core::Mesh line;
   line.AddVertex(point1);
   line.AddVertex(point2);
@@ -42,8 +47,8 @@ TEST(SceneTest, ObjectTranslationTest) {
 }
 
 TEST(SceneTest, ObjectRotationTest) {
-  core::Point3D point1(1,0,0);
-  core::Point3D point2(3,1,-2);
+  core::Point3D point1(1, 0, 0);
+  core::Point3D point2(3 ,1, -2);
   core::Mesh line;
   line.AddVertex(point1);
   line.AddVertex(point2);
@@ -74,7 +79,7 @@ TEST(SceneTest, ObjectRotationTest) {
 
 TEST(SceneTest, ObjectScalingTest) {
   core::Point3D point1(1, 0, 0);
-  core::Point3D point2(5,-4, 1);
+  core::Point3D point2(5, -4, 1);
   core::Mesh line;
   line.AddVertex(point1);
   line.AddVertex(point2);
