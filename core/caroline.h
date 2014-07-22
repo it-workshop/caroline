@@ -33,7 +33,7 @@ class Caroline {
   base::CommandLine* command_line_;
   Config* config_;
   std::unique_ptr<ImageCaptureManager> image_capture_manager_;
-  std::unique_ptr<OpticalFlowProcessor> optical_frow_processor_;
+  std::unique_ptr<OpticalFlowProcessor> optical_flow_processor_;
 };
 
 }  // namespace core

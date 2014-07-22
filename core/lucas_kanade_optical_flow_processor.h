@@ -31,10 +31,10 @@ class LucasKanadeOpticalFlowProcessor : public OpticalFlowProcessor {
       const cv::Mat& first,
       const cv::Mat& second) const override;
 
-  int max_corners_count() const {
+  int64_t max_corners_count() const {
     return max_corners_count_;
   }
-  void set_max_corners_count(int v) {
+  void set_max_corners_count(int64_t v) {
     max_corners_count_ = v;
   }
   double corners_quality() const {
@@ -49,34 +49,34 @@ class LucasKanadeOpticalFlowProcessor : public OpticalFlowProcessor {
   void set_corners_distance(double v) {
     corners_distance_ = v;
   }
-  int sub_pix_search_window_half_width() const {
+  int64_t sub_pix_search_window_half_width() const {
     return sub_pix_search_window_half_width_;
   }
-  void set_sub_pix_search_window_half_width(int v) {
+  void set_sub_pix_search_window_half_width(int64_t v) {
     sub_pix_search_window_half_width_ = v;
   }
-  int sub_pix_search_window_half_height() const {
+  int64_t sub_pix_search_window_half_height() const {
     return sub_pix_search_window_half_height_;
   }
-  void set_sub_pix_search_window_half_height(int v) {
+  void set_sub_pix_search_window_half_height(int64_t v) {
     sub_pix_search_window_half_height_ = v;
   }
-  int sub_pix_zero_zone_half_width() const {
+  int64_t sub_pix_zero_zone_half_width() const {
     return sub_pix_zero_zone_half_width_;
   }
-  void set_sub_pix_zero_zone_half_width(int v) {
+  void set_sub_pix_zero_zone_half_width(int64_t v) {
     sub_pix_zero_zone_half_width_ = v;
   }
-  int sub_pix_zero_zone_half_height() const {
+  int64_t sub_pix_zero_zone_half_height() const {
     return sub_pix_zero_zone_half_height_;
   }
-  void set_sub_pix_zero_zone_half_height(int v) {
+  void set_sub_pix_zero_zone_half_height(int64_t v) {
     sub_pix_zero_zone_half_height_ = v;
   }
-  int sub_pix_iterations() const {
+  int64_t sub_pix_iterations() const {
     return sub_pix_iterations_;
   }
-  void set_sub_pix_iterations(int v) {
+  void set_sub_pix_iterations(int64_t v) {
     sub_pix_iterations_ = v;
   }
   double sub_pix_epsilon() const {
@@ -85,28 +85,28 @@ class LucasKanadeOpticalFlowProcessor : public OpticalFlowProcessor {
   void set_sub_pix_epsilon(double v) {
     sub_pix_epsilon_ = v;
   }
-  int window_width() const {
+  int64_t window_width() const {
     return window_width_;
   }
-  void set_window_width(int v) {
+  void set_window_width(int64_t v) {
     window_width_ = v;
   }
-  int window_height() const {
+  int64_t window_height() const {
     return window_height_;
   }
-  void set_window_height(int v) {
+  void set_window_height(int64_t v) {
     window_height_ = v;
   }
-  int max_level() const {
+  int64_t max_level() const {
     return max_level_;
   }
-  void set_max_level(int v) {
+  void set_max_level(int64_t v) {
     max_level_ = v;
   }
-  int optical_flow_iterations() const {
+  int64_t optical_flow_iterations() const {
     return optical_flow_iterations_;
   }
-  void set_optical_flow_iterations(int v) {
+  void set_optical_flow_iterations(int64_t v) {
     optical_flow_iterations_ = v;
   }
   double optical_flow_epsilon() const {
@@ -117,19 +117,19 @@ class LucasKanadeOpticalFlowProcessor : public OpticalFlowProcessor {
   }
 
  private:
-  int max_corners_count_;
+  int64_t max_corners_count_;
   double corners_quality_;
   double corners_distance_;
-  int sub_pix_search_window_half_width_;
-  int sub_pix_search_window_half_height_;
-  int sub_pix_zero_zone_half_width_;
-  int sub_pix_zero_zone_half_height_;
-  int sub_pix_iterations_;
+  int64_t sub_pix_search_window_half_width_;
+  int64_t sub_pix_search_window_half_height_;
+  int64_t sub_pix_zero_zone_half_width_;
+  int64_t sub_pix_zero_zone_half_height_;
+  int64_t sub_pix_iterations_;
   double sub_pix_epsilon_;
-  int window_width_;
-  int window_height_;
-  int max_level_;
-  int optical_flow_iterations_;
+  int64_t window_width_;
+  int64_t window_height_;
+  int64_t max_level_;
+  int64_t optical_flow_iterations_;
   double optical_flow_epsilon_;
 };
 

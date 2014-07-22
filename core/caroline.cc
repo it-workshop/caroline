@@ -23,11 +23,11 @@ Caroline::~Caroline() {}
 
 bool Caroline::Init() {
   image_capture_manager_ = ImageCaptureManager::Create(config_);
-  optical_frow_processor_ = OpticalFlowProcessor::Create(config_);
+  optical_flow_processor_ = OpticalFlowProcessor::Create(config_);
 
   return image_capture_manager_ &&
       image_capture_manager_->GetCapturesCount() < 2 &&
-      optical_frow_processor_;
+      optical_flow_processor_;
 }
 
 int Caroline::Run() {
@@ -36,7 +36,7 @@ int Caroline::Run() {
     if (frameset.size() < 2)
       return RETURN_WRONG_FRAMES_COUNT;
 
-    auto optical_flow = optical_frow_processor_->Process(
+    auto optical_flow = optical_flow_processor_->Process(
         frameset.at(0).first, frameset.at(1).first);
   }
 

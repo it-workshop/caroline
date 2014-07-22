@@ -52,7 +52,7 @@ void PlySaver::Save(Mesh *mesh) {
   outfile << "property list uchar int vertex_index\n";
   outfile << "end_header\n";
 
-  for (int i = 0; i < vertexes.size(); i++) {
+  for (size_t i = 0; i < vertexes.size(); i++) {
     Point3D point = vertexes.at(i);
 
     outfile << point.x() << " "
@@ -60,7 +60,7 @@ void PlySaver::Save(Mesh *mesh) {
             << point.z() << "\n";
   }
 
-  for (int i = 0; i < faces.size(); i++) {
+  for (size_t i = 0; i < faces.size(); i++) {
     Triangle face = faces.at(i);
 
     outfile << face.Point1() << " "
