@@ -4,6 +4,7 @@
 // Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
 #include "core/scene_element.h"
+#include "core/rotation_matrix.h"
 #include <cmath>
 
 namespace core {
@@ -49,78 +50,81 @@ std::vector<Triangle> SceneElement::Faces() const {
   return mesh_->Faces();
 }
 
+Point3D SceneElement::FindMin(void) const {
+  double min_x_ = mesh_->Vertexes()[0].x();
+  double min_y_ = mesh_->Vertexes()[0].y();
+  double min_z_ = mesh_->Vertexes()[0].z();
+
+  for (int i = 0; i < mesh_->Vertexes().size(); i++) {
+
+    if (mesh_->Vertexes()[i].x() < min_x_)
+      min_x_ = mesh_->Vertexes()[i].x();
+    if (mesh_->Vertexes()[i].y() < min_y_)
+      min_y_ = mesh_->Vertexes()[i].y();
+    if (mesh_->Vertexes()[i].z() < min_z_)
+      min_z_ = mesh_->Vertexes()[i].z();
+  }
+  Point3D min_point;
+  min_point.Set(min_x_,min_y_,min_z_);
+  return min_point;
+}
+
+Point3D SceneElement::FindMax(void) const {
+  double max_x_ = mesh_->Vertexes()[0].x();
+  double max_y_ = mesh_->Vertexes()[0].y();
+  double max_z_ = mesh_->Vertexes()[0].z();
+
+  for (int i = 0; i < mesh_->Vertexes().size(); i++) {
+
+    if (mesh_->Vertexes()[i].x() > max_x_)
+      max_x_ = mesh_->Vertexes()[i].x();
+    if (mesh_->Vertexes()[i].y() > max_y_)
+      max_y_ = mesh_->Vertexes()[i].y();
+    if (mesh_->Vertexes()[i].z() > max_z_)
+      max_z_ = mesh_->Vertexes()[i].z();
+  }
+  Point3D max_point;
+  max_point.Set(max_x_,max_y_,max_z_);
+  return max_point;
+}
+
 Point3D SceneElement::Transform(Point3D point) const {
   Point3D new_point;
 
   new_point.Set(point.x() + pos_x_, point.y() + pos_y_, point.z() + pos_z_);
 
-  // TODO(VladimirGl): Rotation and scaling
-  
-  double min_x_ = mesh_->Vertexes()[0].x();
-  double max_x_ = mesh_->Vertexes()[0].x();
-  double min_y_ = mesh_->Vertexes()[0].y();
-  double max_y_ = mesh_->Vertexes()[0].y();
-  double min_z_ = mesh_->Vertexes()[0].z();
-  double max_z_ = mesh_->Vertexes()[0].z();
-  
-  
-  for (int i = 0; i < mesh_->Vertexes().size(); i++) {     
- 
-      if (mesh_->Vertexes()[i].x() < min_x_) 
-         min_x_ = mesh_->Vertexes()[i].x();
-      if (mesh_->Vertexes()[i].y() < min_y_) 
-         min_y_ = mesh_->Vertexes()[i].y();
-      if (mesh_->Vertexes()[i].z() < min_z_) 
-         min_z_ = mesh_->Vertexes()[i].z();
-      
-      if (mesh_->Vertexes()[i].x() > max_x_) 
-         max_x_ = mesh_->Vertexes()[i].x();
-      if (mesh_->Vertexes()[i].y() > max_y_) 
-         max_y_ = mesh_->Vertexes()[i].y();
-      if (mesh_->Vertexes()[i].z() > max_z_) 
-         max_z_ = mesh_->Vertexes()[i].z();
-  }
-  
-  double mean_x_ = (max_x_ - min_x_) /2 ;
-  double mean_y_ = (max_y_ - min_y_) /2 ;
-  double mean_z_ = (max_z_ - min_z_) /2 ;
-  
-  for (int i = 0; i < mesh_->Vertexes().size(); i++) {
-      mesh_->Vertexes()[i].x() = (mesh_->Vertexes()[i].x() - mean_x_) * scale_x_ + mean_x_; 
-      mesh_->Vertexes()[i].y() = (mesh_->Vertexes()[i].y() - mean_y_) * scale_y_ + mean_y_; 
-      mesh_->Vertexes()[i].z() = (mesh_->Vertexes()[i].z() - mean_z_) * scale_y_ + mean_z_;       
-  }
-  
-  double new_x_;
-  double new_y_;
-  double new_z_;
-  
-  for (int i = 0; i < mesh_->Vertexes().size(); i++) {
-      double tmp;
-      
-      new_x_ = mesh_->Vertexes()[i].x() - rotation_center_x();    
-      new_y_ = mesh_->Vertexes()[i].y() - rotation_center_y();    
-      new_z_ = mesh_->Vertexes()[i].z() - rotation_center_z();    
-      
-      tmp = new_x_;
-      new_x_ = tmp * cos(rotation_xy()) - new_y_ * sin(rotation_xy());
-      new_y_ = tmp * sin(rotation_xy()) + new_y_ * cos(rotation_xy());
-      
-      tmp = new_x_;
-      new_x_ = tmp * cos(rotation_xz()) - new_z_ * sin(rotation_xz());
-      new_z_ = tmp * sin(rotation_xz()) + new_z_ * cos(rotation_xz());
+  Point3D MinPoint = this->FindMin();
+  Point3D MaxPoint = this->FindMax();
 
-      tmp = new_y_;
-      new_y_ = tmp * cos(rotation_yz()) - new_z_ * sin(rotation_yz());
-      new_z_ = tmp * sin(rotation_yz()) + new_z_ * cos(rotation_yz());
+  double mean_x_ = (MaxPoint.x() + MinPoint.x()) /2 ;
+  double mean_y_ = (MaxPoint.y() + MinPoint.y()) /2 ;
+  double mean_z_ = (MaxPoint.z() + MinPoint.z()) /2 ;
+  
+  new_point.set_x ( (new_point.x() - mean_x_) * scale_x_ + mean_x_);
+  new_point.set_y ( (new_point.y() - mean_y_) * scale_y_ + mean_y_);
+  new_point.set_z ( (new_point.z() - mean_z_) * scale_z_ + mean_z_);
+    
+  Point3D rotated_point;
 
-      mesh_->Vertexes()[i].x() = new_x_ + rotation_center_x();         
-      mesh_->Vertexes()[i].y() = new_y_ + rotation_center_y();         
-      mesh_->Vertexes()[i].z() = new_z_ + rotation_center_z();         
+  rotated_point.set_x ( new_point.x() - rotation_center_x() );
+  rotated_point.set_y ( new_point.y() - rotation_center_y() );
+  rotated_point.set_z ( new_point.z() - rotation_center_z() );
 
-  }
+  Rotation_Matrix rot_( angle_ , axis_x_, axis_y_, axis_z_);
+  rot_.Rotate(rotated_point);
+
+  new_point.set_x ( rotated_point.x() + rotation_center_x() );
+  new_point.set_y ( rotated_point.y() + rotation_center_y() );
+  new_point.set_z ( rotated_point.z() + rotation_center_z() );
   
   return new_point;
+}
+
+SceneElement SceneElement::Transform(SceneElement scene_element) const {
+  SceneElement moved_scene_element = scene_element;
+  for (int i = 0; i < scene_element.Vertexes().size(); i++)
+    moved_scene_element.Vertexes()[i] = scene_element.Transform(scene_element.Vertexes()[i]);
+  return moved_scene_element;
 }
 
 void SceneElement::SetStandardTransform() {
@@ -132,13 +136,15 @@ void SceneElement::SetStandardTransform() {
   scale_y_ = 1;
   scale_z_ = 1;
   
-  rotation_xy_=0;
-  rotation_xz_=0;
-  rotation_yz_=0;
+  axis_x_ = 1;
+  axis_y_ = 0;
+  axis_z_ = 0;
 
-  rotation_center_x_=0;
-  rotation_center_y_=0;
-  rotation_center_z_=0;
+  angle_ = 0;
+
+  rotation_center_x_ = 0;
+  rotation_center_y_ = 0;
+  rotation_center_z_ = 0;
 }
 
 }  // namespace core

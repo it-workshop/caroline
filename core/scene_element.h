@@ -30,9 +30,11 @@ class SceneElement {
   void set_scale_z(double scale) { scale_z_ = scale; }
   void SetScale(double scale_x, double scale_y, double scale_z);
 
-  void set_rotation_xy(double rotation) { rotation_xy_ = rotation; }
-  void set_rotation_xz(double rotation) { rotation_xz_ = rotation; }
-  void set_rotation_yz(double rotation) { rotation_yz_ = rotation; }
+  void set_axis_x(double x) { axis_x_ = x; }
+  void set_axis_y(double y) { axis_y_ = y; }
+  void set_axis_z(double z) { axis_z_ = z; }
+
+  void set_angle(double angle) { angle_ = angle; }
 
   void set_rotation_center_x(double x) { rotation_center_x_ = x; }
   void set_rotation_center_y(double y) { rotation_center_y_ = y; }
@@ -46,9 +48,11 @@ class SceneElement {
   double scale_y() const { return scale_y_; }
   double scale_z() const { return scale_z_; }
 
-  double rotation_xy() const { return rotation_xy_; }
-  double rotation_xz() const { return rotation_xz_; }
-  double rotation_yz() const { return rotation_yz_; }
+  double axis_x() const { return axis_x_; }
+  double axis_y() const { return axis_y_; }
+  double axis_z() const { return axis_z_; }
+
+  double angle() const { return angle_; }
 
   double rotation_center_x() const { return rotation_center_x_; }  
   double rotation_center_y() const { return rotation_center_y_; }  
@@ -57,8 +61,12 @@ class SceneElement {
   std::vector<Point3D> Vertexes() const;
   std::vector<Triangle> Faces() const;
 
+  SceneElement Transform(SceneElement scene_element) const;
+
  protected:
   Point3D Transform(Point3D point) const;
+  Point3D FindMin(void) const;
+  Point3D FindMax(void) const;
 
   void SetStandardTransform();
 
@@ -73,9 +81,11 @@ class SceneElement {
   double scale_y_;
   double scale_z_;
 
-  double rotation_xy_;
-  double rotation_xz_;
-  double rotation_yz_;
+  double axis_x_;
+  double axis_y_;
+  double axis_z_;
+
+  double angle_;
   
   double rotation_center_x_;
   double rotation_center_y_;
