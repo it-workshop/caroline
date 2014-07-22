@@ -169,3 +169,14 @@ target_link_libraries(unit_tests
   )
 add_test(unit_tests unit_tests)
 
+find_program(DOXYGEN doxygen)
+if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
+  configure_file(
+    "${CMAKE_SOURCE_DIR}/Doxyfile.in"
+    "${CMAKE_BINARY_DIR}/Doxyfile"
+    NEWLINE_STYLE UNIX)
+  add_custom_target(docs
+      "${DOXYGEN}" "${CMAKE_BINARY_DIR}/Doxyfile"
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+      COMMENT Build documentation.)
+endif ()
