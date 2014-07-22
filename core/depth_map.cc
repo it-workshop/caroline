@@ -64,12 +64,12 @@ std::unique_ptr<DepthMap> DepthMap::BuildMap(
   triangulator.SetCameraMatrices(cam);
 
 
-  for (int i = 0; i < flow.size(); i++) {
+  for (size_t i = 0; i < flow.size(); i++) {
     cv::Point2d p = flow.at(i).first;
 
     double depth = triangulator.TriangulateDepth(p, flow.at(i).second);
 
-    map->SetDepth(p.x, p.y, depth);
+    map->SetDepth((int) p.x, (int) p.y, depth);
   }
 
   return map;

@@ -42,7 +42,7 @@ class ImageCapture {
 
   virtual double GetFocusLength() const = 0;
   // Dots per meter.
-  virtual int GetDpm() const = 0;
+  virtual int64_t GetDpm() const = 0;
 
  private:
   std::unique_ptr<PositionController> position_controller_;

@@ -48,7 +48,7 @@ class FlowDemo {
   base::CommandLine* command_line_;
   core::Config* config_;
   std::unique_ptr<core::ImageCaptureManager> image_capture_manager_;
-  std::unique_ptr<core::OpticalFlowProcessor> optical_frow_processor_;
+  std::unique_ptr<core::OpticalFlowProcessor> optical_flow_processor_;
 
   double resize_factor_x_;
   double resize_factor_y_;
