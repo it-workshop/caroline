@@ -6,23 +6,30 @@
 #ifndef CORE_ROTATION_MATRIX_H_
 #define CORE_ROTATION_MATRIX_H_
 
+#include <vector>
+
 #include "core/point3d.h"
 
 namespace core {
 
-class Rotation_Matrix {
+class RotationMatrix {
  public:
-  Rotation_Matrix();
-  Rotation_Matrix(double angle, double axis_x, double axis_y, double axis_z);
+  RotationMatrix();
+  RotationMatrix(double angle, double axis_x, double axis_y, double axis_z);
 
   Point3D Rotate(const Point3D& point);
 
-  virtual ~Rotation_Matrix();
+  virtual ~RotationMatrix();
 
-  double RotationMatrixElement(int row, int column) { return a_[row][column];}
+  double RotationMatrixElement(int row, int column) {
+    return a_.at(3 * row + column);
+  }
+  void SetMatrixElement(double value, int row, int column) {
+    a_.at(3 * row + column) = value;
+  }
 
  private:
-  double **a_;
+  std::vector<double> a_;
 };
 
 }  // namespace core
