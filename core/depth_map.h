@@ -26,6 +26,8 @@ class DepthMap {
   int height() const { return height_; }
   int width() const { return width_; }
 
+  std::vector<double> depthVector() const { return depth_map_; }
+
   void SetDepth(int x, int y, double depth);
   double Depth(int x, int y) const;
 

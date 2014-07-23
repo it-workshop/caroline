@@ -89,6 +89,10 @@ add_module(core OBJECT
   core/image_time_controller.h
   core/lucas_kanade_optical_flow_processor.cc
   core/lucas_kanade_optical_flow_processor.h
+  core/map_filter.h
+  core/map_filter.cc
+  core/median_map_filter.h
+  core/median_map_filter.cc
   core/mesh.h
   core/mesh.cc
   core/optical_flow.h
@@ -158,6 +162,7 @@ add_application(unit_tests
   base/json_unittest.cc
   base/values_unittest.cc
   core/cameras_unittest.cc
+  core/filter_unittest.cc
   core/opencv_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
