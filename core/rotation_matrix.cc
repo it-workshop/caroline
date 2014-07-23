@@ -8,16 +8,14 @@
 
 namespace core {
 
-Rotation_Matrix::Rotation_Matrix()
-  : a_xx_(1),
-    a_xy_(0),
-    a_xz_(0),
-    a_yx_(0),
-    a_yy_(1),
-    a_yz_(0),
-    a_zx_(0),
-    a_zy_(0),
-    a_zz_(1) {}
+Rotation_Matrix::Rotation_Matrix() {
+  a_ = new double* [3];
+  for (int i = 0; i < 3; i++)
+    a_[i] = new double[3];
+  for (int i = 0; i < 3; i++)
+    for (int j = 0; j < 3; j++)
+      a_[i][j] = (i == j) ? 1 : 0;
+}
 
 
 Rotation_Matrix::Rotation_Matrix(double angle, double x, double y, double z) {
@@ -25,32 +23,46 @@ Rotation_Matrix::Rotation_Matrix(double angle, double x, double y, double z) {
     Rotation_Matrix r;
     *this = r;
   } else {
+    a_ = new double* [3];
+    for (int i = 0; i < 3; i++)
+      a_[i] = new double[3];
+    double *axis = new double[3] {x , y, z};
     double Norm = sqrt(x*x + y*y + z*z);
-    x = x / Norm;
-    y = y / Norm;
-    z = z / Norm;
+    for (int i = 0; i < 3; i++) axis[i] = axis[i] / Norm;
     double Cos = cos(angle);
     double Sin = sin(angle);
-    a_xx_ = Cos + x*x*(1 - Cos);
-    a_xy_ = x*y*(1 - Cos) - z*Sin;
-    a_xz_ = x*z*(1 - Cos) + y*Sin;
-    a_yx_ = y*x*(1 - Cos) + z*Sin;
-    a_yy_ = Cos + y*y*(1 - Cos);
-    a_yz_ = y*z*(1 - Cos) - x*Sin;
-    a_zx_ = z*x*(1 - Cos) - y*Sin;
-    a_zy_ = z*y*(1 - Cos) + x*Sin;
-    a_zz_ = Cos + z*z*(1 - Cos);
+    a_[0][0] = axis[0]*axis[0]*(1 - Cos) + Cos;
+    a_[0][1] = axis[0]*axis[1]*(1 - Cos) - axis[2]*Sin;
+    a_[0][2] = axis[0]*axis[2]*(1 - Cos) + axis[1]*Sin;
+    a_[1][0] = axis[1]*axis[0]*(1 - Cos) + axis[2]*Sin;
+    a_[1][1] = axis[1]*axis[1]*(1 - Cos) + Cos;
+    a_[1][2] = axis[1]*axis[2]*(1 - Cos) - axis[0]*Sin;
+    a_[2][0] = axis[2]*axis[0]*(1 - Cos) - axis[1]*Sin;
+    a_[2][1] = axis[2]*axis[1]*(1 - Cos) + axis[0]*Sin;
+    a_[2][2] = axis[2]*axis[2]*(1 - Cos) + Cos;
+
+    delete [] axis;
   }
 }
 
 Point3D Rotation_Matrix::Rotate(const Point3D& point) {
   Point3D new_point;
-  new_point.set_x(a_xx()*point.x() + a_xy()*point.y() + a_xz()*point.z());
-  new_point.set_y(a_yx()*point.x() + a_yy()*point.y() + a_yz()*point.z());
-  new_point.set_z(a_zx()*point.x() + a_zy()*point.y() + a_zz()*point.z());
+  double *radius_vector1 = new double[3] { point.x(), point.y(), point.z() };
+  double *radius_vector2 = new double[3] { 0, 0, 0 };
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++)
+      radius_vector2[i] +=
+        this->RotationMatrixElement(i, j) * radius_vector1[j];
+  }
+  new_point.Set(radius_vector2[0], radius_vector2[1], radius_vector2[2]);
+  delete []radius_vector1;
+  delete []radius_vector2;
   return new_point;
 }
 
-Rotation_Matrix::~Rotation_Matrix() {}
+Rotation_Matrix::~Rotation_Matrix() {
+  for (int i = 0; i < 3; i++) delete [] a_[i];
+  delete [] a_;
+}
 
 }  // namespace core

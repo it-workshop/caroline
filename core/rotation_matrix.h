@@ -19,26 +19,10 @@ class Rotation_Matrix {
 
   virtual ~Rotation_Matrix();
 
-  double a_xx() { return a_xx_;}
-  double a_xy() { return a_xy_;}
-  double a_xz() { return a_xz_;}
-  double a_yx() { return a_yx_;}
-  double a_yy() { return a_yy_;}
-  double a_yz() { return a_yz_;}
-  double a_zx() { return a_zx_;}
-  double a_zy() { return a_zy_;}
-  double a_zz() { return a_zz_;}
+  double RotationMatrixElement(int row, int column) { return a_[row][column];}
 
  private:
-  double a_xx_;
-  double a_xy_;
-  double a_xz_;
-  double a_yx_;
-  double a_yy_;
-  double a_yz_;
-  double a_zx_;
-  double a_zy_;
-  double a_zz_;
+  double **a_;
 };
 
 }  // namespace core

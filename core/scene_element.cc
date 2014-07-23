@@ -2,6 +2,7 @@
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
 // Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
+// Author: Mlodik Mikhail <mlodik_m@mail.ru>
 
 #include "core/scene_element.h"
 
@@ -110,7 +111,7 @@ Point3D SceneElement::Transform(Point3D point) const {
   rotated_point.set_y(new_point.y() - rotation_center_y() );
   rotated_point.set_z(new_point.z() - rotation_center_z() );
 
-  Rotation_Matrix rot_(angle_ , axis_x_, axis_y_, axis_z_);
+  Rotation_Matrix rot_(angle_, axis_x_, axis_y_, axis_z_);
   rotated_point = rot_.Rotate(rotated_point);
 
   new_point.set_x(rotated_point.x() + rotation_center_x() );
