@@ -62,6 +62,8 @@ add_module(base OBJECT
   base/logging.h
   base/logging_posix.cc
   base/logging_win.cc
+  base/stream.cc
+  base/stream.h
   base/values.cc
   base/values.h
   )
