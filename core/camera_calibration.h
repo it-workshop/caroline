@@ -19,7 +19,8 @@ class CameraCalibration {
  public:
     CameraCalibration() {}
 
-    void addImagePair(const cv::Mat &image1, const cv::Mat &image2);//two image
+    void addImagePair(const cv::Mat &image1,
+    const cv::Mat &image2);  //  two image
     Cameras calibrate(int nx, int ny, float square_size);
  private:
     std::vector<cv::Mat> left_images_;
