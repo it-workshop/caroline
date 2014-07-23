@@ -12,7 +12,7 @@ cat > .git/hooks/pre-commit << EOF
 # LICENSE file.
 # Author: Aleksandr Derbenev <13alexac@gmail.com>
 
-python ./build/lint_all.py .
+exec python ./build/lint_all.py .
 
 EOF
 

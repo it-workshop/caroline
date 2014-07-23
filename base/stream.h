@@ -81,7 +81,7 @@ class Stream {
 
  protected:
   template <class ImplT>
-  Stream(std::unique_ptr<ImplT> impl)
+  explicit Stream(std::unique_ptr<ImplT> impl)
     : impl_(impl) {}
 
  private:
