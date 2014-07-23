@@ -54,38 +54,38 @@ std::vector<Triangle> SceneElement::Faces() const {
 }
 
 Point3D SceneElement::FindMin(void) const {
-  double min_x_ = mesh_->Vertexes()[0].x();
-  double min_y_ = mesh_->Vertexes()[0].y();
-  double min_z_ = mesh_->Vertexes()[0].z();
+  double min_x = mesh_->Vertexes()[0].x();
+  double min_y = mesh_->Vertexes()[0].y();
+  double min_z = mesh_->Vertexes()[0].z();
 
   for (int i = 0; i < mesh_->Vertexes().size(); i++) {
-    if (mesh_->Vertexes()[i].x() < min_x_)
-      min_x_ = mesh_->Vertexes()[i].x();
-    if (mesh_->Vertexes()[i].y() < min_y_)
-      min_y_ = mesh_->Vertexes()[i].y();
-    if (mesh_->Vertexes()[i].z() < min_z_)
-      min_z_ = mesh_->Vertexes()[i].z();
+    if (mesh_->Vertexes()[i].x() < min_x)
+      min_x = mesh_->Vertexes()[i].x();
+    if (mesh_->Vertexes()[i].y() < min_y)
+      min_y = mesh_->Vertexes()[i].y();
+    if (mesh_->Vertexes()[i].z() < min_z)
+      min_z = mesh_->Vertexes()[i].z();
   }
   Point3D min_point;
-  min_point.Set(min_x_, min_y_, min_z_);
+  min_point.Set(min_x, min_y, min_z);
   return min_point;
 }
 
 Point3D SceneElement::FindMax(void) const {
-  double max_x_ = mesh_->Vertexes()[0].x();
-  double max_y_ = mesh_->Vertexes()[0].y();
-  double max_z_ = mesh_->Vertexes()[0].z();
+  double max_x = mesh_->Vertexes()[0].x();
+  double max_y = mesh_->Vertexes()[0].y();
+  double max_z = mesh_->Vertexes()[0].z();
 
   for (int i = 0; i < mesh_->Vertexes().size(); i++) {
-    if (mesh_->Vertexes()[i].x() > max_x_)
-      max_x_ = mesh_->Vertexes()[i].x();
-    if (mesh_->Vertexes()[i].y() > max_y_)
-      max_y_ = mesh_->Vertexes()[i].y();
-    if (mesh_->Vertexes()[i].z() > max_z_)
-      max_z_ = mesh_->Vertexes()[i].z();
+    if (mesh_->Vertexes()[i].x() > max_x)
+      max_x = mesh_->Vertexes()[i].x();
+    if (mesh_->Vertexes()[i].y() > max_y)
+      max_y = mesh_->Vertexes()[i].y();
+    if (mesh_->Vertexes()[i].z() > max_z)
+      max_z = mesh_->Vertexes()[i].z();
   }
   Point3D max_point;
-  max_point.Set(max_x_, max_y_, max_z_);
+  max_point.Set(max_x, max_y, max_z);
   return max_point;
 }
 
@@ -97,13 +97,13 @@ Point3D SceneElement::Transform(Point3D point) const {
   Point3D MinPoint = this->FindMin();
   Point3D MaxPoint = this->FindMax();
 
-  double mean_x_ = (MaxPoint.x() + MinPoint.x()) /2;
-  double mean_y_ = (MaxPoint.y() + MinPoint.y()) /2;
-  double mean_z_ = (MaxPoint.z() + MinPoint.z()) /2;
+  double mean_x = (MaxPoint.x() + MinPoint.x()) /2;
+  double mean_y = (MaxPoint.y() + MinPoint.y()) /2;
+  double mean_z = (MaxPoint.z() + MinPoint.z()) /2;
 
-  new_point.set_x((new_point.x() - mean_x_) * scale_x_ + mean_x_);
-  new_point.set_y((new_point.y() - mean_y_) * scale_y_ + mean_y_);
-  new_point.set_z((new_point.z() - mean_z_) * scale_z_ + mean_z_);
+  new_point.set_x((new_point.x() - mean_x) * scale_x_ + mean_x);
+  new_point.set_y((new_point.y() - mean_y) * scale_y_ + mean_y);
+  new_point.set_z((new_point.z() - mean_z) * scale_z_ + mean_z);
 
   Point3D rotated_point;
 
