@@ -77,11 +77,11 @@ FlowDemo::FlowDemo(base::CommandLine* command_line, core::Config* config)
 
   auto cap_number = base::ToInteger(settings->GetValue(kCapNumberNode));
   if (cap_number)
-    cap_number_ = (int) cap_number->value();
+    cap_number_ = static_cast<int>(cap_number->value());
 
   auto step = base::ToInteger(settings->GetValue(kStepNode));
   if (step)
-    step_ = (int) step->value();
+    step_ = static_cast<int>(step->value());
 }
 
 FlowDemo::~FlowDemo() {}

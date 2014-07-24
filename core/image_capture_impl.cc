@@ -25,7 +25,7 @@ ImageCaptureImpl::ImageCaptureImpl(
     std::unique_ptr<PositionController>&& position_controller,
     int64_t camera_id)
   : ImageCapture(std::move(position_controller), Type::CAPTURE),
-    capture_(new cv::VideoCapture((int) camera_id)) {
+    capture_(new cv::VideoCapture(static_cast<int>(camera_id))) {
   if (!capture_->isOpened() || !capture_->set(cv::CAP_PROP_FORMAT, CV_8U))
     capture_.reset();
 }

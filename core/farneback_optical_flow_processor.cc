@@ -81,9 +81,11 @@ FarnebackOpticalFlowProcessor::Process(
   cv::Mat first_gray = first, second_gray = second, flow;
 
   cv::calcOpticalFlowFarneback(first_gray, second_gray, flow,
-                               pyr_scale_, (int) levels_, (int) winsize_, 
-                               (int) iterations_, (int) poly_n_, poly_sigma_, 
-                               (int) flags_);
+                               pyr_scale_, static_cast<int>(levels_),
+                               static_cast<int>(winsize_),
+                               static_cast<int>(iterations_),
+                               static_cast<int>(poly_n_), poly_sigma_,
+                               static_cast<int>(flags_));
 
   std::vector< std::pair<cv::Point2d, cv::Point2d> > v;
 

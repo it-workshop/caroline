@@ -69,7 +69,7 @@ std::unique_ptr<DepthMap> DepthMap::BuildMap(
 
     double depth = triangulator.TriangulateDepth(p, flow.at(i).second);
 
-    map->SetDepth((int) p.x, (int) p.y, depth);
+    map->SetDepth(static_cast<int>(p.x), static_cast<int>(p.y), depth);
   }
 
   return map;

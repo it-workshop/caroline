@@ -138,28 +138,29 @@ LucasKanadeOpticalFlowProcessor::Process(
     const cv::Mat& first, const cv::Mat& second) const {
   std::vector<cv::Point2f> corners;
   cv::goodFeaturesToTrack(
-      first, corners, (int) max_corners_count_, corners_quality_, 
-      vcorners_distance_);
+      first, corners, static_cast<int>(max_corners_count_), corners_quality_,
+      corners_distance_);
   cv::cornerSubPix(
       first, corners,
       cv::Size(
-          (int) sub_pix_search_window_half_width_,
-          (int) sub_pix_search_window_half_height_),
+          static_cast<int>(sub_pix_search_window_half_width_),
+          static_cast<int>(sub_pix_search_window_half_height_)),
       cv::Size(
-          (int) sub_pix_zero_zone_half_width_,
-          (int) sub_pix_zero_zone_half_height_),
+          static_cast<int>(sub_pix_zero_zone_half_width_),
+          static_cast<int>(sub_pix_zero_zone_half_height_)),
       cv::TermCriteria(
           cv::TermCriteria::MAX_ITER | cv::TermCriteria::EPS,
-          (int) sub_pix_iterations_, sub_pix_epsilon_));
+          static_cast<int>(sub_pix_iterations_), sub_pix_epsilon_));
   std::vector<cv::Point2f> matches;
   std::vector<unsigned char> status;
   cv::Mat errors;
   cv::calcOpticalFlowPyrLK(
       first, second, corners, matches, status, errors,
-      cv::Size((int) window_width_, (int) window_height_), (int) max_level_,
+      cv::Size(static_cast<int>(window_width_),
+          static_cast<int>(window_height_)), static_cast<int>(max_level_),
       cv::TermCriteria(
-      cv::TermCriteria::MAX_ITER | (cv::TermCriteria::EPS), 
-      (int) optical_flow_iterations_, optical_flow_epsilon_));
+      cv::TermCriteria::MAX_ITER | (cv::TermCriteria::EPS),
+      static_cast<int>(optical_flow_iterations_), optical_flow_epsilon_));
   std::vector<std::pair<cv::Point2d, cv::Point2d>> result;
   for (size_t i = 0; i < corners.size(); ++i)
     if (status.at(i))
