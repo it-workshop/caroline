@@ -67,7 +67,6 @@ ImageCaptureManager::Create(Config* config) {
     return manager;
 
   std::unique_ptr<TimeController> time_controller;
-  ImageCapture::Type;
   auto time_settings =
       base::ToDictionary(config_root->GetValue(kTimeSettingsNode));
   if (time_settings) {
