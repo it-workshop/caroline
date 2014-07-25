@@ -51,10 +51,9 @@ double DepthMap::Depth(int x, int y) const {
   return depth_map_[width_ * y + x];
 }
 
-std::unique_ptr<DepthMap> DepthMap::BuildMap(
+std::unique_ptr<DepthMap> DepthMap::BuildMapTriangulate(
     const std::vector<std::pair<cv::Point2d, cv::Point2d> > &flow,
     const Cameras &cam, int w, int h) {
-
   if ((w * h) != flow.size()) {
     return nullptr;
   }
@@ -75,4 +74,16 @@ std::unique_ptr<DepthMap> DepthMap::BuildMap(
   return map;
 }
 
+std::unique_ptr<DepthMap> DepthMap::BuildMapStereoMatching(
+    const Cameras& cam,
+    const cv::Mat& imOne,
+    const cv::Mat& imTwo) {
+
+  if (imOne.size != imTwo.size) {
+    return nullptr;
+  }
+
+  cv::stereoRectify(cam.K1(), cam.D1(), cvm.K2(), cam.D2(), imOne.size, )
+
+}
 }  // namespace core

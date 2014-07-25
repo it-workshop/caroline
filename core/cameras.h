@@ -33,6 +33,11 @@ class Cameras {
   cv::Matx34d P1() const { return P1_; }
   cv::Matx34d P2() const { return P2_; }
 
+  cv::Mat D1() const { return D1_; }
+  cv::Mat D2() const { return D2_; }
+  cv::Mat P() const { return P_; }
+  cv::Mat T() const { return T_; }
+
  private:
   // camera one matrix
   cv::Matx33d K1_;
@@ -42,6 +47,14 @@ class Cameras {
   cv::Matx34d P1_;
   // projective matrix two
   cv::Matx34d P2_;
+  // rotation matrix from camera one to camera 2
+  cv::Matx33d P_;
+  // translation vector
+  cv::Mat T_;
+
+  // cameras distortion matrix
+  cv::Mat D1_;
+  cv::Mat D2_;
 };
 
 }  // namespace core

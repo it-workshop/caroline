@@ -32,9 +32,13 @@ class DepthMap {
   void SetDepth(int x, int y, double depth);
   double Depth(int x, int y) const;
 
-  static std::unique_ptr<DepthMap> BuildMap(
+  static std::unique_ptr<DepthMap> BuildMapTriangulate(
       const std::vector<std::pair<cv::Point2d, cv::Point2d>>& flow,
       const Cameras& cam, int w, int h);
+
+  static std::unique_ptr<DepthMap> BuildMapStereoMatching(const Cameras &cam,
+      const cv::Mat& imOne,
+      const cv::Mat& imTwo);
 
   std::vector<double>::const_iterator begin() const {
     return depth_map_.begin();
