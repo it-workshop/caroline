@@ -23,4 +23,4 @@ class StreamNetPOSIX : public Stream::Impl {
 
 }  // namespace base
 
-#endif  // BASE_STREAM_NET_POSIX_
+#endif  // BASE_STREAM_NET_POSIX_H_
