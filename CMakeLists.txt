@@ -112,6 +112,8 @@ add_module(core OBJECT
   core/predefined_position_controller.cc
   core/predefined_position_controller.h
   core/return_codes.h
+  core/rotation_matrix.cc
+  core/rotation_matrix.h
   core/scene3d.h
   core/scene3d.cc
   core/scene_element.h
@@ -160,6 +162,7 @@ add_application(unit_tests
   base/json_unittest.cc
   base/values_unittest.cc
   core/cameras_unittest.cc
+  core/scene_unittest.cc
   core/opencv_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
