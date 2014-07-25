@@ -27,6 +27,7 @@ class Stream {
     kEnd
   };
 
+
   static const char kFileSchema[];
   static const char kPipeSchema[];
   static const char kTCPSchema[];
@@ -95,8 +96,6 @@ class Stream {
   OpenTCPSocket(const std::string& host, uint16_t port, Mode mode);
   static std::unique_ptr<Stream>
   BindTCPSocket(uint16_t port, Mode mode);
-  static std::unique_ptr<Stream>
-  OpenTCPSocket(const std::string& host);
   static std::unique_ptr<Stream>
   OpenUDPSocket(const std::string& host, uint16_t port, Mode mode);
   static std::unique_ptr<Stream>
