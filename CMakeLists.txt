@@ -22,6 +22,7 @@ include(platform_utils)
 include(targets_utils)
 
 add_subdirectory(third_party)
+add_subdirectory(api)
 
 init_platform()
 set (definitions)
