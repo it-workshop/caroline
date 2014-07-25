@@ -400,6 +400,8 @@ check_end:
 parse_item:
   SkipSpaces(json, offset);
   key.reset(ParseString(json, offset));
+  if (!key)
+    return nullptr;
   SkipSpaces(json, offset);
   if (static_cast<off_t>(json.size()) < *offset)
     return nullptr;
@@ -425,6 +427,7 @@ parse_item:
   }
   if (json[*offset] != '}')
     return nullptr;
+  (*offset)++;
   return dict.release();
 }
 
