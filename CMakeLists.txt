@@ -22,7 +22,7 @@ include(platform_utils)
 include(targets_utils)
 
 add_subdirectory(third_party)
-add_subdirectory(api)
+
 
 init_platform()
 set (definitions)
@@ -177,6 +177,7 @@ target_link_libraries(unit_tests
   )
 add_test(unit_tests unit_tests)
 
+
 find_program(DOXYGEN doxygen)
 if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
   configure_file(
@@ -188,3 +189,11 @@ if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
       COMMENT Build documentation.)
 endif ()
+
+find_package(Protobuf REQUIRED)
+include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
+
+ 
+PROTOBUF_GENERATE_CPP(${CMAKE_SOURCE_DIR}/core/PROTOCOL_SRCS ${CMAKE_SOURCE_DIR}/core/PROTOCOL_HDRS ${CMAKE_SOURCE_DIR}/api/protocol.proto)
+
+

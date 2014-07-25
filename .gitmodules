@@ -9,5 +9,5 @@
 	url = http://192.168.2.2/projects/CAROLINE/repos/thirdparty-opencv.git
 [submodule "api"]
         path = api
-        url = http://192.168.2.2/projects/MOB/repos/carolineproto.git
+        url = http://192.168.2.2/scm/MOB/carolineproto.git
 
