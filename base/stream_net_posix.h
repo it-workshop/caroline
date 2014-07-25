@@ -6,12 +6,18 @@
 #ifndef BASE_STREAM_NET_POSIX_H_
 #define BASE_STREAM_NET_POSIX_H_
 
+#include <string>
 #include "base/stream.h"
 
 namespace base {
 
 class StreamNetPOSIX : public Stream::Impl {
  public:
+  enum ConnectionType {
+    kOpen,
+    kBind
+  };
+
   size_t Read(char* buffer, size_t size);
   size_t Write(const char* buffer, size_t size);
 
@@ -19,6 +25,16 @@ class StreamNetPOSIX : public Stream::Impl {
   size_t GetSize();
 
   void Close();
+
+  static std::unique_ptr<Stream::Impl> init(
+      int sockdf, const std::string& host, uint16_t port,
+      Stream::Mode mode, ConnectionType cn_type);
+
+ protected:
+  explicit StreamNetPOSIX(int sockdf);
+
+ private:
+  int socket_d_;
 };
 
 }  // namespace base
