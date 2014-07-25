@@ -68,3 +68,17 @@ TEST(JSONTest, FloatWithExpTest) {
   EXPECT_GT(parsed->AsFloat()->value(), 0.9);
   EXPECT_LT(parsed->AsFloat()->value(), 1.1);
 }
+
+TEST(JSONTest, KeyAfterDictionaryTest) {
+  base::json::Parser parser;
+  std::unique_ptr<base::DictionaryValue> parsed(
+      base::ToDictionary(parser.Parse("{\"a\":{\"b\":\"c\"},\"d\":\"e\"}")));
+  EXPECT_NE(nullptr, parsed.get());
+  EXPECT_EQ(2, parsed->size());
+  auto a = base::ToDictionary(parsed->GetValue("a"));
+  EXPECT_NE(nullptr, a);
+  auto b = base::ToString(a->GetValue("b"));
+  EXPECT_NE(nullptr, b);
+  auto c = base::ToString(parsed->AsDictionary()->GetValue("d"));
+  EXPECT_NE(nullptr, c);
+}
