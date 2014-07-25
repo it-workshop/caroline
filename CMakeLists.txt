@@ -54,6 +54,17 @@ include_directories("${OpenCV_INCLUDE_DIRS}")
 
 include_directories("${CMAKE_SOURCE_DIR}")
 
+find_package(Protobuf REQUIRED)
+include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
+set ( PROTO_SOURCES
+      ${CMAKE_BINARY_DIR}/core/protocol.cc
+    )
+set (PROTO_HEADERS
+     ${CMAKE_BINARY_DIR}/core/protocol.h
+    )
+PROTOBUF_GENERATE_CPP(${PROTO_SOURCES} ${PROTO_HEADERS} ${CMAKE_SOURCE_DIR}/api/protocol.proto)
+set_source_files_properties(${PROTO_SOURCES} ${PROTO_HEADERS} PROPERTIES GENERATED TRUE)
+
 add_module(base OBJECT
   base/command_line.cc
   base/command_line.h
@@ -135,6 +146,8 @@ add_module(core OBJECT
   core/undefined_position_controller.h
   core/video_time_controller.cc
   core/video_time_controller.h
+  ${PROTO_SOURCES}
+  ${PROTO_HEADERS}
   )
 
 add_application(caroline
@@ -190,10 +203,6 @@ if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
       COMMENT Build documentation.)
 endif ()
 
-find_package(Protobuf REQUIRED)
-include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
 
- 
-PROTOBUF_GENERATE_CPP(${CMAKE_SOURCE_DIR}/core/PROTOCOL_SRCS ${CMAKE_SOURCE_DIR}/core/PROTOCOL_HDRS ${CMAKE_SOURCE_DIR}/api/protocol.proto)
 
 
