@@ -1,9 +1,13 @@
 [submodule "third_party/gtest"]
 	path = third_party/gtest
-	url = http://192.168.1.116/scm/caroline/thirdparty-gtest.git
+	url = http://192.168.2.2/scm/CAROLINE/thirdparty-gtest.git
 [submodule "build/cpplint"]
 	path = build/cpplint
-	url = http://192.168.1.116/scm/caroline/thirdparty-cpplint.git
+	url = http://192.168.2.2/scm/CAROLINE/thirdparty-cpplint.git
 [submodule "third_party/opencv"]
 	path = third_party/opencv
-	url = http://192.168.1.116/scm/caroline/thirdparty-opencv.git
+	url = http://192.168.2.2/scm/CAROLINE/thirdparty-opencv.git
+[submodule "api"]
+        path = api
+        url = http://192.168.2.2/scm/MOB/carolineproto.git
+

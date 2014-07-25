@@ -23,6 +23,7 @@ include(targets_utils)
 
 add_subdirectory(third_party)
 
+
 init_platform()
 set (definitions)
 platform_definitions(definitions)
@@ -52,6 +53,17 @@ endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
 
 include_directories("${CMAKE_SOURCE_DIR}")
+
+find_package(Protobuf REQUIRED)
+include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
+set ( PROTO_SOURCES
+      ${CMAKE_BINARY_DIR}/core/protocol.cc
+    )
+set (PROTO_HEADERS
+     ${CMAKE_BINARY_DIR}/core/protocol.h
+    )
+PROTOBUF_GENERATE_CPP(${PROTO_SOURCES} ${PROTO_HEADERS} ${CMAKE_SOURCE_DIR}/api/protocol.proto)
+set_source_files_properties(${PROTO_SOURCES} ${PROTO_HEADERS} PROPERTIES GENERATED TRUE)
 
 add_module(base OBJECT
   base/command_line.cc
@@ -132,6 +144,8 @@ add_module(core OBJECT
   core/undefined_position_controller.h
   core/video_time_controller.cc
   core/video_time_controller.h
+  ${PROTO_SOURCES}
+  ${PROTO_HEADERS}
   )
 
 add_application(caroline
@@ -174,6 +188,7 @@ target_link_libraries(unit_tests
   )
 add_test(unit_tests unit_tests)
 
+
 find_program(DOXYGEN doxygen)
 if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
   configure_file(
@@ -185,3 +200,7 @@ if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
       COMMENT Build documentation.)
 endif ()
+
+
+
+
