@@ -7,6 +7,7 @@
 #include "core/scene_element.h"
 
 #include <cmath>
+#include <cstddef>
 
 #include "core/rotation_matrix.h"
 
