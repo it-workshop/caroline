@@ -9,6 +9,8 @@
 #include <string>
 #include "base/stream.h"
 
+// NEED TO CHANGE DATAGRAM METHODS
+
 namespace base {
 
 class StreamNetPOSIX : public Stream::Impl {
@@ -31,10 +33,11 @@ class StreamNetPOSIX : public Stream::Impl {
       Stream::Mode mode, ConnectionType cn_type);
 
  protected:
-  explicit StreamNetPOSIX(int sockdf);
+  explicit StreamNetPOSIX(int sockdf, int type);
 
  private:
   int socket_d_;
+  int type_;
 };
 
 }  // namespace base
