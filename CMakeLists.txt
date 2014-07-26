@@ -56,14 +56,10 @@ include_directories("${CMAKE_SOURCE_DIR}")
 
 find_package(Protobuf REQUIRED)
 include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
-set ( PROTO_SOURCES
-      ${CMAKE_BINARY_DIR}/core/protocol.cc
-    )
-set (PROTO_HEADERS
-     ${CMAKE_BINARY_DIR}/core/protocol.h
-    )
-PROTOBUF_GENERATE_CPP(${PROTO_SOURCES} ${PROTO_HEADERS} ${CMAKE_SOURCE_DIR}/api/protocol.proto)
-set_source_files_properties(${PROTO_SOURCES} ${PROTO_HEADERS} PROPERTIES GENERATED TRUE)
+
+protobuf_generate_cpp(PROTO_SOURCES PROTO_HEADERS
+  "api/protocol.proto"
+  )
 
 add_module(base OBJECT
   base/command_line.cc
@@ -155,6 +151,7 @@ add_application(caroline
   )
 target_link_libraries(caroline
   ${OpenCV_LIBS}
+  ${PROTOBUF_LIBRARIES}
   )
 
 add_application(demo_flowdemo
@@ -167,6 +164,7 @@ add_application(demo_flowdemo
 
 target_link_libraries(demo_flowdemo
   ${OpenCV_LIBS}
+  ${PROTOBUF_LIBRARIES}
   )
 
 enable_testing()
@@ -185,6 +183,7 @@ add_application(unit_tests
 target_link_libraries(unit_tests
   gtest
   ${OpenCV_LIBS}
+  ${PROTOBUF_LIBRARIES}
   )
 add_test(unit_tests unit_tests)
 
