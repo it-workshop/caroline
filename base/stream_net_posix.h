@@ -44,7 +44,7 @@ class StreamNetPOSIX : public Stream::Impl {
 
 class TCPOpenPOSIX : public StreamNetPOSIX {
  public:
-  TCPOpenPOSIX(int sockdf) :
+  explicit TCPOpenPOSIX(int sockdf) :
     StreamNetPOSIX(sockdf)
   {}
 
@@ -56,7 +56,7 @@ class TCPOpenPOSIX : public StreamNetPOSIX {
 
 class TCPBindPOSIX: public StreamNetPOSIX {
  public:
-  TCPBindPOSIX(int sockdf) :
+  explicit TCPBindPOSIX(int sockdf) :
     StreamNetPOSIX(sockdf)
   {}
 

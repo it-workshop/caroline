@@ -31,7 +31,7 @@ std::unique_ptr<Stream> Stream::BindTCPSocket(
     uint16_t port, Stream::Mode mode) {
   int sockdf = socket(AF_INET, SOCK_STREAM, 0);
   std::unique_ptr<Impl> impl =
-      StreamNetPOSIX::init(sockdf, kLocal, port, mode, StreamNetPOSIX::kBind);
+      StreamNetPOSIX::init(sockdf, "nope", port, mode, StreamNetPOSIX::kBind);
 
   return std::unique_ptr<Stream>(new Stream(std::move(impl)));
 
