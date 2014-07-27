@@ -24,7 +24,7 @@ int main(int argc, const char* argv[]) {
         command_line->GetSwitchData(core::switches::kEnableLogging);
     base::Logger::Level minimal_level = base::Logger::LOG_NONE;
     if (base::Logger::kLevelError == level)
-      minimal_level = base::Logger::LOG_ERROR;
+      minimal_level = base::Logger::LOG_ERR;
     else if (base::Logger::kLevelWarning == level)
       minimal_level = base::Logger::LOG_WARNING;
     else if (base::Logger::kLevelInfo == level)

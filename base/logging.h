@@ -25,7 +25,7 @@ class Logger {
     /// Logging is disabled (default).
     LOG_NONE,
     /// Log only errors.
-    LOG_ERROR,
+    LOG_ERR,
     /// Log errors and warnings.
     LOG_WARNING,
     /// Log info, errors and warnings.

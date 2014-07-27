@@ -74,6 +74,8 @@ add_module(base OBJECT
   base/stream.h
   base/values.cc
   base/values.h
+  base/stream_net_win.cc
+  base/stream_net_win.h
   )
 
 add_module(core OBJECT
