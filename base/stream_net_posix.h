@@ -20,24 +20,50 @@ class StreamNetPOSIX : public Stream::Impl {
     kBind
   };
 
-  size_t Read(char* buffer, size_t size);
-  size_t Write(const char* buffer, size_t size);
-
-  bool Seek(ssize_t offset, Stream::SeekType type);
-  size_t GetSize();
-
-  void Close();
-
+  virtual ~StreamNetPOSIX() {}
   static std::unique_ptr<Stream::Impl> init(
       int sockdf, const std::string& host, uint16_t port,
       Stream::Mode mode, ConnectionType cn_type);
 
+  size_t Read(char *buffer, size_t size) {}
+  size_t Write(const char *buffer, size_t size) {}
+
+  bool Seek(ssize_t offset, Stream::SeekType type) {}
+  size_t GetSize() {}
+
+  void Close();
+
+  int Sock() const { return socket_d_; }
+
  protected:
-  explicit StreamNetPOSIX(int sockdf, int type);
+  explicit StreamNetPOSIX(int sockdf);
 
  private:
   int socket_d_;
-  int type_;
+};
+
+class TCPOpenPOSIX : public StreamNetPOSIX {
+ public:
+  TCPOpenPOSIX(int sockdf) :
+    StreamNetPOSIX(sockdf)
+  {}
+
+//  ~TCPOpenPOSIX() {}
+
+  size_t Read(char* buffer, size_t size);
+  size_t Write(const char* buffer, size_t size);
+};
+
+class TCPBindPOSIX: public StreamNetPOSIX {
+ public:
+  TCPBindPOSIX(int sockdf) :
+    StreamNetPOSIX(sockdf)
+  {}
+
+//  ~TCPBindPOSIX() {}
+
+  size_t Read(char *buffer, size_t size);
+  size_t Write(const char *buffer, size_t size);
 };
 
 }  // namespace base

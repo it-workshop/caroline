@@ -15,8 +15,6 @@
 
 namespace base {
 
-const std::string kLocal = "127.0.0.1";
-
 std::unique_ptr<Stream> Stream::OpenTCPSocket(
     const std::string& host, uint16_t port, Stream::Mode mode) {
   int sockdf = socket(AF_INET, SOCK_STREAM, 0);
@@ -94,6 +92,8 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIX::init(
     type = 1;
     listen(sockdf, 1);
 
+    return std::unique_ptr<Impl>(new TCPBindPOSIX(sockdf));
+
   } else if (kOpen == cn_type) {
     addr.sin_addr.s_addr = inet_addr(host.c_str());
     type = 2;
@@ -102,27 +102,28 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIX::init(
       LOG(WARNING) << "Socket - can't open";
       return nullptr;
     }
+
+    return std::unique_ptr<Impl>(new TCPOpenPOSIX(sockdf));
   }
 
-  return std::unique_ptr<Impl>(new StreamNetPOSIX(sockdf, type));
+  return nullptr;
 }
 
-StreamNetPOSIX::StreamNetPOSIX(int sockdf, int type) :
-  socket_d_(sockdf),
-  type_(type) {
+StreamNetPOSIX::StreamNetPOSIX(int sockdf) :
+  socket_d_(sockdf) {
 }
 
-size_t StreamNetPOSIX::Read(char *buffer, size_t size) {
+void StreamNetPOSIX::Close() {
+  close(socket_d_);
+}
+
+size_t TCPOpenPOSIX::Read(char *buffer, size_t size) {
   int sock;
 
-  if (type_ == 1) {
-    sock = accept(socket_d_, NULL, NULL);
-    if (sock < 0) {
-      LOG(WARNING) << "Socket - accept error";
-      return -1;
-    } else if (type_ == 2) {
-      sock = socket_d_;
-    }
+  sock = accept(Sock(), NULL, NULL);
+  if (sock < 0) {
+    LOG(WARNING) << "Socket - accept error";
+    return -1;
   }
 
   int bytes_read = recv(sock, buffer, size, 0);
@@ -130,23 +131,17 @@ size_t StreamNetPOSIX::Read(char *buffer, size_t size) {
     LOG(INFO) << "Socket - data not read";
   }
 
-  if (type_ == 1) {
-    close(sock);
-  }
+  close(sock);
   return bytes_read;
 }
 
-size_t StreamNetPOSIX::Write(const char *buffer, size_t size) {
+size_t TCPOpenPOSIX::Write(const char *buffer, size_t size) {
   int sock;
 
-  if (type_ == 1) {
-    sock = accept(socket_d_, NULL, NULL);
-    if (sock < 0) {
-      LOG(WARNING) << "Socket - accept error";
-      return -1;
-    } else if (type_ == 2) {
-      sock = socket_d_;
-    }
+  sock = accept(Sock(), NULL, NULL);
+  if (sock < 0) {
+    LOG(WARNING) << "Socket - accept error";
+    return -1;
   }
 
   int bytes_write = send(sock, buffer, size, 0);
@@ -154,20 +149,32 @@ size_t StreamNetPOSIX::Write(const char *buffer, size_t size) {
     LOG(INFO) << "Socket - data not write";
   }
 
-  if (type_ == 1) {
-    close(sock);
-  }
+  close(sock);
   return bytes_write;
 }
 
-bool StreamNetPOSIX::Seek(ssize_t offset, Stream::SeekType type) {
+size_t TCPBindPOSIX::Read(char *buffer, size_t size) {
+  int sock;
+  sock = Sock();
+
+  int bytes_read = recv(sock, buffer, size, 0);
+  if (bytes_read < 0) {
+    LOG(INFO) << "Socket - data not read";
+  }
+
+  return bytes_read;
 }
 
-size_t StreamNetPOSIX::GetSize() {
-}
+size_t TCPBindPOSIX::Write(const char *buffer, size_t size) {
+  int sock;
+  sock = Sock();
 
-void StreamNetPOSIX::Close() {
-  close(socket_d_);
+  int bytes_write = send(sock, buffer, size, 0);
+  if (bytes_write < 0) {
+    LOG(INFO) << "Socket - data not write";
+  }
+
+  return bytes_write;
 }
 
 }  // namespace base
