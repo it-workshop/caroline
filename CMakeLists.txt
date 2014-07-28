@@ -62,6 +62,8 @@ protobuf_generate_cpp(PROTO_SOURCES PROTO_HEADERS
   "api/protocol.proto"
   )
 
+file (COPY test_images DESTINATION ${CMAKE_BINARY_DIR})
+
 add_module(base OBJECT
   base/command_line.cc
   base/command_line.h

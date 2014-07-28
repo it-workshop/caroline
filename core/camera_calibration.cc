@@ -66,6 +66,8 @@ Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
   return cameras_par;
 }
 
+
+
   void CameraCalibration::addImagePair(const cv::Mat &image1,
   const cv::Mat &image2, int nx, int ny) {
     left_images_.push_back(image1);
@@ -79,8 +81,10 @@ Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
 
       cv::Mat img1 = left_images_.back();
       cv::Mat img2 = right_images_.back();
+
       result1 = cv::findChessboardCorners(img1,
       cv::Size(nx, ny), temp1);  // Finds the positions of
+
       result2 = cv::findChessboardCorners(img2,
       cv::Size(nx, ny), temp2);  // internal corners of the chessboard
       if (result1 && result2) {
@@ -96,14 +100,24 @@ Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
       }
   }
 
+
+
+
   void CameraCalibration::HarvestChessboardIdealPointList
                       (int nx, int ny, float square_size) {
     object_points_.resize(nx*ny);
+
+//    int a;
+//    std::cout<< VPoints1.size();
+//    std::cin>>a;
 
     for (int i = 0; i < ny; i++)
       for (int j = 0; j < nx; j++)
         object_points_[i*nx+j] = cv::Point3f(i*square_size, j*square_size, 0);
   }
+
+
+
 
   cv::Matx33d CameraCalibration::CalebrationOneCamera(int CameraOrientation,
                                           int nx, int ny, float square_size) {
@@ -116,7 +130,6 @@ Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
       images = right_images_;
       VPoints = VPoints2;
     }
-
 
     int result= 0, n = nx*ny, counter, length;
     std::vector<cv::Point2f> temp(n);
@@ -138,7 +151,6 @@ Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
 
     cv::calibrateCamera(VobjectPoints, VPoints, imageSize, K, D, vrvec, tvec, 0,
     cv::TermCriteria(cv::TermCriteria::EPS +cv::TermCriteria::COUNT, 30, 0.01));
-
 
     return K;
   }
