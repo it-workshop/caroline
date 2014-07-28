@@ -76,7 +76,7 @@ void CameraCalibration::addImagePair(const cv::Mat &image1,
   int result2 = 0;
 
   // Finds the positions of
-  //internal corners of the chessboard
+  // internal corners of the chessboard
   result1 = cv::findChessboardCorners(
         image1, cv::Size(nx, ny), temp1);
   result2 = cv::findChessboardCorners(
