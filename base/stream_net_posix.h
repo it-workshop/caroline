@@ -9,9 +9,23 @@
 #include <string>
 #include "base/stream.h"
 
-// NEED TO CHANGE DATAGRAM METHODS
-
 namespace base {
+
+class StreamNetPOSIXFactory {
+ public:
+  enum StreamType {
+    kTCPOpen,
+    kTCPBind,
+    kUDPOpen,
+    kUDPBind
+  };
+
+  static std::unique_ptr<Stream::Impl> createImpl(
+      const std::string &host, uint16_t port,
+      Stream::Mode mode, StreamType type);
+
+  static void SetMode(int sockdf, Stream::Mode mode);
+};
 
 class StreamNetPOSIX : public Stream::Impl {
  public:
@@ -21,9 +35,6 @@ class StreamNetPOSIX : public Stream::Impl {
   };
 
   virtual ~StreamNetPOSIX() {}
-  static std::unique_ptr<Stream::Impl> init(
-      int sockdf, const std::string& host, uint16_t port,
-      Stream::Mode mode, ConnectionType cn_type);
 
   size_t Read(char *buffer, size_t size) {}
   size_t Write(const char *buffer, size_t size) {}
@@ -33,10 +44,12 @@ class StreamNetPOSIX : public Stream::Impl {
 
   void Close();
 
+ protected:
   int Sock() const { return socket_d_; }
 
- protected:
   explicit StreamNetPOSIX(int sockdf);
+
+  void SetMode(int sockdf, Stream::Mode mode);
 
  private:
   int socket_d_;
@@ -48,8 +61,6 @@ class TCPOpenPOSIX : public StreamNetPOSIX {
     StreamNetPOSIX(sockdf)
   {}
 
-//  ~TCPOpenPOSIX() {}
-
   size_t Read(char* buffer, size_t size);
   size_t Write(const char* buffer, size_t size);
 };
@@ -60,7 +71,25 @@ class TCPBindPOSIX: public StreamNetPOSIX {
     StreamNetPOSIX(sockdf)
   {}
 
-//  ~TCPBindPOSIX() {}
+  size_t Read(char *buffer, size_t size);
+  size_t Write(const char *buffer, size_t size);
+};
+
+class UDPOpenPOSIX : public StreamNetPOSIX {
+ public:
+  explicit UDPOpenPOSIX(int sockdf) :
+    StreamNetPOSIX(sockdf)
+  {}
+
+  size_t Read(char *buffer, size_t size);
+  size_t Write(const char *buffer, size_t size);
+};
+
+class UDPBindPOSIX : public StreamNetPOSIX {
+ public:
+  explicit UDPBindPOSIX(int sockdf) :
+    StreamNetPOSIX(sockdf)
+  {}
 
   size_t Read(char *buffer, size_t size);
   size_t Write(const char *buffer, size_t size);

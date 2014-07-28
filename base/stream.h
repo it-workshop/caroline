@@ -95,11 +95,11 @@ class Stream {
   static std::unique_ptr<Stream>
   OpenTCPSocket(const std::string& host, uint16_t port, Mode mode);
   static std::unique_ptr<Stream>
-  BindTCPSocket(uint16_t port, Mode mode);
+  BindTCPSocket(const std::string& host, uint16_t port, Mode mode);
   static std::unique_ptr<Stream>
   OpenUDPSocket(const std::string& host, uint16_t port, Mode mode);
   static std::unique_ptr<Stream>
-  BindUDPSocket(uint16_t port, Mode mode);
+  BindUDPSocket(const std::string& host, uint16_t port, Mode mode);
 
   Stream(const Stream& stream);
   Stream& operator=(const Stream& stream);
