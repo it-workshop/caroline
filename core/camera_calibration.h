@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author:
+// Author: Kukleva Anna <Kuklevaanna@gmail.com>
 
 #ifndef CORE_CAMERA_CALIBRATION_H_
 #define CORE_CAMERA_CALIBRATION_H_
@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 #include "opencv2/opencv.hpp"
-
 
 namespace core {
 
@@ -19,13 +18,14 @@ class CameraCalibration {
  public:
     CameraCalibration() {}
 
-    enum CameraOrientation{
+    enum CameraOrientation {
       kLeft,
       kRight
     };
 
     void addImagePair(const cv::Mat &image1,
-    const cv::Mat &image2, int nx, int ny);  //  two image
+                      const cv::Mat &image2,
+                      int nx, int ny);
     Cameras calibrate(int nx, int ny, float square_size);
     cv::Matx33d CalebrationOneCamera(int CameraOrientation,
                                      int nx, int ny, float square_size);
