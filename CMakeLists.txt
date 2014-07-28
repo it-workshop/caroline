@@ -54,6 +54,8 @@ include_directories("${OpenCV_INCLUDE_DIRS}")
 
 include_directories("${CMAKE_SOURCE_DIR}")
 
+file (COPY test_images DESTINATION ${CMAKE_BINARY_DIR})
+
 add_module(base OBJECT
   base/command_line.cc
   base/command_line.h
