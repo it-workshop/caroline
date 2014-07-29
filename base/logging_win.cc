@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Aleksandr Derbenev <13alexac@gmail.com>
+/// @author Aleksandr Derbenev <13alexac@gmail.com>
 
 #include <Windows.h>
 
@@ -12,15 +12,22 @@
 
 namespace base {
 
+/// Logger implementation for windows.
 class LoggerWin : public Logger {
  public:
+  /// Default constructor.
   LoggerWin();
+  /// Destructor.
   virtual ~LoggerWin();
 
+  /// Implementation of Stream::PostMessage().
+  /// @param[in] message Message to write into the log.
   virtual void PostMessage(const std::string& message) override;
 
  private:
+  /// Copy constuctor is disallowed.
   LoggerWin(const LoggerWin&);
+  /// Assign operator is disallowed.
   LoggerWin& operator=(const LoggerWin&);
 };
 

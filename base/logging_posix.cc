@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Aleksandr Derbenev <13alexac@gmail.com>
+/// @author Aleksandr Derbenev <13alexac@gmail.com>
 
 #include <fcntl.h>
 #include <sys/file.h>
@@ -15,15 +15,22 @@
 
 namespace base {
 
+/// Implementation of the logger for the POSIX systems.
 class LoggerPosix : public Logger {
  public:
+  /// Constructor.
   LoggerPosix();
+  /// Destructor.
   virtual ~LoggerPosix();
 
+  /// Implementation of Stream::PostMessage().
+  /// @param message Message to write into the log.
   virtual void PostMessage(const std::string& message) override;
 
  private:
+  /// Copy constructor is disallowed.
   LoggerPosix(const LoggerPosix&);
+  /// Assign operator is disallowed.
   LoggerPosix& operator=(const LoggerPosix&);
 };
 
