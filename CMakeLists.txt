@@ -72,6 +72,8 @@ add_module(base OBJECT
   base/logging_win.cc
   base/stream.cc
   base/stream.h
+  base/stream_net_posix.cc
+  base/stream_net_posix.h
   base/values.cc
   base/values.h
   )

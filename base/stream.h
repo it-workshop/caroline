@@ -157,7 +157,7 @@ class Stream {
   /// @param[in] impl Implementation.
   template <class ImplT>
   explicit Stream(std::unique_ptr<ImplT> impl)
-    : impl_(impl) {}
+    : impl_(impl.release()) {}
 
  private:
   std::unique_ptr<Impl> impl_;
