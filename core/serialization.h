@@ -21,6 +21,6 @@ void GenOptFlow (core::OpticalFlow defaultFlow);
 void GenModel(core::Scene3D defaultScene);
 
 void GenPic(core::ImageCapture* default_pic1,
-           core::ImageCapture* default_pic2 );
+            core::ImageCapture* default_pic2 );
 
 } // namespace bitdata
