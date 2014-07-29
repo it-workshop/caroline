@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
+/// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
 #include "base/stream_net_posix.h"
 
@@ -149,38 +149,18 @@ std::unique_ptr<Stream> Stream::BindUDPSocket(
   return std::unique_ptr<Stream>(new Stream(std::move(impl)));
 }
 
-void StreamNetPOSIX::SetMode(int sockdf, Stream::Mode mode) {
-  switch (mode) {
-  case Stream::kRead: {
-    shutdown(sockdf, 1);
-    break;
-  }
-  case Stream::kWrite: {
-    shutdown(sockdf, 0);
-    break;
-  }
-  case Stream::kAppend: {
-    shutdown(sockdf, 0);
-    break;
-  }
-  default: {
-    break;
-  }
-  }
-}
-
 StreamNetPOSIX::StreamNetPOSIX(int sockdf) :
-  socket_d_(sockdf) {
+  socketdf_(sockdf) {
 }
 
 void StreamNetPOSIX::Close() {
-  close(socket_d_);
+  close(socketdf_);
 }
 
 size_t TCPOpenPOSIX::Read(char *buffer, size_t size) {
   int sock;
 
-  sock = accept(Sock(), NULL, NULL);
+  sock = accept(socketdf(), NULL, NULL);
   if (sock < 0) {
     LOG(WARNING) << "Socket - accept error TCP";
     return -1;
@@ -197,7 +177,7 @@ size_t TCPOpenPOSIX::Read(char *buffer, size_t size) {
 
 size_t TCPOpenPOSIX::Write(const char *buffer, size_t size) {
   int sock;
-  sock = accept(Sock(), NULL, NULL);
+  sock = accept(socketdf(), NULL, NULL);
 
   if (sock < 0) {
     LOG(WARNING) << "Socket - accept error TCP";
@@ -215,7 +195,7 @@ size_t TCPOpenPOSIX::Write(const char *buffer, size_t size) {
 
 size_t TCPBindPOSIX::Read(char *buffer, size_t size) {
   int sock;
-  sock = Sock();
+  sock = socketdf();
 
   int bytes_read = recv(sock, buffer, size, 0);
   if (bytes_read < 0) {
@@ -227,7 +207,7 @@ size_t TCPBindPOSIX::Read(char *buffer, size_t size) {
 
 size_t TCPBindPOSIX::Write(const char *buffer, size_t size) {
   int sock;
-  sock = Sock();
+  sock = socketdf();
 
   int bytes_write = send(sock, buffer, size, 0);
   if (bytes_write < 0) {
@@ -239,7 +219,7 @@ size_t TCPBindPOSIX::Write(const char *buffer, size_t size) {
 
 size_t UDPOpenPOSIX::Read(char *buffer, size_t size) {
   int sock;
-  sock = Sock();
+  sock = socketdf();
 
   int bytes_read = recvfrom(sock, buffer, size, 0, NULL, NULL);
   if (bytes_read < 0) {
@@ -251,7 +231,7 @@ size_t UDPOpenPOSIX::Read(char *buffer, size_t size) {
 
 size_t UDPOpenPOSIX::Write(const char *buffer, size_t size) {
   int sock;
-  sock = Sock();
+  sock = socketdf();
 
   int bytes_write = sendto(sock, buffer, size, 0, NULL, NULL);
   if (bytes_write < 0) {
@@ -263,7 +243,7 @@ size_t UDPOpenPOSIX::Write(const char *buffer, size_t size) {
 
 size_t UDPBindPOSIX::Read(char *buffer, size_t size) {
   int sock;
-  sock = Sock();
+  sock = socketdf();
 
   int bytes_read = recv(sock, buffer, size, 0);
   if (bytes_read < 0) {
@@ -275,7 +255,7 @@ size_t UDPBindPOSIX::Read(char *buffer, size_t size) {
 
 size_t UDPBindPOSIX::Write(const char *buffer, size_t size) {
   int sock;
-  sock = Sock();
+  sock = socketdf();
 
   int bytes_write = send(sock, buffer, size, 0);
   if (bytes_write < 0) {
