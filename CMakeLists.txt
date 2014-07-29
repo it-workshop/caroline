@@ -91,6 +91,8 @@ add_module(core OBJECT
   core/lucas_kanade_optical_flow_processor.h
   core/map_filter.h
   core/map_filter.cc
+  core/map_recognise.h
+  core/map_recognise.cc
   core/median_map_filter.h
   core/median_map_filter.cc
   core/mesh.h
@@ -162,8 +164,9 @@ add_application(unit_tests
   base/json_unittest.cc
   base/values_unittest.cc
   core/cameras_unittest.cc
-  core/filter_unittest.cc
   core/opencv_unittest.cc
+  core/filter_unittest.cc
+  core/recognise_unittest.cc
   unit_tests_main.cc
   $<TARGET_OBJECTS:base>
   $<TARGET_OBJECTS:core>

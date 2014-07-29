@@ -14,7 +14,7 @@ TEST(MapFilterTest, TestNum) {
 
   for (int i = 0; i < h; ++i)
        for (int j = 0; j < w; ++j)
-         maps.SetDepth(j, i, 2);
+         maps.SetDepth(i, j, 2);
 
   maps.SetDepth(2, 2, 1);
 
@@ -35,39 +35,39 @@ TEST(MapFilterTest1, TestNum1) {
 
   for (int i = 0; i < h; ++i)
        for (int j = 0; j < w; ++j)
-         maps.SetDepth(j, i, 0);
+         maps.SetDepth(i, j, 0);
 
   maps.SetDepth(0, 0, 0);
-  maps.SetDepth(0, 1, 5);
-  maps.SetDepth(0, 2, -1);
-  maps.SetDepth(1, 0, 0);
+  maps.SetDepth(1, 0, 5);
+  maps.SetDepth(2, 0, -1);
+  maps.SetDepth(0, 1, 0);
   maps.SetDepth(1, 1, 4);
-  maps.SetDepth(1, 2, -2);
-  maps.SetDepth(2, 0, 0);
-  maps.SetDepth(2, 1, 6);
+  maps.SetDepth(2, 1, -2);
+  maps.SetDepth(0, 2, 0);
+  maps.SetDepth(1, 2, 6);
   maps.SetDepth(2, 2, -3);
-  maps.SetDepth(3, 0, 1);
-  maps.SetDepth(3, 1, 1);
-  maps.SetDepth(3, 2, 1);
-  maps.SetDepth(4, 0, 5);
-  maps.SetDepth(4, 1, 4);
-  maps.SetDepth(4, 2, 2);
-  maps.SetDepth(5, 0, 1);
-  maps.SetDepth(5, 1, 2);
-  maps.SetDepth(5, 2, 3);
-  maps.SetDepth(6, 0, 0);
-  maps.SetDepth(6, 1, 0);
-  maps.SetDepth(6, 2, 0);
+  maps.SetDepth(0, 3, 1);
+  maps.SetDepth(1, 3, 1);
+  maps.SetDepth(2, 3, 1);
+  maps.SetDepth(0, 4, 5);
+  maps.SetDepth(1, 4, 4);
+  maps.SetDepth(2, 4, 2);
+  maps.SetDepth(0, 5, 1);
+  maps.SetDepth(1, 5, 2);
+  maps.SetDepth(2, 5, 3);
+  maps.SetDepth(0, 6, 0);
+  maps.SetDepth(1, 6, 0);
+  maps.SetDepth(2, 6, 0);
 
   core::MedianMapFilter filterr;
   filterr.SetKernel(3);
 
   core::DepthMap new_map = filterr.filter(maps);
   ASSERT_EQ(new_map.Depth(1, 1), 0);
-  ASSERT_EQ(new_map.Depth(2, 1), 1);
-  ASSERT_EQ(new_map.Depth(3, 1), 1);
-  ASSERT_EQ(new_map.Depth(4, 1), 2);
-  ASSERT_EQ(new_map.Depth(5, 1), 2);
+  ASSERT_EQ(new_map.Depth(1, 2), 1);
+  ASSERT_EQ(new_map.Depth(1, 3), 1);
+  ASSERT_EQ(new_map.Depth(1, 4), 2);
+  ASSERT_EQ(new_map.Depth(1, 5), 2);
   }
 
 TEST(MapFilterTest2, TestNum2) {
@@ -77,7 +77,7 @@ TEST(MapFilterTest2, TestNum2) {
 
   for (int i = 0; i < h; ++i)
        for (int j = 0; j < w; ++j)
-         maps.SetDepth(j, i, 0);
+         maps.SetDepth(i, j, 0);
 
   maps.SetDepth(0, 0, 1);
   maps.SetDepth(0, 1, 0);

@@ -13,15 +13,16 @@
 
 namespace core {
 
-DepthMap::DepthMap(int height, int width) {
-  height_ = height;
+DepthMap::DepthMap(int width, int height) {
   width_ = width;
+  height_ = height;
+
 
   depth_map_.resize(width_ * height_);
 
-  for (int i = 0; i < height; i++) {
-    for (int j = 0; j < width; j++) {
-      depth_map_[width_ * i + j] = kBadDepth;
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < height; j++) {
+      depth_map_[width_ * j + i] = kBadDepth;
     }
   }
 }
@@ -59,7 +60,7 @@ std::unique_ptr<DepthMap> DepthMap::BuildMap(
     return nullptr;
   }
 
-  std::unique_ptr<DepthMap> map(new DepthMap(h, w));
+  std::unique_ptr<DepthMap> map(new DepthMap(w, h));
   Triangulation triangulator;
   triangulator.SetCameraMatrices(cam);
 
