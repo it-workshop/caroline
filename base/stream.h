@@ -188,14 +188,11 @@ class Stream {
   /// @returns Stream for this connection.
   static std::unique_ptr<Stream>
   BindTCPSocket(const std::string& host, uint16_t port, Mode mode);
-<<<<<<< HEAD
-=======
   /// Will be called when udp:// schema is used.
   /// @param[in] host host to connect to.
   /// @param[in] port port to connect to.
   /// @param[in] mode Mode of stream.
   /// @returns Stream for this connection.
->>>>>>> d486be47819251239956afbe20fb2c398f7f4b6c
   static std::unique_ptr<Stream>
   OpenUDPSocket(const std::string& host, uint16_t port, Mode mode);
   /// Will be called when udp-bind:// schema is used.
