@@ -75,8 +75,8 @@ class StreamNetPOSIX : public Stream::Impl {
 /// Implementation of TCP open schema.
 class TCPOpenPOSIX : public StreamNetPOSIX {
  public:
-  explicit TCPOpenPOSIX(int sockdf) :
-    StreamNetPOSIX(sockdf)
+  explicit TCPOpenPOSIX(int sockdf)
+    : StreamNetPOSIX(sockdf)
   {}
 
   size_t Read(char* buffer, size_t size);
@@ -84,10 +84,10 @@ class TCPOpenPOSIX : public StreamNetPOSIX {
 };
 
 /// Implementation of TCP bind schema.
-class TCPBindPOSIX: public StreamNetPOSIX {
+class TCPBindPOSIX : public StreamNetPOSIX {
  public:
-  explicit TCPBindPOSIX(int sockdf) :
-    StreamNetPOSIX(sockdf)
+  explicit TCPBindPOSIX(int sockdf)
+    : StreamNetPOSIX(sockdf)
   {}
 
   size_t Read(char *buffer, size_t size);
@@ -97,8 +97,8 @@ class TCPBindPOSIX: public StreamNetPOSIX {
 /// Implementation of UDP open schema.
 class UDPOpenPOSIX : public StreamNetPOSIX {
  public:
-  explicit UDPOpenPOSIX(int sockdf) :
-    StreamNetPOSIX(sockdf)
+  explicit UDPOpenPOSIX(int sockdf)
+    : StreamNetPOSIX(sockdf)
   {}
 
   size_t Read(char *buffer, size_t size);
@@ -108,8 +108,8 @@ class UDPOpenPOSIX : public StreamNetPOSIX {
 /// Impelentation of UDP bind schema.
 class UDPBindPOSIX : public StreamNetPOSIX {
  public:
-  explicit UDPBindPOSIX(int sockdf) :
-    StreamNetPOSIX(sockdf)
+  explicit UDPBindPOSIX(int sockdf)
+    : StreamNetPOSIX(sockdf)
   {}
 
   size_t Read(char *buffer, size_t size);
