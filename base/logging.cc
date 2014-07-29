@@ -45,16 +45,11 @@ void Logger::InitInstance(std::shared_ptr<Logger> self,
   file_ = file;
   minimum_level_ = minimum_level;
 }
-bitdata::Message* Logger::PostMessage( const std::string& message)
-{
-  bitdata::Message* mess = new bitdata::Message;
-  bitdata::Log* new_log = new bitdata::Log;
-  new_log->set_line(message);
-  mess->set_allocated_log(new_log);
+
+void Logger::PostMessage( const std::string& message) {
+  std::unique_ptr<bitdata::Message>mess(new bitdata::Message);
+  mess->mutable_log()->set_line(message);
   mess->set_type(bitdata::Message::LOG);
-  return mess;
-  delete mess;
-  delete new_log;
 }
 
 }  // namespace base

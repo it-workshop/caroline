@@ -92,7 +92,7 @@ class Logger {
  protected:
   /// Internal function that writes a string to the log.
   /// @param[in] message Message to write.
-  bitdata::Message* PostMessage(const std::string& message);
+  void PostMessage(const std::string& message);
   virtual void PostMessageImpl (const std::string& message)=0;
 
  private:

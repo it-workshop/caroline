@@ -13,14 +13,15 @@ inline void GenDMap (core::DepthMap& defaultM) {
   width = defaultM.width();
   mess->mutable_depth_map()->set_width(width);
   mess->mutable_depth_map()->set_height(width);
-  int j,i,k(0);
-  for(int i=0;i<height;i++){
-
-    for( j=0;j<width;j++){
+  int j;
+  int i;
+  int k = 0;
+  for(int i=0;i<height;i++) { 
+    for( j=0;j<width;j++) {
       mess->mutable_depth_map()->set_data(i+j,defaultM.Depth(i+k,j));
     }
     k += width;
-    }
+  }
   mess->set_type(bitdata::Message::DEPTH_MAP);
 }
 
@@ -56,16 +57,15 @@ void GenModel(core::Scene3D defaultScene){
     faces = some_element.get_mesh()->Faces();
     k = vertexes.size();
     for(n=0;j<k;n++){
-    mess->mutable_model()->mutable_verticies(n)->
-        set_x(vertexes[n].x());
-    mess->mutable_model()->mutable_verticies(n)->
-        set_y(vertexes[n].y());
-    mess->mutable_model()->mutable_verticies(n)->
-        set_z(vertexes[n].z());                
+      mess->mutable_model()->mutable_verticies(n)->
+          set_x(vertexes[n].x());
+      mess->mutable_model()->mutable_verticies(n)->
+          set_y(vertexes[n].y());
+      mess->mutable_model()->mutable_verticies(n)->
+          set_z(vertexes[n].z());                
     }
     k = faces.size();
-    for(n=0;n<k;n++){
-    
+    for(n=0;n<k;n++) {  
     mess->mutable_model()->mutable_faces(n)->
         set_point1(faces[n].Point1());
     mess->mutable_model()->mutable_faces(n)->
@@ -111,15 +111,3 @@ void GenPic(core::ImageCapture* default_pic1,
 
 } //namespace bitdata
   
-
-
-
-
-    
-  
-  
-
-
-
-
- 
