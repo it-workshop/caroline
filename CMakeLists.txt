@@ -36,6 +36,10 @@ if (DEFINED cxx11_flag)
   add_definitions("${cxx11_flag}")
 endif ()
 
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
+   set (LIBRARIES_WIN ws2_32)
+endif()
+
 if (NOT use_own_opencv)
   find_package(OpenCV REQUIRED)
 else ()
@@ -53,13 +57,13 @@ endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
 
 include_directories("${CMAKE_SOURCE_DIR}")
-
-find_package(Protobuf REQUIRED)
-include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
-
-protobuf_generate_cpp(PROTO_SOURCES PROTO_HEADERS
-  "api/protocol.proto"
-  )
+#
+#find_package(Protobuf REQUIRED)
+#include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
+#
+#protobuf_generate_cpp(PROTO_SOURCES PROTO_HEADERS
+#  "api/protocol.proto"
+#  )
 
 add_module(base OBJECT
   base/command_line.cc
@@ -142,8 +146,8 @@ add_module(core OBJECT
   core/undefined_position_controller.h
   core/video_time_controller.cc
   core/video_time_controller.h
-  ${PROTO_SOURCES}
-  ${PROTO_HEADERS}
+#  ${PROTO_SOURCES}
+#  ${PROTO_HEADERS}
   )
 
 add_application(caroline
@@ -153,7 +157,8 @@ add_application(caroline
   )
 target_link_libraries(caroline
   ${OpenCV_LIBS}
-  ${PROTOBUF_LIBRARIES}
+# ${PROTOBUF_LIBRARIES}
+  ${LIBRARIES_WIN}
   )
 
 add_application(demo_flowdemo
@@ -166,7 +171,8 @@ add_application(demo_flowdemo
 
 target_link_libraries(demo_flowdemo
   ${OpenCV_LIBS}
-  ${PROTOBUF_LIBRARIES}
+#  ${PROTOBUF_LIBRARIES}
+  ${LIBRARIES_WIN}
   )
 
 enable_testing()
@@ -185,7 +191,8 @@ add_application(unit_tests
 target_link_libraries(unit_tests
   gtest
   ${OpenCV_LIBS}
-  ${PROTOBUF_LIBRARIES}
+#  ${PROTOBUF_LIBRARIES}
+  ${LIBRARIES_WIN}
   )
 add_test(unit_tests unit_tests)
 
