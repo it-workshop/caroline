@@ -7,8 +7,6 @@
 
 #include "base/stream.h"
 
-#include "base/stream_net_posix.h"
-
 namespace base {
 
 const char Stream::kFileSchema[] = "file";

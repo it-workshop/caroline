@@ -27,7 +27,6 @@ class Stream {
     kEnd
   };
 
-
   static const char kFileSchema[];
   static const char kPipeSchema[];
   static const char kTCPSchema[];

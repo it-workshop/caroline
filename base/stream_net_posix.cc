@@ -15,6 +15,8 @@
 
 namespace base {
 
+const int kSocketNotCreated = -1;
+
 std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
     const std::string& host, uint16_t port,
     Stream::Mode mode, StreamType type) {
@@ -30,7 +32,7 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
     sockdf = socket(AF_INET, SOCK_DGRAM, 0);
   }
 
-  if (sockdf == -1) {
+  if (sockdf == kSocketNotCreated) {
     return nullptr;
   }
 
@@ -39,7 +41,7 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
   switch (type) {
   case kTCPOpen: {
     if (bind(sockdf, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-      LOG(WARNING) << "Socket - can't bind";
+      LOG(WARNING) << "Socket - can't bind TCP";
       return nullptr;
     }
     listen(sockdf, 1);
@@ -49,7 +51,7 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
   }
   case kTCPBind: {
     if (connect(sockdf, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-      LOG(WARNING) << "Socket - can't open";
+      LOG(WARNING) << "Socket - can't open TCP";
       return nullptr;
     }
 
@@ -58,7 +60,7 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
   }
   case kUDPOpen: {
     if (bind(sockdf, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-      LOG(WARNING) << "Socket - can't bind";
+      LOG(WARNING) << "Socket - can't bind UDP";
       return nullptr;
     }
 
@@ -67,7 +69,7 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
   }
   case kUDPBind: {
     if (connect(sockdf, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-      LOG(WARNING) << "Socket - can't open";
+      LOG(WARNING) << "Socket - can't open UDP";
       return nullptr;
     }
 
@@ -180,13 +182,13 @@ size_t TCPOpenPOSIX::Read(char *buffer, size_t size) {
 
   sock = accept(Sock(), NULL, NULL);
   if (sock < 0) {
-    LOG(WARNING) << "Socket - accept error";
+    LOG(WARNING) << "Socket - accept error TCP";
     return -1;
   }
 
   int bytes_read = recv(sock, buffer, size, 0);
   if (bytes_read < 0) {
-    LOG(INFO) << "Socket - data not read";
+    LOG(INFO) << "Socket - data not read TCP";
   }
 
   close(sock);
@@ -198,13 +200,13 @@ size_t TCPOpenPOSIX::Write(const char *buffer, size_t size) {
   sock = accept(Sock(), NULL, NULL);
 
   if (sock < 0) {
-    LOG(WARNING) << "Socket - accept error";
+    LOG(WARNING) << "Socket - accept error TCP";
     return -1;
   }
 
   int bytes_write = send(sock, buffer, size, 0);
   if (bytes_write < 0) {
-    LOG(INFO) << "Socket - data not write";
+    LOG(INFO) << "Socket - data not write TCP";
   }
 
   close(sock);
@@ -217,7 +219,7 @@ size_t TCPBindPOSIX::Read(char *buffer, size_t size) {
 
   int bytes_read = recv(sock, buffer, size, 0);
   if (bytes_read < 0) {
-    LOG(INFO) << "Socket - data not read";
+    LOG(INFO) << "Socket - data not read TCP";
   }
 
   return bytes_read;
@@ -229,7 +231,7 @@ size_t TCPBindPOSIX::Write(const char *buffer, size_t size) {
 
   int bytes_write = send(sock, buffer, size, 0);
   if (bytes_write < 0) {
-    LOG(INFO) << "Socket - data not write";
+    LOG(INFO) << "Socket - data not write TCP";
   }
 
   return bytes_write;
@@ -241,7 +243,7 @@ size_t UDPOpenPOSIX::Read(char *buffer, size_t size) {
 
   int bytes_read = recvfrom(sock, buffer, size, 0, NULL, NULL);
   if (bytes_read < 0) {
-    LOG(INFO) << "Socket - data not read";
+    LOG(INFO) << "Socket - data not read UDP";
   }
 
   return bytes_read;
@@ -253,7 +255,7 @@ size_t UDPOpenPOSIX::Write(const char *buffer, size_t size) {
 
   int bytes_write = sendto(sock, buffer, size, 0, NULL, NULL);
   if (bytes_write < 0) {
-    LOG(INFO) << "Socket - data not write";
+    LOG(INFO) << "Socket - data not write UDP";
   }
 
   return bytes_write;
@@ -265,7 +267,7 @@ size_t UDPBindPOSIX::Read(char *buffer, size_t size) {
 
   int bytes_read = recv(sock, buffer, size, 0);
   if (bytes_read < 0) {
-    LOG(INFO) << "Socket - data not read";
+    LOG(INFO) << "Socket - data not read UDP";
   }
 
   return bytes_read;
@@ -277,7 +279,7 @@ size_t UDPBindPOSIX::Write(const char *buffer, size_t size) {
 
   int bytes_write = send(sock, buffer, size, 0);
   if (bytes_write < 0) {
-    LOG(INFO) << "Socket - data not write";
+    LOG(INFO) << "Socket - data not write UDP";
   }
 
   return bytes_write;
