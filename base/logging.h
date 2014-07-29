@@ -10,6 +10,8 @@
 #include <sstream>
 #include <string>
 
+#include "protocol.pb.h"
+
 namespace base {
 
 /// Logger serves LOG() macro.
@@ -90,7 +92,8 @@ class Logger {
  protected:
   /// Internal function that writes a string to the log.
   /// @param[in] message Message to write.
-  virtual void PostMessage(const std::string& message) = 0;
+  bitdata::Message* PostMessage(const std::string& message);
+  virtual void PostMessageImpl (const std::string& message)=0;
 
  private:
   /// Internal function that initializes logger.

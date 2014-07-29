@@ -51,6 +51,7 @@ class SceneElement {
   double axis_x() const { return axis_x_; }
   double axis_y() const { return axis_y_; }
   double axis_z() const { return axis_z_; }
+  Mesh* get_mesh() const { return mesh_; }
 
   double angle() const { return angle_; }
 
