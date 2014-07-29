@@ -126,6 +126,7 @@ add_module(core OBJECT
   core/scene3d.cc
   core/scene_element.h
   core/scene_element.cc
+  core/serialization_functions.cc
   core/surface_mesh.h
   core/surface_mesh.cc
   core/switches.cc
