@@ -79,8 +79,8 @@ class TCPOpenPOSIX : public StreamNetPOSIX {
     : StreamNetPOSIX(sockdf)
   {}
 
-  size_t Read(char* buffer, size_t size);
-  size_t Write(const char* buffer, size_t size);
+  virtual size_t Read(char* buffer, size_t size) override;
+  virtual size_t Write(const char* buffer, size_t size) override;
 };
 
 /// Implementation of TCP bind schema.
@@ -90,8 +90,8 @@ class TCPBindPOSIX : public StreamNetPOSIX {
     : StreamNetPOSIX(sockdf)
   {}
 
-  size_t Read(char *buffer, size_t size);
-  size_t Write(const char *buffer, size_t size);
+  virtual size_t Read(char *buffer, size_t size) override;
+  virtual size_t Write(const char *buffer, size_t size) override;
 };
 
 /// Implementation of UDP open schema.
@@ -101,8 +101,8 @@ class UDPOpenPOSIX : public StreamNetPOSIX {
     : StreamNetPOSIX(sockdf)
   {}
 
-  size_t Read(char *buffer, size_t size);
-  size_t Write(const char *buffer, size_t size);
+  virtual size_t Read(char *buffer, size_t size) override;
+  virtual size_t Write(const char *buffer, size_t size) override;
 };
 
 /// Impelentation of UDP bind schema.
@@ -112,8 +112,8 @@ class UDPBindPOSIX : public StreamNetPOSIX {
     : StreamNetPOSIX(sockdf)
   {}
 
-  size_t Read(char *buffer, size_t size);
-  size_t Write(const char *buffer, size_t size);
+  size_t Read(char *buffer, size_t size) override;
+  size_t Write(const char *buffer, size_t size) override;
 };
 
 }  // namespace base

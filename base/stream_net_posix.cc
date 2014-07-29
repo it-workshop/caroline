@@ -16,6 +16,8 @@
 namespace base {
 
 const int kSocketNotCreated = -1;
+const int kWriteOnly = 0;
+const int kReadOnly = 1;
 
 std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
     const std::string& host, uint16_t port,
@@ -24,7 +26,7 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
   struct sockaddr_in addr;
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);
-  addr.sin_addr.s_addr = inet_addr(host.c_str());
+  addr.sin_addr.s_addr = inet_addr;
 
   if (type == kTCPOpen || type == kTCPBind) {
     sockdf = socket(AF_INET, SOCK_STREAM, 0);
@@ -84,15 +86,15 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
 void StreamNetPOSIXFactory::SetMode(int sockdf, Stream::Mode mode) {
   switch (mode) {
   case Stream::kRead: {
-    shutdown(sockdf, 1);
+    shutdown(sockdf, kReadOnly);
     break;
   }
   case Stream::kWrite: {
-    shutdown(sockdf, 0);
+    shutdown(sockdf, kWriteOnly);
     break;
   }
   case Stream::kAppend: {
-    shutdown(sockdf, 0);
+    shutdown(sockdf, kWriteOnly);
     break;
   }
   default: {
