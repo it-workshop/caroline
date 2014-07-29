@@ -4,10 +4,9 @@
 
 #include "core/serialization.h"
 
-namespace bitdata 
-{
-inline void GenDMap (core::DepthMap& defaultM) {
+namespace bitdata {
 
+inline void GenDMap (core::DepthMap& defaultM) {
   Message* mess = new Message;
   int height,width;
   height = defaultM.height();
@@ -17,15 +16,15 @@ inline void GenDMap (core::DepthMap& defaultM) {
   int j,i,k(0);
   for(int i=0;i<height;i++){
 
-      for( j=0;j<width;j++){
-        mess->mutable_depth_map()->set_data(i+j,defaultM.Depth(i+k,j));}
-      k += width;
+    for( j=0;j<width;j++){
+      mess->mutable_depth_map()->set_data(i+j,defaultM.Depth(i+k,j));
+    }
+    k += width;
     }
   mess->set_type(bitdata::Message::DEPTH_MAP);
 }
 
-void GenOptFlow (core::OpticalFlow defaultFlow)
-{
+void GenOptFlow (core::OpticalFlow defaultFlow){
   int i=0;
   OpticalFlowItem flowItem;
   std::unique_ptr<Message>mess(new Message);
@@ -44,38 +43,35 @@ void GenOptFlow (core::OpticalFlow defaultFlow)
   mess->set_type(bitdata::Message::OPTICAL_FLOW);
 }
 
-void GenModel(core::Scene3D defaultScene)
-{
+void GenModel(core::Scene3D defaultScene){
   std::unique_ptr<Message>mess(new Message);
   int i = defaultScene.NumberOfElements();
   unsigned int j=0,k,n;
   std::vector<core::Point3D>vertexes;
   std::vector<core::Triangle>faces;
   core::SceneElement some_element;
-  do
-  {
+  do {  
     some_element = some_element.Transform(defaultScene.ElementAt(j)); 
     vertexes = some_element.get_mesh()->Vertexes();
     faces = some_element.get_mesh()->Faces();
     k = vertexes.size();
-    for(n=0;j<k;n++)
-    {
-      mess->mutable_model()->mutable_verticies(n)->
-          set_x(vertexes[n].x());
-      mess->mutable_model()->mutable_verticies(n)->
-          set_y(vertexes[n].y());
-      mess->mutable_model()->mutable_verticies(n)->
-          set_z(vertexes[n].z());                
+    for(n=0;j<k;n++){
+    mess->mutable_model()->mutable_verticies(n)->
+        set_x(vertexes[n].x());
+    mess->mutable_model()->mutable_verticies(n)->
+        set_y(vertexes[n].y());
+    mess->mutable_model()->mutable_verticies(n)->
+        set_z(vertexes[n].z());                
     }
     k = faces.size();
-    for(n=0;n<k;n++)
-    {
-      mess->mutable_model()->mutable_faces(n)->
-          set_point1(faces[n].Point1());
-      mess->mutable_model()->mutable_faces(n)->
-          set_point2(faces[n].Point2());
-      mess->mutable_model()->mutable_faces(n)->
-          set_point3(faces[n].Point3());
+    for(n=0;n<k;n++){
+    
+    mess->mutable_model()->mutable_faces(n)->
+        set_point1(faces[n].Point1());
+    mess->mutable_model()->mutable_faces(n)->
+        set_point2(faces[n].Point2());
+    mess->mutable_model()->mutable_faces(n)->
+        set_point3(faces[n].Point3());
     }
     j++;
   }
@@ -84,8 +80,7 @@ void GenModel(core::Scene3D defaultScene)
 }
 
 void GenPic(core::ImageCapture* default_pic1,
-           core::ImageCapture* default_pic2 )
-{
+            core::ImageCapture* default_pic2 ) {
   std::unique_ptr<Message>mess(new Message);
   cv::Mat frame1;
   cv::Mat frame2;
@@ -102,16 +97,15 @@ void GenPic(core::ImageCapture* default_pic1,
       set_width(width);
   mess->mutable_images()->mutable_right()->
       set_height(height);
-  for(n=0;n<height;n++)
-    { for(k=0;k<width;k++)
-      {
-        mess->mutable_images()->mutable_left()->
-            set_data(k+z,frame1.at<int>(k,n));
-        mess->mutable_images()->mutable_right()->
-            set_data(k+z,frame2.at<int>(k,n));
+  for(n=0;n<height;n++) {
+     for(k=0;k<width;k++){
+      mess->mutable_images()->mutable_left()->
+          set_data(k+z,frame1.at<int>(k,n));
+      mess->mutable_images()->mutable_right()->
+          set_data(k+z,frame2.at<int>(k,n));
       }
       z+=width;
-    }
+  }
   mess->set_type(bitdata::Message::IMAGES);
 }
 
