@@ -17,10 +17,10 @@ TEST(CamerasCalibrateTest, Test1) {
   std::string str = "0";
 
   for ( int i = 0; i < 4; i++ ) {
-    cv::Mat left_im = cv::imread("test_images/left0" +
+    cv::Mat left_im = cv::imread("test_images/camera_calibration/left0" +
       str +".ppm", cv::IMREAD_GRAYSCALE);
 
-    cv::Mat right_im = cv::imread("test_images/right0" +
+    cv::Mat right_im = cv::imread("test_images/camera_calibration/right0" +
       str +".ppm", cv::IMREAD_GRAYSCALE);
     str = std::to_string(i + 1);
     calib.addImagePair(left_im, right_im, 9, 6);
@@ -42,9 +42,9 @@ TEST(CamerasCalibrateTest, TestForOneCam) {
   std::string str = "0";
 
   for ( int i = 0; i < 4; i++ ) {
-    cv::Mat left_im = cv::imread("test_images/left0" +
+    cv::Mat left_im = cv::imread("test_images/camera_calibration/left0" +
       str + ".ppm", cv::IMREAD_GRAYSCALE);
-    cv::Mat right_im = cv::imread("test_images/right0" +
+    cv::Mat right_im = cv::imread("test_images/camera_calibration/right0" +
       str + ".ppm", cv::IMREAD_GRAYSCALE);
     str = std::to_string(i + 1);
     calib.addImagePair(left_im, right_im, 9, 6);
