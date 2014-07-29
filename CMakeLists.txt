@@ -136,8 +136,6 @@ add_module(core OBJECT
   core/position.h
   core/predefined_position_controller.cc
   core/predefined_position_controller.h
-  core/rectification.cc
-  core/rectification.h
   core/return_codes.h
   core/rotation_matrix.cc
   core/rotation_matrix.h
