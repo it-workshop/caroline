@@ -26,7 +26,7 @@ std::unique_ptr<Stream::Impl> StreamNetPOSIXFactory::createImpl(
   struct sockaddr_in addr;
   addr.sin_family = AF_INET;
   addr.sin_port = htons(port);
-  addr.sin_addr.s_addr = inet_addr;
+  addr.sin_addr.s_addr = inet_addr(host.c_str());
 
   if (type == kTCPOpen || type == kTCPBind) {
     sockdf = socket(AF_INET, SOCK_STREAM, 0);
