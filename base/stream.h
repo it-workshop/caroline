@@ -130,15 +130,11 @@ class Stream {
     return impl_->Write(buffer, size);
   }
 
-<<<<<<< HEAD
   /// Change position in the stream.
   /// @param[in] offset Offset to move position at.
   /// @param[in] type   Type of the seek operation.
   /// @returns true if seek was successful.
-  bool Seek(ssize_t offset, SeekType type) {
-=======
   bool Seek(int offset, SeekType type) {
->>>>>>> Add network support for Windows plus fixes in logging and stream
     return impl_->Seek(offset, type);
   }
   /// Change position in the stream.
@@ -192,14 +188,11 @@ class Stream {
   /// @returns Stream for this connection.
   static std::unique_ptr<Stream>
   BindTCPSocket(const std::string& host, uint16_t port, Mode mode);
-<<<<<<< HEAD
   /// Will be called when udp:// schema is used.
   /// @param[in] host host to connect to.
   /// @param[in] port port to connect to.
   /// @param[in] mode Mode of stream.
   /// @returns Stream for this connection.
-=======
->>>>>>> Add network support for Windows plus fixes in logging and stream
   static std::unique_ptr<Stream>
   OpenUDPSocket(const std::string& host, uint16_t port, Mode mode);
   /// Will be called when udp-bind:// schema is used.
@@ -208,11 +201,7 @@ class Stream {
   /// @param[in] mode Mode of stream.
   /// @returns Stream for this connection.
   static std::unique_ptr<Stream>
-<<<<<<< HEAD
   BindUDPSocket(const std::string& host, uint16_t port, Mode mode);
-=======
-  BindUDPSocket(const std::string&, uint16_t port, Mode mode);
->>>>>>> Add network support for Windows plus fixes in logging and stream
 
   /// Copy constructor is disabled.
   Stream(const Stream& stream);

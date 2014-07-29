@@ -9,27 +9,8 @@
 #include "core/config.h"
 #include "core/switches.h"
 #include "core/return_codes.h"
-#include "base/file_access.cc"
 
-#include "base/stream_net_win.h"
 int main(int argc, const char* argv[]) {
-  /*
-  int indicator;
-  std::cout << "Enter 1 for Bind and 0 for Connect" << std::endl;
-  std::cin >> indicator;
-  if (indicator == 1){
-    base::StreamNetWin stream;
-    if (stream.base::StreamNetWin::ListenOnPort(3213) )
-      std::cout << "Socket Binded";
-  }
-  else if (indicator == 0){
-    base::StreamNetWin stream;
-    if (stream.base::StreamNetWin::ConnectToHost(3213, "127.0.0.1"))
-      std::cout << "Socket Connected";
-  }
-  */
-
-
   auto command_line(base::CommandLine::GetForCurrentProcess());
   base::CommandLine::ParseArgs(argv, command_line.get());
 
