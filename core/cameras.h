@@ -35,7 +35,7 @@ class Cameras {
 
   cv::Mat D1() const { return D1_; }
   cv::Mat D2() const { return D2_; }
-  cv::Mat P() const { return P_; }
+  cv::Mat R() const { return R_; }
   cv::Mat T() const { return T_; }
 
  private:
@@ -48,7 +48,7 @@ class Cameras {
   // projective matrix two
   cv::Matx34d P2_;
   // rotation matrix from camera one to camera 2
-  cv::Matx33d P_;
+  cv::Mat R_;
   // translation vector
   cv::Mat T_;
 

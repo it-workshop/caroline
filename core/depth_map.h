@@ -37,8 +37,8 @@ class DepthMap {
       const Cameras& cam, int w, int h);
 
   static std::unique_ptr<DepthMap> BuildMapStereoMatching(const Cameras &cam,
-      const cv::Mat& imOne,
-      const cv::Mat& imTwo);
+      const cv::Mat& im_one,
+      const cv::Mat& im_two);
 
   std::vector<double>::const_iterator begin() const {
     return depth_map_.begin();
