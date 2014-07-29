@@ -8,8 +8,10 @@
 
 #include <cmath>
 #include <cstddef>
+#include <iostream>
 
 #include "core/rotation_matrix.h"
+#include "core/mesh_merge_utils.h"
 
 namespace core {
 
@@ -150,6 +152,96 @@ void SceneElement::SetStandardTransform() {
   rotation_center_x_ = 0;
   rotation_center_y_ = 0;
   rotation_center_z_ = 0;
+}
+
+void SceneElement::Merge(const Mesh& mesh,
+                         SceneElement* result_scene) {
+  Mesh new_mesh = MergeSortByX(mesh);
+  SceneElement old_scene = *result_scene;
+
+  SceneElement new_scene = old_scene.Transform(old_scene);
+  Mesh TmpMesh;
+  for (int i = 0; i < new_scene.Vertexes().size(); i++)
+    TmpMesh.AddVertex(new_scene.Vertexes().at(i));
+  for (int i = 0; i < new_scene.Faces().size(); i++)
+    TmpMesh.AddFace(new_scene.Faces().at(i));
+
+  const int shift = old_scene.Vertexes().size();
+  const int old_faces_number = old_scene.Faces().size();
+
+  for (int i = 0; i < new_mesh.Vertexes().size(); i++) {
+    TmpMesh.AddVertex(new_mesh.Vertexes()[i]);
+  }
+  for (int i = 0; i < mesh.Faces().size(); i++) {
+    Triangle TmpFace(
+      mesh.Faces()[i].Point1() + shift,
+      mesh.Faces()[i].Point2() + shift,
+      mesh.Faces()[i].Point3() + shift);
+    TmpMesh.AddFace(TmpFace);
+  }
+
+  std::vector<bool> destined_to_be_destroyed;
+  for (int i = 0; i < TmpMesh.Vertexes().size(); i++)
+    destined_to_be_destroyed.push_back(false);
+
+  int vert_counter = TmpMesh.Vertexes().size();
+  for (int i = 0; (i < shift) && (vert_counter > shift); i++) {
+    Point3D curr_point = TmpMesh.Vertexes().at(i);
+
+    int begin = shift;
+    int end = TmpMesh.Vertexes().size();
+    int left_border = BinarySearchByX(TmpMesh.Vertexes(),
+                                      begin,
+                                      end,
+                                      curr_point.x() - merge_error,
+                                      '<');
+    int right_border = BinarySearchByX(TmpMesh.Vertexes(),
+                                      begin,
+                                      end,
+                                      curr_point.x() + merge_error,
+                                      '>');
+
+    for (int j = left_border; j <= right_border; j++)
+      if ((fabs(curr_point.y() - TmpMesh.Vertexes().at(j).y()) < merge_error)
+         &&
+         (fabs(curr_point.z() - TmpMesh.Vertexes().at(j).z()) < merge_error)) {
+        vert_counter--;
+        for (int i0 = old_faces_number; i0 < new_mesh.Faces().size(); i0++) {
+          if (new_mesh.Faces().at(i0).Point1() == j) {
+            Triangle TmpFace(i,
+                              new_mesh.Faces().at(i0).Point2(),
+                              new_mesh.Faces().at(i0).Point3());
+            new_mesh.Faces().at(i0) = TmpFace;
+          }
+          if (new_mesh.Faces().at(i0).Point2() == j) {
+            Triangle TmpFace(new_mesh.Faces().at(i0).Point1(),
+                              i,
+                              new_mesh.Faces().at(i0).Point3());
+            new_mesh.Faces().at(i0) = TmpFace;
+          }
+          if (new_mesh.Faces().at(i0).Point3() == j) {
+            Triangle TmpFace(new_mesh.Faces().at(i0).Point1(),
+                              new_mesh.Faces().at(i0).Point2(),
+                              i);
+            new_mesh.Faces().at(i0) = TmpFace;
+          }
+        }
+        destined_to_be_destroyed.at(j) = true;
+      }
+    }
+  new_scene.SetMesh(&TmpMesh);
+
+  Mesh result_mesh;
+  for (int i = 0; i < new_scene.Vertexes().size(); i++) {
+    if (destined_to_be_destroyed.at(i) == false)
+      result_mesh.AddVertex(new_scene.Vertexes().at(i));}
+  result_mesh.Vertexes().shrink_to_fit();
+
+  for (int i = 0; i < new_scene.Faces().size(); i++)
+    result_mesh.AddFace(new_scene.Faces().at(i));
+  new_scene.SetMesh(&result_mesh);
+  *result_scene = new_scene;
+  std::cout << result_scene->Vertexes().size() << '\n';
 }
 
 }  // namespace core
