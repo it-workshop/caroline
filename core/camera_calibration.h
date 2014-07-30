@@ -14,11 +14,9 @@ namespace core {
 
 class Cameras;
 
-///
-
+/// Class to calibrate stereo cameras
 class CameraCalibration {
  public:
-
   /// Constructor.
     CameraCalibration() {}
   /// Type of camera position
@@ -43,9 +41,7 @@ class CameraCalibration {
     /// @param[in] nx Number of internal corners horizontally
     /// @param[in] ny Number of internal corners vertically
     /// @param[in] squre_size Size of square on the chessboard in cm
-    /// @returns 2 matrix internal parameters of each camera and 2 rotation matrix
-    /// between the 1st and the 2nd camera coordinate systems with
-    /// translation vector between the coordinate systems of the cameras
+    /// @returns Cameras object for two calibrated cameras
     Cameras calibrate(int nx, int ny, float square_size);
     /// Calibrates one camera
     /// @param[in] CameraOrientation Сamera Position
@@ -79,7 +75,7 @@ class CameraCalibration {
     std::vector<cv::Mat> left_images_;
     /// Vector of right images
     std::vector<cv::Mat> right_images_;
-    /// Vector of pattern coordinates ....
+    /// Vector of pattern corners coordinates for each stereo pair
     std::vector<cv::Point3f> object_points_;
     /// Vector of corners coordinate of left images
     std::vector<std::vector<cv::Point2f>> VPoints1;
