@@ -6,7 +6,8 @@
 #ifndef CORE_CAMERAS_H_
 #define CORE_CAMERAS_H_
 
-#include "opencv2/opencv.hpp"
+#include "opencv2/core/mat.hpp"
+#include <memory>
 
 namespace core {
 

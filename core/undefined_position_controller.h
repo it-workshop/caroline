@@ -18,7 +18,7 @@ class UndefinedPositionController : public PositionController {
   explicit UndefinedPositionController(TimeController* time_controller);
   virtual ~UndefinedPositionController();
 
-  virtual Point3D GetLocation() const override;
+  virtual cv::Point3d GetLocation() const override;
   virtual Quaternion GetRotation() const override;
 };
 

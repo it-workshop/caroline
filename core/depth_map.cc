@@ -51,10 +51,8 @@ double DepthMap::Depth(int x, int y) const {
   return depth_map_[width_ * y + x];
 }
 
-std::unique_ptr<DepthMap> DepthMap::BuildMap(
-    const OpticalFlow &flow,
-    const Cameras &cam,
-    int w, int h) {
+std::unique_ptr<DepthMap> DepthMap::BuildMap(const std::vector<std::pair<cv::Point2d, cv::Point2d> > &flow,
+    const Cameras &cam, int w, int h) {
 
   if ((w * h) != flow.size()) {
     return nullptr;

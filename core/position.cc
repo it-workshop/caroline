@@ -7,7 +7,7 @@
 
 namespace core {
 
-Position::Position(const core::Point3D& location,
+Position::Position(const cv::Point3d& location,
     const core::Quaternion& rotation)
   : location_(location),
     rotation_(rotation) {}

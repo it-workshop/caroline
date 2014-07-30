@@ -16,6 +16,7 @@ class CommandLine;
 
 namespace core {
 
+class Cameras;
 class Config;
 class ImageCaptureManager;
 class OpticalFlowProcessor;
@@ -34,6 +35,7 @@ class Caroline {
   Config* config_;
   std::unique_ptr<ImageCaptureManager> image_capture_manager_;
   std::unique_ptr<OpticalFlowProcessor> optical_flow_processor_;
+  std::unique_ptr<Cameras> cameras_properties_;
 };
 
 }  // namespace core

@@ -66,7 +66,7 @@ PredefinedPositionController::Create(
     controller->time_mapped_position_.insert(std::make_pair(
         uint64_t(time->value()),
         Position(
-            Point3D(
+            cv::Point3d(
                 l_x->value(),
                 l_y->value(),
                 l_z->value()),
@@ -92,7 +92,7 @@ PredefinedPositionController::PredefinedPositionController(
 
 PredefinedPositionController::~PredefinedPositionController() {}
 
-Point3D PredefinedPositionController::GetLocation() const {
+cv::Point3d PredefinedPositionController::GetLocation() const {
   auto next_position = last_known_position_;
   ++next_position;
   for (uint64_t current_time = time_controller()->GetCurrentTime();

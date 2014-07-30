@@ -6,6 +6,7 @@
 #ifndef CORE_SCENE3D_H_
 #define CORE_SCENE3D_H_
 
+#include <memory>
 #include <vector>
 
 #include "core/scene_element.h"
@@ -16,23 +17,23 @@ class Scene3D {
  public:
   Scene3D();
 
-  void AddElement(const SceneElement& element);
+  void AddElement(SceneElement *element);
 
   int NumberOfElements() const;
 
   // Number must be less then NumberOfElements.
-  SceneElement ElementAt(int number) const;
+  SceneElement *ElementAt(int number) const;
 
-  std::vector<SceneElement>::const_iterator begin() const {
+  std::vector<SceneElement *>::const_iterator begin() const {
     return scene_elements_.begin();
   }
 
-  std::vector<SceneElement>::const_iterator end() const {
+  std::vector<SceneElement *>::const_iterator end() const {
     return scene_elements_.end();
   }
 
  private:
-  std::vector<SceneElement> scene_elements_;
+  std::vector<SceneElement *> scene_elements_;
 };
 
 }  // namespace core

@@ -41,20 +41,20 @@ void GenModel(core::Scene3D scene) {
   core::SceneElement some_element;
   int vertex_base_index = 0;
   for (auto scene_element : scene) {
-    for (auto vertex : scene_element.mesh()->vertexes()) {
-      auto transformed_vertex = scene_element.Transform(vertex);
+    for (auto vertex : scene_element->mesh()->vertexes()) {
+      auto transformed_vertex = scene_element->Transform(vertex);
       auto proto_vertex = message->mutable_model()->add_verticies();
       proto_vertex->set_x(vertex.x());
       proto_vertex->set_y(vertex.y());
       proto_vertex->set_z(vertex.z());
     }
-    for (auto face : scene_element.mesh()->faces()) {
+    for (auto face : scene_element->mesh()->faces()) {
       auto proto_face = message->mutable_model()->add_faces();
       proto_face->set_point1(face.Point1() + vertex_base_index);
       proto_face->set_point2(face.Point2() + vertex_base_index);
       proto_face->set_point3(face.Point3() + vertex_base_index);
     }
-    vertex_base_index += scene_element.mesh()->vertexes().size();
+    vertex_base_index += scene_element->mesh()->vertexes().size();
   }
   message->set_type(Message::MODEL);
 }
