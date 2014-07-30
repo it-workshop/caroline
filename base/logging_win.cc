@@ -22,7 +22,7 @@ class LoggerWin : public Logger {
 
   /// Implementation of Stream::PostMessage().
   /// @param[in] message Message to write into the log.
-  virtual void PostMessage(const std::string& message) override;
+  virtual void PostMessageImpl(const std::string& message) override;
 
  private:
   /// Copy constuctor is disallowed.
@@ -41,7 +41,7 @@ LoggerWin::LoggerWin() {}
 
 LoggerWin::~LoggerWin() {}
 
-void LoggerWin::PostMessage(const std::string& message) {
+void LoggerWin::PostMessageImpl(const std::string& message) {
   std::cout << message << std::flush;
   if (file().empty())
     return;

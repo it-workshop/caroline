@@ -36,8 +36,8 @@ class Mesh {
   void AddVertex(const Point3D& point);
   void AddFace(const Triangle& face);
 
-  std::vector<Point3D> Vertexes() const { return vertexes_; }
-  std::vector<Triangle> Faces() const { return faces_; }
+  const std::vector<Point3D>& vertexes() const { return vertexes_; }
+  const std::vector<Triangle>& faces() const { return faces_; }
 
  protected:
   void SetVertexes(const std::vector<Point3D>& vertexes);

@@ -51,6 +51,7 @@ class SceneElement {
   double axis_x() const { return axis_x_; }
   double axis_y() const { return axis_y_; }
   double axis_z() const { return axis_z_; }
+  Mesh* mesh() const { return mesh_; }
 
   double angle() const { return angle_; }
 
@@ -63,8 +64,9 @@ class SceneElement {
 
   SceneElement Transform(SceneElement scene_element) const;
 
- protected:
   Point3D Transform(Point3D point) const;
+
+ protected:
   Point3D FindMin(void) const;
   Point3D FindMax(void) const;
 
