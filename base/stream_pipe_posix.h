@@ -6,11 +6,31 @@
 #ifndef BASE_STREAM_PIPE_POSIX_H_
 #define BASE_STREAM_PIPE_POSIX_H_
 
+#include <string>
+#include "base/stream.h"
+
 namespace base {
 
-class StreamPipePOSIX {
+class StreamPipePOSIX : public Stream::Impl {
  public:
-  StreamPipePOSIX();
+  explicit StreamPipePOSIX(int filedf);
+
+  virtual ~StreamPipePOSIX() {}
+
+  virtual bool Seek(ssize_t offset, Stream::SeekType type) override {}
+  virtual size_t GetSize() override {}
+
+  virtual size_t Write(const char *buffer, size_t size) override;
+  virtual size_t Read(char *buffer, size_t size) override;
+
+  virtual void Close() override;
+
+ protected:
+  int filedf() const { return filedf_; }
+
+ private:
+  std::string path_;
+  int filedf_;
 };
 
 }  // namespace base
