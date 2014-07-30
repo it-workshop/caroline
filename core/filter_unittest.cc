@@ -23,9 +23,9 @@ TEST(MapFilterTest, TestNum) {
 
   core::DepthMap new_map = filterr.filter(maps);
 
-  ASSERT_EQ(new_map.Depth(2, 2), 2);
-  ASSERT_EQ(new_map.Depth(0, 0), 2);
-  ASSERT_EQ(new_map.Depth(1, 1), 2);
+  ASSERT_EQ(2, new_map.Depth(2, 2));
+  ASSERT_EQ(2, new_map.Depth(0, 0));
+  ASSERT_EQ(2, new_map.Depth(1, 1));
 }
 
 TEST(MapFilterTest1, TestNum1) {
