@@ -74,6 +74,8 @@ add_module(base OBJECT
   base/stream.h
   base/stream_net_posix.cc
   base/stream_net_posix.h
+  base/stream_pipe_posix.cc
+  base/stream_pipe_posix.h
   base/values.cc
   base/values.h
   )
