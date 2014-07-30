@@ -36,8 +36,17 @@ class Mesh {
   void AddVertex(const Point3D& point);
   void AddFace(const Triangle& face);
 
+<<<<<<< HEAD
   const std::vector<Point3D>& vertexes() const { return vertexes_; }
   const std::vector<Triangle>& faces() const { return faces_; }
+=======
+  void ChangeVertex(const Point3D& point, int i) {
+    vertexes_.at(i) = point;
+  }
+
+  std::vector<Point3D> Vertexes() const { return vertexes_; }
+  std::vector<Triangle> Faces() const { return faces_; }
+>>>>>>> #65: Working merge of mesh and scene. #52 bug is fixed.
 
  protected:
   void SetVertexes(const std::vector<Point3D>& vertexes);
