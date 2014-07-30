@@ -184,6 +184,7 @@ add_application(unit_tests
   base/command_line_unittest.cc
   base/json_unittest.cc
   base/values_unittest.cc
+  base/stream_unittest.cc
   core/cam_calib_unittest.cc
   core/cameras_unittest.cc
   core/scene_unittest.cc
