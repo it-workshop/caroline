@@ -5,6 +5,8 @@
 
 #include "base/logging.h"
 
+#include "core/serialization.h"
+
 namespace base {
 
 const char Logger::kLevelError[] = "error";
@@ -44,6 +46,11 @@ void Logger::InitInstance(std::shared_ptr<Logger> self,
   self_ = self;
   file_ = file;
   minimum_level_ = minimum_level;
+}
+
+void Logger::PostMessage(const std::string& message) {
+  bitdata::GenLog(message);
+  PostMessageImpl(message);
 }
 
 }  // namespace base

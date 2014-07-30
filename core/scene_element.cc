@@ -41,7 +41,7 @@ void SceneElement::SetScale(double scale_x, double scale_y, double scale_z) {
 
 std::vector<Point3D> SceneElement::Vertexes() const {
   std::vector<Point3D> new_vertexes;
-  std::vector<Point3D> old_vertexes = mesh_->Vertexes();
+  std::vector<Point3D> old_vertexes = mesh_->vertexes();
 
   for (size_t i = 0; i < old_vertexes.size(); i++) {
     new_vertexes.push_back(Transform(old_vertexes.at(i)));
@@ -51,21 +51,21 @@ std::vector<Point3D> SceneElement::Vertexes() const {
 }
 
 std::vector<Triangle> SceneElement::Faces() const {
-  return mesh_->Faces();
+  return mesh_->faces();
 }
 
 Point3D SceneElement::FindMin(void) const {
-  double min_x = mesh_->Vertexes()[0].x();
-  double min_y = mesh_->Vertexes()[0].y();
-  double min_z = mesh_->Vertexes()[0].z();
+  double min_x = mesh_->vertexes()[0].x();
+  double min_y = mesh_->vertexes()[0].y();
+  double min_z = mesh_->vertexes()[0].z();
 
-  for (int i = 0; i < mesh_->Vertexes().size(); i++) {
-    if (mesh_->Vertexes()[i].x() < min_x)
-      min_x = mesh_->Vertexes()[i].x();
-    if (mesh_->Vertexes()[i].y() < min_y)
-      min_y = mesh_->Vertexes()[i].y();
-    if (mesh_->Vertexes()[i].z() < min_z)
-      min_z = mesh_->Vertexes()[i].z();
+  for (int i = 0; i < mesh_->vertexes().size(); i++) {
+    if (mesh_->vertexes()[i].x() < min_x)
+      min_x = mesh_->vertexes()[i].x();
+    if (mesh_->vertexes()[i].y() < min_y)
+      min_y = mesh_->vertexes()[i].y();
+    if (mesh_->vertexes()[i].z() < min_z)
+      min_z = mesh_->vertexes()[i].z();
   }
   Point3D min_point;
   min_point.Set(min_x, min_y, min_z);
@@ -73,17 +73,17 @@ Point3D SceneElement::FindMin(void) const {
 }
 
 Point3D SceneElement::FindMax(void) const {
-  double max_x = mesh_->Vertexes()[0].x();
-  double max_y = mesh_->Vertexes()[0].y();
-  double max_z = mesh_->Vertexes()[0].z();
+  double max_x = mesh_->vertexes()[0].x();
+  double max_y = mesh_->vertexes()[0].y();
+  double max_z = mesh_->vertexes()[0].z();
 
-  for (int i = 0; i < mesh_->Vertexes().size(); i++) {
-    if (mesh_->Vertexes()[i].x() > max_x)
-      max_x = mesh_->Vertexes()[i].x();
-    if (mesh_->Vertexes()[i].y() > max_y)
-      max_y = mesh_->Vertexes()[i].y();
-    if (mesh_->Vertexes()[i].z() > max_z)
-      max_z = mesh_->Vertexes()[i].z();
+  for (int i = 0; i < mesh_->vertexes().size(); i++) {
+    if (mesh_->vertexes()[i].x() > max_x)
+      max_x = mesh_->vertexes()[i].x();
+    if (mesh_->vertexes()[i].y() > max_y)
+      max_y = mesh_->vertexes()[i].y();
+    if (mesh_->vertexes()[i].z() > max_z)
+      max_z = mesh_->vertexes()[i].z();
   }
   Point3D max_point;
   max_point.Set(max_x, max_y, max_z);
