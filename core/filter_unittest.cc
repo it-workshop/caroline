@@ -8,12 +8,12 @@
 #include "core/median_map_filter.h"
 
 TEST(MapFilterTest, TestNum) {
-  int h = 5;
   int w = 5;
-  core::DepthMap maps(h, w);
+  int h = 5;
+  core::DepthMap maps(w, h);
 
-  for (int i = 0; i < h; ++i)
-       for (int j = 0; j < w; ++j)
+  for (int i = 0; i < w; ++i)
+       for (int j = 0; j < h; ++j)
          maps.SetDepth(i, j, 2);
 
   maps.SetDepth(2, 2, 1);
@@ -23,18 +23,18 @@ TEST(MapFilterTest, TestNum) {
 
   core::DepthMap new_map = filterr.filter(maps);
 
-  ASSERT_EQ(2, new_map.Depth(2, 2));
-  ASSERT_EQ(2, new_map.Depth(0, 0));
-  ASSERT_EQ(2, new_map.Depth(1, 1));
+  EXPECT_EQ(2, new_map.Depth(2, 2));
+  EXPECT_EQ(2, new_map.Depth(0, 0));
+  EXPECT_EQ(2, new_map.Depth(1, 1));
 }
 
 TEST(MapFilterTest1, TestNum1) {
-  int h = 3;
-  int w = 7;
-  core::DepthMap maps(h, w);
+  int w = 3;
+  int h = 7;
+  core::DepthMap maps(w, h);
 
-  for (int i = 0; i < h; ++i)
-       for (int j = 0; j < w; ++j)
+  for (int i = 0; i < w; ++i)
+       for (int j = 0; j < h; ++j)
          maps.SetDepth(i, j, 0);
 
   maps.SetDepth(0, 0, 0);
@@ -63,20 +63,20 @@ TEST(MapFilterTest1, TestNum1) {
   filterr.SetKernel(3);
 
   core::DepthMap new_map = filterr.filter(maps);
-  ASSERT_EQ(new_map.Depth(1, 1), 0);
-  ASSERT_EQ(new_map.Depth(1, 2), 1);
-  ASSERT_EQ(new_map.Depth(1, 3), 1);
-  ASSERT_EQ(new_map.Depth(1, 4), 2);
-  ASSERT_EQ(new_map.Depth(1, 5), 2);
+  EXPECT_EQ(new_map.Depth(1, 1), 0);
+  EXPECT_EQ(new_map.Depth(1, 2), 1);
+  EXPECT_EQ(new_map.Depth(1, 3), 1);
+  EXPECT_EQ(new_map.Depth(1, 4), 2);
+  EXPECT_EQ(new_map.Depth(1, 5), 2);
   }
 
 TEST(MapFilterTest2, TestNum2) {
-  int h = 5;
   int w = 5;
-  core::DepthMap maps(h, w);
+  int h = 5;
+  core::DepthMap maps(w, h);
 
-  for (int i = 0; i < h; ++i)
-       for (int j = 0; j < w; ++j)
+  for (int i = 0; i < w; ++i)
+       for (int j = 0; j < h; ++j)
          maps.SetDepth(i, j, 0);
 
   maps.SetDepth(0, 0, 1);
@@ -110,8 +110,8 @@ TEST(MapFilterTest2, TestNum2) {
 
   core::DepthMap new_map = filterr.filter(maps);
 
-  ASSERT_EQ(1, new_map.Depth(0, 0));
-  ASSERT_EQ(1, new_map.Depth(2, 1));
-  ASSERT_EQ(1, new_map.Depth(3, 2));
-  ASSERT_EQ(1, new_map.Depth(4, 4));
+  EXPECT_EQ(1, new_map.Depth(0, 0));
+  EXPECT_EQ(1, new_map.Depth(2, 1));
+  EXPECT_EQ(1, new_map.Depth(3, 2));
+  EXPECT_EQ(1, new_map.Depth(4, 4));
 }

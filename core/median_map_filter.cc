@@ -2,6 +2,7 @@
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
 // Author: Sirotkin Dmitry <dmitriy.v.sirotkin@gmail.com
+
 #include <vector>
 #include "core/median_map_filter.h"
 #include "core/depth_map.h"

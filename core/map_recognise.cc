@@ -54,7 +54,7 @@ int MapRecognise::NeighbourDepth(int i, int j, int direction) {
 }
 
 void MapRecognise::dfs(int i, int j, int NumberCounter) {
-    object_map_.SetDepth(i, j, NumberCounter);
+  object_map_.SetDepth(i, j, NumberCounter);
     for (int direction = 0; direction < 4; direction++) {
       if ((SmoothNeighbourhood(i, j, direction, precision_) == true) &&
           (NeighbourDepth(i, j, direction) == 0))  {
