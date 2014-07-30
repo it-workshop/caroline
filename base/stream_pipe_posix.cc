@@ -14,27 +14,27 @@
 
 namespace base {
 
-std::unique_ptr<Stream> Stream::OpenFile(
+std::unique_ptr<Stream> Stream::OpenPipe(
     const std::string& path, Stream::Mode mode) {
-  int filedf = open(path.c_str(), O_RDWR);
+  int filed = StreamPipePOSIX::DescriptorSetMode(path, mode);
 
-  if (filedf == -1) {
+  if (filed == -1) {
     unlink(path.c_str());
     if (mkfifo(path.c_str(), O_RDWR) == -1) {
       LOG(WARNING) << "Pipe - can't create file.";
       return nullptr;
     }
 
-    filedf = open(path.c_str(), O_RDWR);
+    filed = StreamPipePOSIX::DescriptorSetMode(path, mode);
   }
 
   return std::unique_ptr<Stream>(
         new Stream(std::move(std::unique_ptr<Stream::Impl>(
-                               new StreamPipePOSIX(filedf)))));
+                               new StreamPipePOSIX(filed)))));
 }
 
-StreamPipePOSIX::StreamPipePOSIX(int filedf)
-  : filedf_(filedf) {
+StreamPipePOSIX::StreamPipePOSIX(int filed)
+  : filedf_(filed) {
 }
 
 size_t StreamPipePOSIX::Write(const char *buffer, size_t size) {
@@ -57,6 +57,30 @@ size_t StreamPipePOSIX::Read(char *buffer, size_t size) {
 
 void StreamPipePOSIX::Close() {
   close(filedf());
+}
+
+int StreamPipePOSIX::DescriptorSetMode(
+    const std::string& path, Stream::Mode mode) {
+  int filed;
+
+  switch (mode) {
+  case Stream::kRead: {
+    filed = open(path.c_str(), O_RDONLY);
+    break;
+  }
+  case Stream::kWrite: {
+    filed = open(path.c_str(), O_WRONLY);
+    break;
+  }
+  case Stream::kAppend: {
+    filed = open(path.c_str(), O_WRONLY);
+    break;
+  }
+  default:
+    filed = open(path.c_str(), O_RDWR);
+  }
+
+  return filed;
 }
 
 }  // namespace base

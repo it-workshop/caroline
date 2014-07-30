@@ -11,12 +11,18 @@
 
 namespace base {
 
+/// Implementation of POSIX pipe
+/// Can be used to read and write to pipe
 class StreamPipePOSIX : public Stream::Impl {
  public:
-  explicit StreamPipePOSIX(int filedf);
+  /// Constructor
+  /// @param[in] filedf Sets the filedf_ to filedf;
+  explicit StreamPipePOSIX(int filed);
 
+  /// Destructor
   virtual ~StreamPipePOSIX() {}
 
+  /// Used only for File schema
   virtual bool Seek(ssize_t offset, Stream::SeekType type) override {}
   virtual size_t GetSize() override {}
 
@@ -25,7 +31,11 @@ class StreamPipePOSIX : public Stream::Impl {
 
   virtual void Close() override;
 
+  static int DescriptorSetMode(
+      const std::string& path, Stream::Mode mode);
+
  protected:
+  /// Returns the file descriptor.
   int filedf() const { return filedf_; }
 
  private:
