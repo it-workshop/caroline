@@ -16,7 +16,7 @@ namespace base {
 
 std::unique_ptr<Stream> Stream::OpenPipe(
     const std::string& path, Stream::Mode mode) {
-  int filed = StreamPipePOSIX::DescriptorSetMode(path, mode);
+  int filed = open(path.c_str(), O_RDWR);
 
   if (filed == -1) {
     unlink(path.c_str());
@@ -25,7 +25,7 @@ std::unique_ptr<Stream> Stream::OpenPipe(
       return nullptr;
     }
 
-    filed = StreamPipePOSIX::DescriptorSetMode(path, mode);
+    filed = open(path.c_str(), O_RDWR);
   }
 
   return std::unique_ptr<Stream>(
