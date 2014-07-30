@@ -69,7 +69,8 @@ int Caroline::Run() {
                                   frameset.at(1).second.rotation(),
                                   frameset.at(1).second.location()));
 
-    auto depth_map = DepthMap::BuildMap(optical_flow, *cameras_properties_, w, h);
+    auto depth_map = DepthMap::BuildMap(
+          optical_flow, *cameras_properties_, w, h);
     std::unique_ptr<Mesh> mesh(new DepthMesh(*depth_map, 0, INT_MAX));
     std::unique_ptr<Scene3D> scene(new Scene3D);
 

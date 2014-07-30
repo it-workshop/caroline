@@ -6,10 +6,8 @@
 #ifndef CORE_POSITION_H_
 #define CORE_POSITION_H_
 
-#include "core/point3d.h"
 #include "core/quaternion.h"
-
-#include <opencv2/core/mat.hpp>
+#include "opencv2/core/mat.hpp"
 
 namespace core {
 
