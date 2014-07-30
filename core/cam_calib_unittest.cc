@@ -29,9 +29,9 @@ TEST(CamerasCalibrateTest, Test1) {
   calib.HarvestChessboardIdealPointList(9, 6, 2.8);
   cam = calib.calibrate(9, 6, 2.8);
 
-  ASSERT_TRUE(fabs(cam.P2()(0, 3) - (-8.7705)) < epsilon);
-  ASSERT_TRUE(fabs(cam.P2()(1, 3) - (-0.0513309)) < epsilon);
-  ASSERT_TRUE(fabs(cam.P2()(2, 3) - (-8.7705)) < epsilon);
+  EXPECT_LE((fabs(cam.P2()(0, 3) - (-8.7705))), epsilon);
+  EXPECT_LE((fabs(cam.P2()(1, 3) - (-0.0513309))), epsilon);
+  EXPECT_LE((fabs(cam.P2()(2, 3) - (-8.7705))), epsilon);
 }
 
 TEST(CamerasCalibrateTest, TestForOneCam) {
@@ -56,13 +56,13 @@ TEST(CamerasCalibrateTest, TestForOneCam) {
 
   calib.set_first(intr_mat);
 
-  ASSERT_TRUE(fabs(intr_mat(0, 2) - 318.873) < epsilon);
-  ASSERT_TRUE(fabs(intr_mat(1, 2) - 239.406) < epsilon);
+  EXPECT_LE((fabs(intr_mat(0, 2) - 318.873)), epsilon);
+  EXPECT_LE((fabs(intr_mat(1, 2) - 239.406)), epsilon);
 
   intr_mat = calib.CalebrationOneCamera(
         core::CameraCalibration::kRight, 9, 6, 2.8);
   calib.set_second(intr_mat);
 
-  ASSERT_TRUE(fabs(intr_mat(0, 2) - 319.581) < epsilon);
-  ASSERT_TRUE(fabs(intr_mat(1, 2) - 239.706) < epsilon);
+  EXPECT_LE((fabs(intr_mat(0, 2) - 319.581)), epsilon);
+  EXPECT_LE((fabs(intr_mat(1, 2) - 239.706)), epsilon);
 }
