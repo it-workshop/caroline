@@ -1,7 +1,6 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Konstantin Bormotov <bormotovk@gmail.com
 /// @author Konstantin Bormotov <bormotovk@gmail.com>
 
 #ifndef BASE_STREAM_NET_WIN_H_
@@ -75,8 +74,8 @@ namespace base {
     int socket_type_;
     /// Socket
     SOCKET sock_;
-    /// WSA data structure
-    WSADATA* wsadata_;
+    /// WSA data structurestatic
+    WSADATA wsadata_;
     /// Read or write or both mode
     Stream::Mode mode_;
     /// ip address
@@ -84,7 +83,7 @@ namespace base {
     /// Port
     int port_;
     /// Structure which contain base information about socket like used protocols
-    SOCKADDR_IN addr_info;
+    SOCKADDR_IN addr_info_;
     /// Write ip and port in special structure
     /// param[in] ip_address ip address
     /// param[in] port Port 
@@ -101,6 +100,11 @@ namespace base {
     void StreamNetWin::SetMode(SOCKET sock, Stream::Mode mode);
     /// Initilisation of WSA data
     void InitWSA();
+    bool TryAccept();
+    ///
+    SOCKET accept_socket_;
+    bool accepted_;
+    void AsyncThisShit();
   };
 }  // namespace base
 

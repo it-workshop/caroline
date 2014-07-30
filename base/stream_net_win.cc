@@ -28,17 +28,18 @@ namespace base {
     Stream::Mode mode)
     : ip_addr_(ip_address),
     port_(port),
-    mode_(mode)
+    mode_(mode),
+    accepted_(false)
   {}
   StreamNetWin::~StreamNetWin() {
   }
 
   void StreamNetWin::InitWSA() {
-    if (!wsadata_)
-      wsadata_ = new WSADATA();
-    int iResult = WSAStartup(MAKEWORD(2, 2), wsadata_);   // Fill in WSA info
+    //if (!wsadata_)
+    //  wsadata_ = new WSADATA();
+    int iResult = WSAStartup(MAKEWORD(2, 2), &wsadata_);   // Fill in WSA info
     if (iResult != NO_ERROR) {
-      LOG(ERR) << WSAGetLastError();
+      LOG(ERR) << WSAGetLastError() << "\n iResult: "<< iResult;
     }
   }
 
@@ -69,10 +70,22 @@ namespace base {
     }
     }
   }
+  
+  /*bool StreamNetWin::TryAccept() { 
+    if (accepted_)
+      return true;
+    sockaddr addr_info;
+    int size = sizeof(sockaddr);
+    sock_ = accept(sock_, &addr_info, &size);
+  }*/
+  
   size_t StreamNetWin::Read(char* buffer, size_t size) {
+    /*if (!TryAccept()) {
+      return 0;
+    }*/
     typedef int socklen_t;
     socklen_t from_lenghth;
-    SOCKADDR_IN from = addr_info;
+    SOCKADDR_IN from = addr_info_;
     int received_bytes;
     if (socket_type_ == UDP) {
       received_bytes = recvfrom(sock_, buffer, size,
@@ -93,10 +106,13 @@ namespace base {
     return received_bytes;
   }
   size_t StreamNetWin::Write(const char* buffer, size_t size) {
+    /*if (!TryAccept()) {
+      return 0;
+    }*/
     int sent_bytes;
     if (socket_type_ == UDP) {
       sent_bytes = sendto(sock_, (const char*)buffer, size,
-        0, reinterpret_cast<sockaddr*>(&addr_info), sizeof(sockaddr_in));
+        0, reinterpret_cast<sockaddr*>(&addr_info_), sizeof(sockaddr_in));
       if (sent_bytes != size) {
         LOG(ERR) << "failed to send packet: return value " << sent_bytes;
         return false;
@@ -105,7 +121,8 @@ namespace base {
     else if (socket_type_ == TCP) {
       sent_bytes = send(sock_, buffer, size, 0);
       if (sent_bytes != size) {
-        LOG(ERR) << "failed to send packet: return value" << sent_bytes;
+        LOG(ERR) << "failed to send packet: return value " << sent_bytes;
+        LOG(ERR) << "\n Error: " << WSAGetLastError();
         return false;
       }
       return true;
@@ -127,12 +144,12 @@ namespace base {
     WSACleanup();;
   }
   void StreamNetWin::SetSockAddr(int family,
-    const std::string& ip_address,
-    uint16_t port_no) {
+                                 const std::string& ip_address,
+                                 uint16_t port_no) {
     auto host_ip = ConvertAddr(ip_addr_);
-    addr_info.sin_family = AF_INET;
-    addr_info.sin_port = htons(port_no);
-    addr_info.sin_addr.s_addr = inet_addr(host_ip);
+    addr_info_.sin_family = AF_INET;
+    addr_info_.sin_port = htons(port_no);
+    addr_info_.sin_addr.s_addr = inet_addr(host_ip);
   }
 
   char* StreamNetWin::ConvertAddr(const std::string& ip_address) {
@@ -145,17 +162,19 @@ namespace base {
 
   bool StreamNetWin::OpenTCPSocket() {
     StreamNetWin::InitWSA();
-    SOCKADDR_IN target = addr_info;
+    socket_type_ = TCP;
     sock_ = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    SetSockAddr(AF_INET, ip_addr_, port_);
     if (sock_ == INVALID_SOCKET) {
       LOG(ERR) << "Invalid Socket" << WSAGetLastError();
       Close();
       return false;
     }
     SetMode(sock_, mode_);
-    iResult = connect(sock_,
-      reinterpret_cast<SOCKADDR *>(&target),
-      sizeof(target));
+    AsyncThisShit();
+    int iResult = connect(sock_,
+      reinterpret_cast<SOCKADDR *>(&addr_info_),
+      sizeof(addr_info_));
     if (iResult == SOCKET_ERROR) {
       LOG(ERR) << "SOCKET_ERROR" << WSAGetLastError();
       Close();
@@ -167,11 +186,7 @@ namespace base {
   }
   bool StreamNetWin::OpenUDPSocket() {
     StreamNetWin::InitWSA();
-    SOCKADDR_IN target;
-    auto host_ip = ConvertAddr(ip_addr_);
-    target.sin_family = AF_INET;
-    target.sin_port = htons(port_);
-    target.sin_addr.s_addr = inet_addr(host_ip);
+    StreamNetWin::SetSockAddr(AF_INET, ip_addr_, port_);
     sock_ = socket(AF_INET, SOCK_DGRAM, IPPROTO_TCP);
     SetMode(sock_, mode_);
     if (sock_ == INVALID_SOCKET) {
@@ -186,20 +201,15 @@ namespace base {
   bool StreamNetWin::BindUDPSocket() {
     socket_type_ = UDP;
     StreamNetWin::InitWSA();
-    }
-    SOCKADDR_IN addr;
     DWORD non_blocking = 1;
-
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port_);
-    addr.sin_addr.s_addr = inet_addr(ConvertAddr(ip_addr_));
+    StreamNetWin::SetSockAddr(AF_INET, ip_addr_, port_);
     sock_ = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);  // Create socket
     if (sock_ == INVALID_SOCKET) {
       LOG(ERR) << WSAGetLastError();
       return false;
     }
     SetMode(sock_, mode_);
-    if (bind(sock_, (LPSOCKADDR)&addr, sizeof(addr)) == SOCKET_ERROR) {
+    if (bind(sock_, (LPSOCKADDR)&addr_info_, sizeof(addr_info_)) == SOCKET_ERROR) {
       LOG(ERR) << WSAGetLastError();
       return false;
     }
@@ -215,29 +225,33 @@ namespace base {
   }
   bool StreamNetWin::BindTCPSocket() {
     socket_type_ = TCP;
-    SOCKADDR_IN addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port_);
-    addr.sin_addr.s_addr = inet_addr(ConvertAddr(ip_addr_));
+    DWORD non_blocking = 1;
+    StreamNetWin::InitWSA();
+    StreamNetWin::SetSockAddr(AF_INET, ip_addr_, port_);
     sock_ = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);  // Create socket
     if (sock_ == INVALID_SOCKET)  {
       LOG(ERR) << WSAGetLastError();
       return false;
     }
     SetMode(sock_, mode_);
-    if (bind(sock_, (LPSOCKADDR)&addr, sizeof(addr)) == SOCKET_ERROR) {
+    if (bind(sock_, (LPSOCKADDR)&addr_info_, sizeof(addr_info_)) == SOCKET_ERROR) {
       LOG(ERR) << WSAGetLastError();
       return false;
     }
+    /*if (ioctlsocket(sock_, FIONBIO, &non_blocking) != 0) {
+      LOG(ERR) << "Failed to set non-blocking socket \n";
+      return false;
+    }*/
+    AsyncThisShit();
     if (listen(sock_, SOMAXCONN) == SOCKET_ERROR) {
       LOG(ERR) << "listen function failed with error: %d\n" << WSAGetLastError();
       return false;
     }
-    SOCKET AcceptSocket = accept(sock_, NULL, NULL);
-    if (AcceptSocket == INVALID_SOCKET) {
-      LOG(ERR) << "invalid accept socket: " << WSAGetLastError();
-      return false;
-    }
+    //SOCKET accept_socket_ = accept(sock_, NULL, NULL);
+    //if (AcceptSocket == INVALID_SOCKET) {
+    //  LOG(ERR) << "invalid accept socket: " << WSAGetLastError();
+    //  return false;
+    //}
     return true;
   }
 
@@ -270,8 +284,7 @@ namespace base {
     std::unique_ptr<StreamNetWin>
       connection(new StreamNetWin(ip_address, port_no, mode));
     if (!connection->BindTCPSocket())
-      return std::unique_ptr<Stream>(new Stream(std::move(connection)));
-    //return nullptr;
+      return nullptr;
     else
       return std::unique_ptr<Stream>(new Stream(std::move(connection)));
   }
@@ -310,5 +323,19 @@ namespace base {
   }
   size_t Stream::Impl::GetSize() {
     return GetSize();
+  }
+
+
+  void StreamNetWin::AsyncThisShit(){
+    SOCKET sock = sock_;
+    const int WM_SOCKET = 104;
+    HWND console_wnd = GetConsoleWindow();
+    int i_result = WSAAsyncSelect(sock, console_wnd, WM_SOCKET, (FD_CLOSE | FD_READ));
+    if (i_result)
+    {
+      LOG(ERR) << "WSAAsyncSelect failed " << "Critical Error: " << WSAGetLastError();
+    }
+    else
+      sock_ = sock;
   }
 }  // namespace base

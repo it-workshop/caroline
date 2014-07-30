@@ -43,24 +43,24 @@ std::unique_ptr<Stream> Stream::Open(
     return std::unique_ptr<Stream>();
 
   const std::string& host =
-      url.substr(schema_offset + 3, port_offset);
-  const std::string& port_str = url.substr(port_offset + 1);
+      url.substr(schema_offset + 3, port_offset - schema_offset - 3);
+  const std::string& port_str = url.substr(port_offset + 1, port_offset);
   const uint16_t port = atoi(port_str.c_str());
 
   if (kTCPSchema == schema) {
-    // return OpenTCPSocket(host, port, mode);
+     return OpenTCPSocket(host, port, mode);
   }
 
   if (kTCPBindSchema == schema) {
-    // return BindTCPSocket(port, mode);
+     return BindTCPSocket(host,port, mode);
   }
 
   if (kUDPSchema == schema) {
-    // return OpenUDPSocket(host, port, mode);
+     return OpenUDPSocket(host, port, mode);
   }
 
   if (kUDPBindSchema == schema) {
-    // return BindUDPSocket(port, mode);
+     return BindUDPSocket(host, port, mode);
   }
 
   return std::unique_ptr<Stream>();
