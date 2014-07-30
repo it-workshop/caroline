@@ -35,6 +35,10 @@ class Mesh {
   void AddVertex(const Point3D& point);
   void AddFace(const Triangle& face);
 
+  void ChangeVertex(const Point3D& point, int i) {
+    vertexes_.at(i) = point;
+  }
+
   std::vector<Point3D> Vertexes() const { return vertexes_; }
   std::vector<Triangle> Faces() const { return faces_; }
 

@@ -52,7 +52,7 @@ void TopDownMergeSort(std::vector<int>* old_order,
 }
 
 Mesh MergeSortByX(const Mesh& mesh) {
-  int n = mesh.Vertexes().size();
+  const int n = mesh.Vertexes().size();
   std::vector<int> old_order;
   std::vector<int> new_order;
   for (int i = 0; i < n; i++) {

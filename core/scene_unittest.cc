@@ -5,7 +5,6 @@
 
 #include <memory>
 #include <cmath>
-#include <iostream>
 
 #include "gtest/gtest.h"
 
@@ -38,7 +37,7 @@ TEST(SceneTest, ObjectTranslationTest) {
   Line.set_scale_y(1);
   Line.set_scale_z(1);
 
-  Line = Line.Transform(Line);
+  Line.Transform(&Line);
 
   EXPECT_TRUE(fabs(Line.Vertexes()[0].x() - 2) < precision);
   EXPECT_TRUE(fabs(Line.Vertexes()[0].y() - 2) < precision);
@@ -73,7 +72,7 @@ TEST(SceneTest, ObjectRotationTest) {
   Line.set_scale_y(1);
   Line.set_scale_z(1);
 
-  Line = Line.Transform(Line);
+  Line.Transform(&Line);
 
   EXPECT_TRUE(fabs(Line.Vertexes()[1].x() + 1)< precision);
   EXPECT_TRUE(fabs(Line.Vertexes()[1].y() - 2) < precision);
@@ -103,15 +102,15 @@ TEST(SceneTest, ObjectScalingTest) {
   Line.set_scale_y(0.5);
   Line.set_scale_z(3);
 
-  Line = Line.Transform(Line);
+  Line.Transform(&Line);
 
   EXPECT_TRUE(fabs(Line.Vertexes()[0].x() - 2) < precision);
   EXPECT_TRUE(fabs(Line.Vertexes()[0].y() + 1) < precision);
   EXPECT_TRUE(fabs(Line.Vertexes()[0].z() + 1) < precision);
 
-  EXPECT_TRUE(fabs(Line.Vertexes()[1].x() - 4) < precision);
-  EXPECT_TRUE(fabs(Line.Vertexes()[1].y() + 3) < precision);
-  EXPECT_TRUE(fabs(Line.Vertexes()[1].z() - 2) < precision);
+  EXPECT_TRUE((Line.Vertexes()[1].x() - 4) < precision);
+  EXPECT_TRUE((Line.Vertexes()[1].y() + 3) < precision);
+  EXPECT_TRUE((Line.Vertexes()[1].z() - 2) < precision);
 }
 
 TEST(SceneTest, MeshSortingTest) {
@@ -129,10 +128,10 @@ TEST(SceneTest, MeshSortingTest) {
   mesh.AddFace(core::Triangle(0, 2, 3));
   mesh.AddFace(core::Triangle(1, 2, 3));
 
-  core::Point3D point10(10, 0, 0);
+  core::Point3D point10(15, 0, 0);
   core::Point3D point20(12, 1, 0);
   core::Point3D point30(13, 0, 1);
-  core::Point3D point40(15, 0, 0);
+  core::Point3D point40(10, 0, 0);
   core::Mesh mesh0;
   mesh0.AddVertex(point10);
   mesh0.AddVertex(point20);
@@ -144,9 +143,8 @@ TEST(SceneTest, MeshSortingTest) {
   mesh0.AddFace(core::Triangle(1, 2, 3));
   core::SceneElement TestScene(&mesh);
   EXPECT_EQ(TestScene.Vertexes().size(), 4);
-  TestScene.Merge(mesh0, &TestScene);
+  core::Mesh GluedMesh = TestScene.Merge(mesh0, TestScene);
   std::vector<core::Point3D> some_vertices;
-  some_vertices = TestScene.Vertexes();
-//  std::cout << TestScene.Vertexes().size() << '\n';
-//  EXPECT_EQ(TestScene.Vertexes().at(0).x(), 7);
+  some_vertices = GluedMesh.Vertexes();
+  EXPECT_EQ(GluedMesh.Vertexes().size(), 7);
 }
