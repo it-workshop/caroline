@@ -49,7 +49,7 @@ class StreamNetPOSIXFactory {
 class StreamNetPOSIX : public Stream::Impl {
  public:
   /// Destructor.
-  virtual ~StreamNetPOSIX() {}
+  virtual ~StreamNetPOSIX() { Close(); }
 
   /// Not needed for sockets, so empty impl
   bool Seek(ssize_t offset, Stream::SeekType type) {}

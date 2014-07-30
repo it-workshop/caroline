@@ -172,6 +172,7 @@ target_link_libraries(demo_flowdemo
 enable_testing()
 include_directories(third_party/gtest/include)
 add_application(unit_tests
+  base/stream_unittest.cc
   base/command_line_unittest.cc
   base/json_unittest.cc
   base/values_unittest.cc
