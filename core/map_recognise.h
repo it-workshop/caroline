@@ -21,7 +21,9 @@ class MapRecognise {
 
   DepthMap filter(const DepthMap &map);
   void SetPrecision(float Precision);
-  DepthMap GetMap() { return new_map_;}
+
+ protected:
+  DepthMap GetMap() { return new_map_; }
   void dfs(int PointWidth, int PointHeight, int NumberCounter);
   bool SmoothNeighbourhood(int PointWidth, int PointHeight,
                            int direction, float Precision);
@@ -31,9 +33,8 @@ class MapRecognise {
   // 1 - Right
   // 2 - Down
   // 3 - Up
-
  private:
-  float Precision_;
+  float precision_;
 
   DepthMap object_map_;
   DepthMap new_map_;

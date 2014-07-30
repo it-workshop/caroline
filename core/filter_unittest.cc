@@ -110,8 +110,8 @@ TEST(MapFilterTest2, TestNum2) {
 
   core::DepthMap new_map = filterr.filter(maps);
 
-  ASSERT_EQ(new_map.Depth(0, 0), 1);
-  ASSERT_EQ(new_map.Depth(2, 1), 1);
-  ASSERT_EQ(new_map.Depth(3, 2), 1);
-  ASSERT_EQ(new_map.Depth(4, 4), 1);
+  ASSERT_EQ(1, new_map.Depth(0, 0));
+  ASSERT_EQ(1, new_map.Depth(2, 1));
+  ASSERT_EQ(1, new_map.Depth(3, 2));
+  ASSERT_EQ(1, new_map.Depth(4, 4));
 }

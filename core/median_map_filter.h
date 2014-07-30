@@ -10,7 +10,7 @@
 
 namespace core {
 
-class MedianMapFilter: public MapFilter {
+class MedianMapFilter : public MapFilter {
  public:
   MedianMapFilter();
 
@@ -18,8 +18,6 @@ class MedianMapFilter: public MapFilter {
 
   DepthMap filter(const DepthMap &map);
   void SetKernel(int KernelSize);
-  //cv::Mat matrisate(const DepthMap &map);
-  //DepthMap dematrisate(const cv::Mat &matDepthVector);
 
  private:
   int KernelSize_;
