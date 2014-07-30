@@ -43,7 +43,8 @@ std::unique_ptr<Stream> Stream::Open(
     return std::unique_ptr<Stream>();
 
   const std::string& host =
-      url.substr(schema_offset + 3, port_offset);
+      url.substr(schema_offset + 3, port_offset - schema_offset - 3);
+
   const std::string& port_str = url.substr(port_offset + 1);
   const uint16_t port = atoi(port_str.c_str());
 
