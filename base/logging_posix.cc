@@ -25,7 +25,7 @@ class LoggerPosix : public Logger {
 
   /// Implementation of Stream::PostMessage().
   /// @param message Message to write into the log.
-  virtual void PostMessage(const std::string& message) override;
+  virtual void PostMessageImpl(const std::string& message) override;
 
  private:
   /// Copy constructor is disallowed.
@@ -44,7 +44,7 @@ LoggerPosix::LoggerPosix() {}
 
 LoggerPosix::~LoggerPosix() {}
 
-void LoggerPosix::PostMessage(const std::string& message) {
+void LoggerPosix::PostMessageImpl(const std::string& message) {
   std::cout << message << std::flush;
   if (file().empty())
     return;

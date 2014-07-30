@@ -54,6 +54,8 @@ include_directories("${OpenCV_INCLUDE_DIRS}")
 
 include_directories("${CMAKE_SOURCE_DIR}")
 
+include_directories("${CMAKE_BINARY_DIR}")
+
 find_package(Protobuf REQUIRED)
 include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
 
@@ -128,6 +130,8 @@ add_module(core OBJECT
   core/scene3d.cc
   core/scene_element.h
   core/scene_element.cc
+  core/serialization.cc
+  core/serialization.h
   core/surface_mesh.h
   core/surface_mesh.cc
   core/switches.cc
