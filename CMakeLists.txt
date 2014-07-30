@@ -48,6 +48,7 @@ else ()
     opencv_highgui
     opencv_imgproc
     opencv_video
+    opencv_calib3d
     )
 endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
@@ -62,6 +63,8 @@ include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
 protobuf_generate_cpp(PROTO_SOURCES PROTO_HEADERS
   "api/protocol.proto"
   )
+
+file (COPY test_images DESTINATION ${CMAKE_BINARY_DIR})
 
 add_module(base OBJECT
   base/command_line.cc
@@ -81,6 +84,8 @@ add_module(base OBJECT
   )
 
 add_module(core OBJECT
+  core/camera_calibration.cc
+  core/camera_calibration.h
   core/cameras.cc
   core/cameras.h
   core/caroline.cc
@@ -179,6 +184,7 @@ add_application(unit_tests
   base/command_line_unittest.cc
   base/json_unittest.cc
   base/values_unittest.cc
+  core/cam_calib_unittest.cc
   core/cameras_unittest.cc
   core/scene_unittest.cc
   core/opencv_unittest.cc
