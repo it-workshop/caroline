@@ -23,6 +23,14 @@ class Scene3D {
   // Number must be less then NumberOfElements.
   SceneElement ElementAt(int number) const;
 
+  std::vector<SceneElement>::const_iterator begin() const {
+    return scene_elements_.begin();
+  }
+
+  std::vector<SceneElement>::const_iterator end() const {
+    return scene_elements_.end();
+  }
+
  private:
   std::vector<SceneElement> scene_elements_;
 };

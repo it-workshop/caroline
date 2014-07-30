@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-#include "protocol.pb.h"
+#include "protocol.pb.h"  // NOLINT
 
 namespace base {
 
@@ -93,7 +93,7 @@ class Logger {
   /// Internal function that writes a string to the log.
   /// @param[in] message Message to write.
   void PostMessage(const std::string& message);
-  virtual void PostMessageImpl (const std::string& message)=0;
+  virtual void PostMessageImpl(const std::string& message)=0;
 
  private:
   /// Internal function that initializes logger.

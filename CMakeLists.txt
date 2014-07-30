@@ -54,6 +54,8 @@ include_directories("${OpenCV_INCLUDE_DIRS}")
 
 include_directories("${CMAKE_SOURCE_DIR}")
 
+include_directories("${CMAKE_BINARY_DIR}")
+
 find_package(Protobuf REQUIRED)
 include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
 

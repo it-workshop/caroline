@@ -1,113 +1,92 @@
 // Copyright (c) 2014 The Caroline authors. All right reserved.
-// Use of this source file is governed by a MIT license that can be found in the// License file
+// Use of this source file is governed by a MIT license that can be found in the
+// License file
 /// @author: Vladislav Krikunov <vlad.krikunoff@yandex.ru>
 
 #include "core/serialization.h"
 
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "protocol.pb.h"  // NOLINT
+
 namespace bitdata {
 
-inline void GenDMap (core::DepthMap& defaultM) {
-  Message* mess = new Message;
-  int height,width;
-  height = defaultM.height();
-  width = defaultM.width();
-  mess->mutable_depth_map()->set_width(width);
-  mess->mutable_depth_map()->set_height(width);
-  int j;
-  int i;
-  int k = 0;
-  for(int i=0;i<height;i++) { 
-    for( j=0;j<width;j++) {
-      mess->mutable_depth_map()->set_data(i+j,defaultM.Depth(i+k,j));
-    }
-    k += width;
-  }
-  mess->set_type(bitdata::Message::DEPTH_MAP);
+void GenDMap(const core::DepthMap& depth_map) {
+  std::unique_ptr<Message> message(new Message());
+  message->mutable_depth_map()->set_width(depth_map.width());
+  message->mutable_depth_map()->set_height(depth_map.height());
+  for (double depth : depth_map)
+    message->mutable_depth_map()->add_data(depth);
+  message->set_type(Message::DEPTH_MAP);
 }
 
-void GenOptFlow (core::OpticalFlow defaultFlow){
-  int i=0;
-  OpticalFlowItem flowItem;
-  std::unique_ptr<Message>mess(new Message);
-  do {
-    mess->mutable_optical_flow()->mutable_item(i)->
-        mutable_left()->set_x(defaultFlow[i].first.x);
-    mess->mutable_optical_flow()->mutable_item(i)->
-        mutable_left()->set_y(defaultFlow[i].first.y);
-    mess->mutable_optical_flow()->mutable_item(i)->
-        mutable_right()->set_x(defaultFlow[i].second.x);
-    mess->mutable_optical_flow()->mutable_item(i)->
-        mutable_right()->set_y(defaultFlow[i].second.y);
-    i++;
+void GenOptFlow(const core::OpticalFlow& optical_flow) {
+  std::unique_ptr<Message>message(new Message);
+  for (auto pair : optical_flow) {
+    OpticalFlowItem* item = message->mutable_optical_flow()->add_item();
+    item->mutable_left()->set_x(pair.first.x);
+    item->mutable_left()->set_y(pair.first.y);
+    item->mutable_right()->set_x(pair.second.x);
+    item->mutable_right()->set_y(pair.second.y);
   }
-  while(i<defaultFlow.size());
-  mess->set_type(bitdata::Message::OPTICAL_FLOW);
+  message->set_type(Message::OPTICAL_FLOW);
 }
 
-void GenModel(core::Scene3D defaultScene){
-  std::unique_ptr<Message>mess(new Message);
-  int i = defaultScene.NumberOfElements();
-  unsigned int j=0,k,n;
-  std::vector<core::Point3D>vertexes;
-  std::vector<core::Triangle>faces;
+void GenModel(core::Scene3D scene) {
+  std::unique_ptr<Message>message(new Message());
+  std::vector<core::Point3D> vertexes;
+  std::vector<core::Triangle> faces;
   core::SceneElement some_element;
-  do {  
-    some_element = some_element.Transform(defaultScene.ElementAt(j)); 
-    vertexes = some_element.get_mesh()->Vertexes();
-    faces = some_element.get_mesh()->Faces();
-    k = vertexes.size();
-    for(n=0;j<k;n++){
-      mess->mutable_model()->mutable_verticies(n)->
-          set_x(vertexes[n].x());
-      mess->mutable_model()->mutable_verticies(n)->
-          set_y(vertexes[n].y());
-      mess->mutable_model()->mutable_verticies(n)->
-          set_z(vertexes[n].z());                
+  int vertex_base_index = 0;
+  for (auto scene_element : scene) {
+    for (auto vertex : scene_element.mesh()->vertexes()) {
+      auto transformed_vertex = scene_element.Transform(vertex);
+      auto proto_vertex = message->mutable_model()->add_verticies();
+      proto_vertex->set_x(vertex.x());
+      proto_vertex->set_y(vertex.y());
+      proto_vertex->set_z(vertex.z());
     }
-    k = faces.size();
-    for(n=0;n<k;n++) {  
-    mess->mutable_model()->mutable_faces(n)->
-        set_point1(faces[n].Point1());
-    mess->mutable_model()->mutable_faces(n)->
-        set_point2(faces[n].Point2());
-    mess->mutable_model()->mutable_faces(n)->
-        set_point3(faces[n].Point3());
+    for (auto face : scene_element.mesh()->faces()) {
+      auto proto_face = message->mutable_model()->add_faces();
+      proto_face->set_point1(face.Point1() + vertex_base_index);
+      proto_face->set_point2(face.Point2() + vertex_base_index);
+      proto_face->set_point3(face.Point3() + vertex_base_index);
     }
-    j++;
+    vertex_base_index += scene_element.mesh()->vertexes().size();
   }
-  while(j<i);
-  mess->set_type(bitdata::Message::MODEL);
+  message->set_type(Message::MODEL);
 }
 
-void GenPic(core::ImageCapture* default_pic1,
-            core::ImageCapture* default_pic2 ) {
-  std::unique_ptr<Message>mess(new Message);
-  cv::Mat frame1;
-  cv::Mat frame2;
-  int height;
-  int width;
-  int n;
-  int k;
-  int z=0;
-  frame1 = default_pic1->GetNextImage();
-  frame2 = default_pic1->GetNextImage();
-  height= frame1.size().height;
-  width = frame1.size().width;
-  mess->mutable_images()->mutable_left()->
-      set_width(width);
-  mess->mutable_images()->mutable_right()->
-      set_height(height);
-  for(n=0;n<height;n++) {
-     for(k=0;k<width;k++){
-      mess->mutable_images()->mutable_left()->
-          set_data(k+z,frame1.at<int>(k,n));
-      mess->mutable_images()->mutable_right()->
-          set_data(k+z,frame2.at<int>(k,n));
-      }
-      z+=width;
+void GenPic(const std::vector<std::pair<cv::Mat, core::Position>>& frameset) {
+  std::unique_ptr<Message>message(new Message());
+  const cv::Mat& left = frameset[0].first;
+  const cv::Mat& right = frameset[1].first;
+  message->mutable_images()->mutable_left()->
+      set_width(left.size().width);
+  message->mutable_images()->mutable_left()->
+      set_height(left.size().height);
+  message->mutable_images()->mutable_right()->
+      set_width(right.size().width);
+  message->mutable_images()->mutable_right()->
+      set_width(right.size().width);
+  for (auto it = left.begin<double>(), end = left.end<double>();
+      it != end; ++it) {
+    message->mutable_images()->mutable_left()->add_data(*it);
   }
-  mess->set_type(bitdata::Message::IMAGES);
+  for (auto it = right.begin<double>(), end = right.end<double>();
+      it != end; ++it) {
+    message->mutable_images()->mutable_right()->add_data(*it);
+  }
+  message->set_type(Message::IMAGES);
 }
 
-} //namespace bitdata
-  
+void GenLog(const std::string& message) {
+  std::unique_ptr<Message>proto_message(new Message());
+  proto_message->mutable_log()->set_line(message);
+  proto_message->set_type(Message::LOG);
+}
+
+}  // namespace bitdata
+

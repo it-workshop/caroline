@@ -29,8 +29,8 @@ void PlySaver::Save(Mesh *mesh) {
     return;
   }
 
-  std::vector<Point3D> vertexes = mesh->Vertexes();
-  std::vector<Triangle> faces = mesh->Faces();
+  std::vector<Point3D> vertexes = mesh->vertexes();
+  std::vector<Triangle> faces = mesh->faces();
 
   outfile << "ply\n";
   outfile << "format ascii 1.0\n";

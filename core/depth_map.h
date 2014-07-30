@@ -34,6 +34,13 @@ class DepthMap {
       const Cameras& cam,
       int w, int h);
 
+  std::vector<double>::const_iterator begin() const {
+    return depth_map_.begin();
+  }
+  std::vector<double>::const_iterator end() const {
+    return depth_map_.end();
+  }
+
  private:
   int height_;
   int width_;
