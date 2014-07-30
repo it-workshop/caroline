@@ -10,7 +10,7 @@ namespace core {
 Scene3D::Scene3D() {
 }
 
-void Scene3D::AddElement(const SceneElement &element) {
+void Scene3D::AddElement(SceneElement *element) {
   scene_elements_.push_back(element);
 }
 
@@ -18,7 +18,7 @@ int Scene3D::NumberOfElements() const {
   return scene_elements_.size();
 }
 
-SceneElement Scene3D::ElementAt(int number) const {
+SceneElement *Scene3D::ElementAt(int number) const {
   return scene_elements_.at(number);
 }
 

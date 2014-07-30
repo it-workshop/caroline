@@ -30,10 +30,10 @@ class PositionController {
   explicit PositionController(TimeController* time_controller);
   virtual ~PositionController();
 
-  virtual Point3D GetLocation() const = 0;
+  virtual cv::Point3d GetLocation() const = 0;
   virtual Quaternion GetRotation() const = 0;
 
-  Point3D location() const {
+  cv::Point3d location() const {
     UpdateCacheIfNeeded();
     return location_;
   }
@@ -61,7 +61,7 @@ class PositionController {
 
   TimeController* time_controller_;
   mutable uint64_t current_time_;
-  mutable Point3D location_;
+  mutable cv::Point3d location_;
   mutable Quaternion rotation_;
   mutable Position position_;
 };

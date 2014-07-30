@@ -20,7 +20,7 @@ class PredefinedPositionController : public PositionController {
   explicit PredefinedPositionController(TimeController* time_controller);
   virtual ~PredefinedPositionController();
 
-  virtual Point3D GetLocation() const override;
+  virtual cv::Point3d GetLocation() const override;
   virtual Quaternion GetRotation() const override;
 
  private:

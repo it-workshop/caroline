@@ -4,6 +4,7 @@
 // Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
 #include "core/cameras.h"
+
 #include "core/quaternion.h"
 
 namespace core {
@@ -13,8 +14,8 @@ Cameras::Cameras() {
 
 cv::Matx33d Cameras::CameraMatrix(int dpm, double focus_length, int w, int h) {
   cv::Matx33d K(dpm * focus_length, 0, w / 2,
-                     0, dpm * focus_length, h / 2,
-                     0, 0, 1);
+                0, dpm * focus_length, h / 2,
+                0, 0, 1);
 
   return K;
 }

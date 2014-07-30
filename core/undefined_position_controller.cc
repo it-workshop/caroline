@@ -21,8 +21,8 @@ UndefinedPositionController::UndefinedPositionController(
 
 UndefinedPositionController::~UndefinedPositionController() {}
 
-Point3D UndefinedPositionController::GetLocation() const {
-  return Point3D();
+cv::Point3d UndefinedPositionController::GetLocation() const {
+  return cv::Point3d();
 }
 
 Quaternion UndefinedPositionController::GetRotation() const {

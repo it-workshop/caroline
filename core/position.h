@@ -6,18 +6,18 @@
 #ifndef CORE_POSITION_H_
 #define CORE_POSITION_H_
 
-#include "core/point3d.h"
 #include "core/quaternion.h"
+#include "opencv2/core/mat.hpp"
 
 namespace core {
 
 class Position {
  public:
-  Position(const Point3D& location, const Quaternion& rotation);
+  Position(const cv::Point3d &location, const Quaternion& rotation);
   Position();
   virtual ~Position();
 
-  Point3D location() const {
+  cv::Point3d location() const {
     return location_;
   }
   Quaternion rotation() const {
@@ -25,7 +25,7 @@ class Position {
   }
 
  private:
-  Point3D location_;
+  cv::Point3d location_;
   Quaternion rotation_;
 };
 

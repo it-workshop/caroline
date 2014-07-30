@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <memory>
+#include <utility>
 
 #include "core/optical_flow.h"
 
@@ -32,9 +33,8 @@ class DepthMap {
   double Depth(int x, int y) const;
 
   static std::unique_ptr<DepthMap> BuildMap(
-      const OpticalFlow& flow,
-      const Cameras& cam,
-      int w, int h);
+      const std::vector<std::pair<cv::Point2d, cv::Point2d>>& flow,
+      const Cameras& cam, int w, int h);
 
   std::vector<double>::const_iterator begin() const {
     return depth_map_.begin();
