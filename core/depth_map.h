@@ -19,12 +19,14 @@ class DepthMap {
  public:
   static const int kBadDepth = -1;
 
-  DepthMap(int height, int width);
+  DepthMap(int width, int height);
 
   ~DepthMap() {}
 
-  int height() const { return height_; }
   int width() const { return width_; }
+  int height() const { return height_; }
+
+  std::vector<double> depthVector() const { return depth_map_; }
 
   void SetDepth(int x, int y, double depth);
   double Depth(int x, int y) const;
@@ -42,8 +44,9 @@ class DepthMap {
   }
 
  private:
-  int height_;
   int width_;
+  int height_;
+
 
   std::vector<double> depth_map_;
 };
