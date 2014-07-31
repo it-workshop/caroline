@@ -199,11 +199,14 @@ Mesh SceneElement::Merge(const Mesh& mesh,
                                       '>');
 
     for (int j = left_border; j <= right_border; j++)
-      if ((fabs(curr_point.y() - new_scene.Vertexes().at(j).y())
-         < merge_error)
-         &&
-         (fabs(curr_point.z() - new_scene.Vertexes().at(j).z())
-         < merge_error)) {
+      if ((fabs(curr_point.x() - new_scene.Vertexes().at(j).x())
+          < merge_error)
+          &&
+          (fabs(curr_point.y() - new_scene.Vertexes().at(j).y())
+          < merge_error)
+          &&
+          (fabs(curr_point.z() - new_scene.Vertexes().at(j).z())
+          < merge_error)) {
         vert_counter--;
         point_to_merge.at(j) = i;
       }
@@ -211,19 +214,22 @@ Mesh SceneElement::Merge(const Mesh& mesh,
 
   Mesh GluedMesh;
   std::vector<int> old_number;
+  std::vector<int> new_number;
 
   for (int i = 0; i < new_scene.Vertexes().size(); i++) {
     if (point_to_merge.at(i) == i) {
       GluedMesh.AddVertex(new_scene.Vertexes()[i]);
       old_number.push_back(i);
+      new_number.push_back(old_number.size() - 1);
+    } else {
+      new_number.push_back(-1);
     }
   }
 
-
   for (int i = 0; i < new_scene.Faces().size(); i++) {
-    Triangle TmpFace(old_number[point_to_merge[new_scene.Faces()[i].Point1()]],
-                     old_number[point_to_merge[new_scene.Faces()[i].Point2()]],
-                     old_number[point_to_merge[new_scene.Faces()[i].Point3()]]);
+    Triangle TmpFace(new_number[point_to_merge[new_scene.Faces()[i].Point1()]],
+                     new_number[point_to_merge[new_scene.Faces()[i].Point2()]],
+                     new_number[point_to_merge[new_scene.Faces()[i].Point3()]]);
     GluedMesh.AddFace(TmpFace);
   }
 

@@ -113,11 +113,11 @@ TEST(SceneTest, ObjectScalingTest) {
   EXPECT_TRUE((Line.Vertexes()[1].z() - 2) < precision);
 }
 
-TEST(SceneTest, MeshSortingTest) {
+TEST(SceneTest, MeshMergingTest) {
   core::Point3D point1(10, 0, 0);
   core::Point3D point2(2, 1, 0);
-  core::Point3D point3(1, 0, 1);
-  core::Point3D point4(0, 0, 0);
+  core::Point3D point3(3, 0, 1);
+  core::Point3D point4(5, 0, 0);
   core::Mesh mesh;
   mesh.AddVertex(point1);
   mesh.AddVertex(point2);
@@ -147,4 +147,5 @@ TEST(SceneTest, MeshSortingTest) {
   std::vector<core::Point3D> some_vertices;
   some_vertices = GluedMesh.Vertexes();
   EXPECT_EQ(GluedMesh.Vertexes().size(), 7);
+  EXPECT_EQ(GluedMesh.Faces().at(4).Point1(), 0);
 }
