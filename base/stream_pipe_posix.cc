@@ -16,16 +16,15 @@ namespace base {
 
 std::unique_ptr<Stream> Stream::OpenPipe(
     const std::string& path, Stream::Mode mode) {
-  int filed = open(path.c_str(), O_RDWR);
+  int filed = StreamPipePOSIX::DescriptorSetMode(path, mode);
 
   if (filed == -1) {
-    unlink(path.c_str());
-    if (mkfifo(path.c_str(), O_RDWR) == -1) {
+    if (mkfifo(path.c_str(), 0777) == -1) {
       LOG(WARNING) << "Pipe - can't create file.";
       return nullptr;
     }
 
-    filed = open(path.c_str(), O_RDWR);
+    filed = StreamPipePOSIX::DescriptorSetMode(path, mode);
   }
 
   return std::unique_ptr<Stream>(
@@ -65,19 +64,27 @@ int StreamPipePOSIX::DescriptorSetMode(
 
   switch (mode) {
   case Stream::kRead: {
-    filed = open(path.c_str(), O_RDONLY);
+    filed = open(path.c_str(), O_RDONLY | O_NONBLOCK);
     break;
   }
   case Stream::kWrite: {
-    filed = open(path.c_str(), O_WRONLY);
+    filed = open(path.c_str(), O_WRONLY | O_NONBLOCK);
     break;
   }
   case Stream::kAppend: {
-    filed = open(path.c_str(), O_WRONLY);
+    filed = open(path.c_str(), O_WRONLY | O_NONBLOCK);
+    break;
+  }
+  case Stream::kReadWrite: {
+    filed = open(path.c_str(), O_RDWR | O_NONBLOCK);
+    break;
+  }
+  case Stream::kReadAppend: {
+    filed = open(path.c_str(), O_RDWR | O_NONBLOCK);
     break;
   }
   default:
-    filed = open(path.c_str(), O_RDWR);
+    filed = -1;
   }
 
   return filed;
