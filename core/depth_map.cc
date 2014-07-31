@@ -130,8 +130,7 @@ std::unique_ptr<DepthMap> DepthMap::BuildMapStereoMatching(
   cv::Mat disp8;
   disp.convertTo(disp8, CV_8U);
 
-  cv::Mat map;
-  cv::reprojectImageTo3D(disp, map, Q, true);
+  cv::imwrite("/home/rayman/Downloads/rect.jpg", disp8);
 }
 
 }  // namespace core
