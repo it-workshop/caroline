@@ -118,6 +118,8 @@ add_module(core OBJECT
   core/median_map_filter.cc
   core/mesh.h
   core/mesh.cc
+  core/mesh_merge_utils.h
+  core/mesh_merge_utils.cc
   core/optical_flow.h
   core/optical_flow.cc
   core/optical_flow_processor.cc

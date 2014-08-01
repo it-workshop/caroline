@@ -16,9 +16,12 @@ namespace core {
 class SceneElement {
  public:
   SceneElement();
+  static constexpr double merge_error = 0.2;
   explicit SceneElement(Mesh *mesh);
 
   void SetMesh(Mesh *mesh);
+  void AddVertex(const Point3D& point);
+  void AddFace(const Triangle& face);
 
   void set_x(double x) { pos_x_ = x; }
   void set_y(double y) { pos_y_ = y; }
@@ -62,13 +65,20 @@ class SceneElement {
   std::vector<Point3D> Vertexes() const;
   std::vector<Triangle> Faces() const;
 
-  SceneElement Transform(SceneElement scene_element) const;
+  void ChangeVertex(Point3D point, int i) {
+    mesh_->ChangeVertex(point, i);
+  }
 
-  Point3D Transform(Point3D point) const;
+  void Transform(SceneElement* transformed_scene) const;
+
+  Mesh Merge(const Mesh& mesh, const SceneElement& result_scene);
+
+  void Transform(Point3D* point, const Point3D& mean_point) const;
 
  protected:
   Point3D FindMin(void) const;
   Point3D FindMax(void) const;
+  Point3D FindMeanPoint(void) const;
 
   void SetStandardTransform();
 

@@ -32,12 +32,15 @@ class Triangle {
 class Mesh {
  public:
   Mesh();
-
   void AddVertex(const Point3D& point);
   void AddFace(const Triangle& face);
 
   const std::vector<Point3D>& vertexes() const { return vertexes_; }
   const std::vector<Triangle>& faces() const { return faces_; }
+
+  void ChangeVertex(const Point3D& point, int i) {
+    vertexes_.at(i) = point;
+  }
 
  protected:
   void SetVertexes(const std::vector<Point3D>& vertexes);
