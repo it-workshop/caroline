@@ -5,7 +5,6 @@
 
 #include "demo/sgbmdemo/sgbm_depth_demo.h"
 
-#include "core/cameras.h"
 #include "core/depth_map.h"
 
 namespace demo {
@@ -46,7 +45,7 @@ int SGBMDepthDemo::Run() {
 }
 
 void SGBMDepthDemo::FillCams() {
-
+  // need to fill cam_ here
 }
 
 }  // namespace demo

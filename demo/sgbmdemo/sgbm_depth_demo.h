@@ -8,15 +8,13 @@
 
 #include <memory>
 
+#include "core/cameras.h"
+
 #include "opencv2/core/mat.hpp"
 #include "opencv2/core/core.hpp"
 #include "opencv2/video/tracking.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
-
-namespace core {
-  class Cameras;
-}
 
 namespace demo {
 

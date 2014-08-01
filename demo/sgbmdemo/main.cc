@@ -3,7 +3,16 @@
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
+#include "demo/sgbmdemo/sgbm_depth_demo.h"
 
 int main() {
   return 0;
+
+  demo::SGBMDepthDemo application;
+
+  if (!application.Init()) {
+    return -1;
+  }
+
+  return application.Run();
 }
