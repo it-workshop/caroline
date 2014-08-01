@@ -186,6 +186,19 @@ target_link_libraries(demo_flowdemo
   ${PROTOBUF_LIBRARIES}
   )
 
+add_application(demo_sgbmdepth
+  demo/sgbmdemo/main.cc
+  demo/sgbmdemo/sgbm_depth_demo.cc
+  demo/sgbmdemo/sgbm_depth_demo.h
+  $<TARGET_OBJECTS:base>
+  $<TARGET_OBJECTS:core>
+  )
+
+target_link_libraries(demo_sgbmdepth
+  ${OpenCV_LIBS}
+  ${PROTOBUF_LIBRARIES}
+  )
+
 enable_testing()
 include_directories(third_party/gtest/include)
 add_application(unit_tests

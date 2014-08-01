@@ -130,7 +130,18 @@ std::unique_ptr<DepthMap> DepthMap::BuildMapStereoMatching(
   cv::Mat disp8;
   disp.convertTo(disp8, CV_8U);
 
-  cv::imwrite("/home/rayman/Downloads/rect.jpg", disp8);
+  int w = disp8.size().width;
+  int h = disp8.size().height;
+
+  std::unique_ptr<DepthMap> map(new DepthMap(w, h));
+
+  for (size_t i = 0; i < w; i++) {
+    for (size_t j = 0; j < h; j++) {
+      map->SetDepth(i, j, disp8.at<uchar>(i, j));
+    }
+  }
+
+  return map;
 }
 
 }  // namespace core
