@@ -32,7 +32,6 @@ class Triangle {
 class Mesh {
  public:
   Mesh();
-
   void AddVertex(const Point3D& point);
   void AddFace(const Triangle& face);
 

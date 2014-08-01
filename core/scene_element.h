@@ -16,9 +16,8 @@ namespace core {
 class SceneElement {
  public:
   SceneElement();
-  explicit SceneElement(Mesh *mesh);
-
   static constexpr double merge_error = 0.2;
+  explicit SceneElement(Mesh *mesh);
 
   void SetMesh(Mesh *mesh);
   void AddVertex(const Point3D& point);
@@ -77,6 +76,7 @@ class SceneElement {
   void Transform(Point3D* point, const Point3D& mean_point) const;
 
  protected:
+
   Point3D FindMin(void) const;
   Point3D FindMax(void) const;
   Point3D FindMeanPoint(void) const;

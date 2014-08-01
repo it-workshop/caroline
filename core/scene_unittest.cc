@@ -11,6 +11,8 @@
 #include "core/scene_element.h"
 #include "core/scene3d.h"
 #include "core/rotation_matrix.h"
+#include "core/mesh.h"
+#include "core/mesh_merge_utils.h"
 
 TEST(SceneTest, ObjectTranslationTest) {
   core::Point3D point1(1, 0, 0);
