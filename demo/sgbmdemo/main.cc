@@ -6,8 +6,6 @@
 #include "demo/sgbmdemo/sgbm_depth_demo.h"
 
 int main() {
-  return 0;
-
   demo::SGBMDepthDemo application;
 
   if (!application.Init()) {
