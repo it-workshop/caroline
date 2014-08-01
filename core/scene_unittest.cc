@@ -37,13 +37,13 @@ TEST(SceneTest, ObjectTranslationTest) {
 
   Line.Transform(&Line);
 
-  ASSERT_TRUE(fabs(Line.Vertexes()[0].x() - 2) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[0].y() - 2) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[0].z() - 3) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[0].x() - 2) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[0].y() - 2) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[0].z() - 3) < precision);
 
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].x() - 2) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].y() - 3) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].z() - 3) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].x() - 2) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].y() - 3) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].z() - 3) < precision);
 }
 
 TEST(SceneTest, ObjectRotationTest) {
@@ -72,9 +72,9 @@ TEST(SceneTest, ObjectRotationTest) {
 
   Line.Transform(&Line);
 
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].x() + 1)< precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].y() - 2) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].z() + 1) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].x() + 1)< precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].y() - 2) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].z() + 1) < precision);
 }
 
 TEST(SceneTest, ObjectScalingTest) {
@@ -102,18 +102,13 @@ TEST(SceneTest, ObjectScalingTest) {
 
   Line.Transform(&Line);
 
-  ASSERT_TRUE(fabs(Line.Vertexes()[0].x() - 2) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[0].y() + 1) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[0].z() + 1) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[0].x() - 2) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[0].y() + 1) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[0].z() + 1) < precision);
 
-<<<<<<< HEAD
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].x() - 4) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].y() + 3) < precision);
-  ASSERT_TRUE(fabs(Line.Vertexes()[1].z() - 2) < precision);
-=======
-  EXPECT_TRUE((Line.Vertexes()[1].x() - 4) < precision);
-  EXPECT_TRUE((Line.Vertexes()[1].y() + 3) < precision);
-  EXPECT_TRUE((Line.Vertexes()[1].z() - 2) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].x() - 4) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].y() + 3) < precision);
+  EXPECT_TRUE(fabs(Line.Vertexes()[1].z() - 2) < precision);
 }
 
 TEST(SceneTest, MeshMergingTest) {
@@ -148,11 +143,7 @@ TEST(SceneTest, MeshMergingTest) {
   EXPECT_EQ(TestScene.Vertexes().size(), 4);
   core::Mesh GluedMesh = TestScene.Merge(mesh0, TestScene);
   std::vector<core::Point3D> some_vertices;
-  some_vertices = GluedMesh.Vertexes();
-  EXPECT_EQ(GluedMesh.Vertexes().size(), 7);
-<<<<<<< HEAD
->>>>>>> #65: Working merge of mesh and scene. #52 bug is fixed.
-=======
-  EXPECT_EQ(GluedMesh.Faces().at(4).Point1(), 0);
->>>>>>> #65: All is working. Not supporting deletion of coincident faces and cv::point3d.
+  some_vertices = GluedMesh.vertexes();
+  EXPECT_EQ(GluedMesh.vertexes().size(), 7);
+  EXPECT_EQ(GluedMesh.faces().at(4).Point1(), 0);
 }

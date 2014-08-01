@@ -42,7 +42,8 @@ void GenModel(core::Scene3D scene) {
   int vertex_base_index = 0;
   for (auto scene_element : scene) {
     for (auto vertex : scene_element->mesh()->vertexes()) {
-      auto transformed_vertex = scene_element->Transform(vertex);
+      auto transformed_vertex = vertex;
+      scene_element->Transform(&transformed_vertex, transformed_vertex);
       auto proto_vertex = message->mutable_model()->add_verticies();
       proto_vertex->set_x(vertex.x());
       proto_vertex->set_y(vertex.y());

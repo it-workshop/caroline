@@ -52,21 +52,21 @@ void TopDownMergeSort(std::vector<int>* old_order,
 }
 
 Mesh MergeSortByX(const Mesh& mesh) {
-  const int n = mesh.Vertexes().size();
+  const int n = mesh.vertexes().size();
   std::vector<int> old_order;
   std::vector<int> new_order;
   for (int i = 0; i < n; i++) {
     old_order.push_back(i);
     new_order.push_back(i);
   }
-  TopDownMergeSort(&old_order, &new_order, n, mesh.Vertexes());
+  TopDownMergeSort(&old_order, &new_order, n, mesh.vertexes());
   Mesh new_mesh;
   for (int i = 0; i < n; i++)
-    new_mesh.AddVertex(mesh.Vertexes()[new_order[i]]);
-  for (int i = 0; i < mesh.Faces().size(); i++) {
-    Triangle TmpFace(mesh.Faces()[new_order[i]].Point1(),
-                     mesh.Faces()[new_order[i]].Point2(),
-                     mesh.Faces()[new_order[i]].Point3());
+    new_mesh.AddVertex(mesh.vertexes()[new_order[i]]);
+  for (int i = 0; i < mesh.faces().size(); i++) {
+    Triangle TmpFace(mesh.faces()[new_order[i]].Point1(),
+                     mesh.faces()[new_order[i]].Point2(),
+                     mesh.faces()[new_order[i]].Point3());
     new_mesh.AddFace(TmpFace);
   }
   return new_mesh;

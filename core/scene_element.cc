@@ -8,12 +8,10 @@
 
 #include <cmath>
 #include <cstddef>
-<<<<<<< HEAD
-=======
 #include <vector>
->>>>>>> #65: Working merge of mesh and scene. #52 bug is fixed.
 
 #include "core/rotation_matrix.h"
+#include "core/mesh_merge_utils.h"
 
 namespace core {
 
@@ -52,18 +50,7 @@ void SceneElement::SetScale(double scale_x, double scale_y, double scale_z) {
 }
 
 std::vector<Point3D> SceneElement::Vertexes() const {
-<<<<<<< HEAD
-  std::vector<Point3D> new_vertexes;
-  std::vector<Point3D> old_vertexes = mesh_->vertexes();
-
-  for (size_t i = 0; i < old_vertexes.size(); i++) {
-    new_vertexes.push_back(Transform(old_vertexes.at(i)));
-  }
-
-  return new_vertexes;
-=======
-  return mesh_->Vertexes();
->>>>>>> #65: Working merge of mesh and scene. #52 bug is fixed.
+  return mesh_->vertexes();
 }
 
 std::vector<Triangle> SceneElement::Faces() const {
@@ -169,8 +156,6 @@ void SceneElement::SetStandardTransform() {
   rotation_center_z_ = 0;
 }
 
-<<<<<<< HEAD
-=======
 Mesh SceneElement::Merge(const Mesh& mesh,
                          const SceneElement& scene) {
   Mesh sorted_mesh = MergeSortByX(mesh);
@@ -180,14 +165,14 @@ Mesh SceneElement::Merge(const Mesh& mesh,
 
   const int shift = scene.Vertexes().size();
 
-  for (int i = 0; i < sorted_mesh.Vertexes().size(); i++) {
-    new_scene.AddVertex(sorted_mesh.Vertexes()[i]);
+  for (int i = 0; i < sorted_mesh.vertexes().size(); i++) {
+    new_scene.AddVertex(sorted_mesh.vertexes()[i]);
   }
-  for (int i = 0; i < sorted_mesh.Faces().size(); i++) {
+  for (int i = 0; i < sorted_mesh.faces().size(); i++) {
     Triangle TmpFace(
-      mesh.Faces()[i].Point1() + shift,
-      mesh.Faces()[i].Point2() + shift,
-      mesh.Faces()[i].Point3() + shift);
+      mesh.faces()[i].Point1() + shift,
+      mesh.faces()[i].Point2() + shift,
+      mesh.faces()[i].Point3() + shift);
     new_scene.AddFace(TmpFace);
   }
 
@@ -251,5 +236,4 @@ Mesh SceneElement::Merge(const Mesh& mesh,
   return GluedMesh;
 }
 
->>>>>>> #65: Working merge of mesh and scene. #52 bug is fixed.
 }  // namespace core
