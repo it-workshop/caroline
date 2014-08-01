@@ -49,4 +49,3 @@ TEST(StreamTest, TCPOpenTest) {
   stream2->Close();
   stream->Close();
 }
-
