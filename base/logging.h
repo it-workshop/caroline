@@ -95,11 +95,12 @@ class Logger {
   /// @returns path to the log.
   std::string file() const { return file_; }
 
-public:
+  void Set_Connection_Data(std::string data) {connection_data_ = data; }
+
+protected:
   /// Internal function that writes a string to the log.
   /// @param[in] message Message to write.
   void PostMessage(const std::string& message);
-protected:
   virtual void PostMessageImpl(const std::string& message)=0;
 
  private:
@@ -117,6 +118,7 @@ protected:
 
   Level minimum_level_;
   std::string file_;
+  std::string connection_data_;
   std::weak_ptr<Logger> self_;
 
   /// Copy consturctor is disallowed.
@@ -145,7 +147,8 @@ protected:
 #define LOG(level) \
     (base::Logger::GetInstance()\
         ->AddMessage(base::Logger::LOG_ ## level)\
-        .stream() << __LOG_PREFIX(level))
+        .stream() << __LOG_PREFIX(level))\
+     
 
 }  // namespace base
 

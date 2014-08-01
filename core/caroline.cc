@@ -37,13 +37,15 @@ bool Caroline::Init() {
   image_capture_manager_ = ImageCaptureManager::Create(config_);
   optical_flow_processor_ = OpticalFlowProcessor::Create(config_);
   std::string adress;
-  if (config_->dictionary()->GetValue(StreamConfigFieldName)) { 
+  if (config_->dictionary()->GetValue(StreamConfigFieldName)) {   
     adress = config_->dictionary()->GetValue(StreamConfigFieldName)->
         AsString()->value();
+    base::Logger::Init("logfile.xxx",base::Logger::LOG_DEBUG);
+    base::Logger::GetInstance()->Set_Connection_Data(adress); 
     message_->SetStream(adress);
   }
   else send_message_=false;
-  message_->GenLog("Connection : " + adress);
+  
 
   return image_capture_manager_ &&
       image_capture_manager_->GetCapturesCount() < 2 &&

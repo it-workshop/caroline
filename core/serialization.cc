@@ -15,10 +15,6 @@
 
 namespace bitdata {
 
-GlobalMessage::GlobalMessage() : stream_name_() {
-base::Logger::Init("log_file",base::Logger::LOG_INFO);
-log_ = base::Logger::GetInstance();
-}
 
 void GlobalMessage::SetStream(const std::string& stream) {
 stream_name_ = stream;
@@ -108,7 +104,6 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
 }
 
 void GlobalMessage::GenLog(const std::string& message) {
-  log_->PostMessage(message);
   std::unique_ptr<Message>proto_message(new Message());
   proto_message->mutable_log()->set_line(message);
   proto_message->set_type(Message::LOG);

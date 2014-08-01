@@ -24,7 +24,6 @@ namespace bitdata {
 
 class GlobalMessage {
 public:
-GlobalMessage();
 
 std::string GetStream() { return stream_name_; }
 
@@ -53,7 +52,6 @@ void GenLog(const std::string& message);
 private:
   std::string stream_name_;
   std::unique_ptr<base::Stream>stream_;
-  std::shared_ptr<base::Logger>log_;
 };
 
 }  // namespace bitdata
