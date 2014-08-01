@@ -148,7 +148,6 @@ protected:
     (base::Logger::GetInstance()\
         ->AddMessage(base::Logger::LOG_ ## level)\
         .stream() << __LOG_PREFIX(level))
-     
 
 }  // namespace base
 
