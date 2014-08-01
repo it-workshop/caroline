@@ -46,3 +46,38 @@ TEST(StreamTest, TCPOpenTest) {
   stream2->Close();
   stream->Close();
 }
+
+TEST(StreamTest, PipeTest) {
+  std::string path = "caroline_pipe";
+
+  std::unique_ptr<base::Stream> stream =
+      base::Stream::Open("pipe://" + path, base::Stream::kReadWrite);
+  std::unique_ptr<base::Stream> stream2 =
+      base::Stream::Open("pipe://" + path, base::Stream::kReadWrite);
+
+  ASSERT_NE(stream, nullptr);
+  ASSERT_NE(stream2, nullptr);
+
+  std::string sent_message("Hello, 'm test message");
+  std::unique_ptr<char[]> recieve_buffer(new char[sent_message.size() + 1]);
+
+  size_t transmitted = 0;
+  do {
+    transmitted += stream2->Write(sent_message.c_str() + transmitted,
+      sent_message.size() - transmitted);
+  } while (transmitted != sent_message.size());
+
+  size_t received = 0;
+  do {
+    received += stream->Read(recieve_buffer.get() + received,
+      sent_message.size() - received);
+  } while (received != sent_message.size());
+  recieve_buffer[received] = '\0';
+
+  EXPECT_STREQ(sent_message.c_str(), recieve_buffer.get());
+
+  stream2->Close();
+  stream->Close();
+
+  unlink(path.c_str());
+}

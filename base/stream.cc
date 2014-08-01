@@ -33,7 +33,7 @@ std::unique_ptr<Stream> Stream::Open(
 
   if (kPipeSchema == schema) {
     const std::string& path = url.substr(schema_offset + 3);
-    // return OpenPipe(path, mode);
+    return OpenPipe(path, mode);
   }
 
   // Network protocol. Find port number.
