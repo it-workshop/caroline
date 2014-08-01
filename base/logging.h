@@ -12,6 +12,12 @@
 
 #include "protocol.pb.h"  // NOLINT
 
+namespace bitdata {
+
+class GlobalMessage;
+
+}
+
 namespace base {
 
 /// Logger serves LOG() macro.
@@ -89,7 +95,9 @@ class Logger {
   /// @returns path to the log.
   std::string file() const { return file_; }
 
- protected:
+  void Set_Connection_Data(std::string data) {connection_data_ = data; }
+
+protected:
   /// Internal function that writes a string to the log.
   /// @param[in] message Message to write.
   void PostMessage(const std::string& message);
@@ -110,6 +118,7 @@ class Logger {
 
   Level minimum_level_;
   std::string file_;
+  std::string connection_data_;
   std::weak_ptr<Logger> self_;
 
   /// Copy consturctor is disallowed.

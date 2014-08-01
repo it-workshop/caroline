@@ -1,11 +1,13 @@
-// Copyright (c) 2014 The Caroline authors. All rights reserved.
+// Copyright (c) 2014 The Caroline authors.  All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 
 #include "core/caroline.h"
 
+#include "base/values.h"
 #include "core/cameras.h"
+#include "core/config.h"
 #include "core/depth_map.h"
 #include "core/depth_mesh.h"
 #include "core/image_capture_manager.h"
@@ -13,15 +15,20 @@
 #include "core/position.h"
 #include "core/return_codes.h"
 #include "core/scene3d.h"
+#include "core/serialization.h"
 #include "core/time_controller.h"
 #include "opencv2/core/mat.hpp"
+
+const std::string StreamConfigFieldName = "Connection";
 
 namespace core {
 
 Caroline::Caroline(base::CommandLine* command_line, Config* config)
   : command_line_(command_line),
     config_(config),
-    cameras_properties_(new Cameras) {
+    cameras_properties_(new Cameras),
+    message_(new bitdata::GlobalMessage),
+    send_message_(true)  {
 }
 
 Caroline::~Caroline() {}
@@ -29,6 +36,15 @@ Caroline::~Caroline() {}
 bool Caroline::Init() {
   image_capture_manager_ = ImageCaptureManager::Create(config_);
   optical_flow_processor_ = OpticalFlowProcessor::Create(config_);
+  std::string adress;
+  if (config_->dictionary()->GetValue(StreamConfigFieldName)) {   
+    adress = config_->dictionary()->GetValue(StreamConfigFieldName)->
+        AsString()->value();
+    base::Logger::GetInstance()->Set_Connection_Data(adress); 
+    message_->SetStream(adress);
+  }
+  else send_message_=false;
+  
 
   return image_capture_manager_ &&
       image_capture_manager_->GetCapturesCount() < 2 &&
@@ -41,8 +57,13 @@ int Caroline::Run() {
     if (frameset.size() < 2)
       return RETURN_WRONG_FRAMES_COUNT;
 
+    if (send_message_) 
+      message_->GenPic(frameset);
+
     auto optical_flow = optical_flow_processor_->Process(
         frameset.at(0).first, frameset.at(1).first);
+
+    if (send_message_) message_->GenOptFlow(optical_flow);
 
     int w = frameset.at(0).first.size().width;
     int h = frameset.at(0).first.size().height;
@@ -71,12 +92,18 @@ int Caroline::Run() {
 
     auto depth_map = DepthMap::BuildMap(
           optical_flow, *cameras_properties_, w, h);
+
+    if (send_message_) message_->GenDMap(*depth_map.get());
+
     std::unique_ptr<Mesh> mesh(new DepthMesh(*depth_map, 0, INT_MAX));
     std::unique_ptr<Scene3D> scene(new Scene3D);
 
     std::unique_ptr<SceneElement> element(new SceneElement(mesh.get()));
 
     scene->AddElement(element.get());
+
+    if (send_message_)
+      message_->GenModel(*scene);
   }
 
   return RETURN_OK;

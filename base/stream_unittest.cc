@@ -6,6 +6,9 @@
 
 #include "gtest/gtest.h"
 #include "base/stream.h"
+#include <string>
+#include "core/serialization.h"
+#include "protocol.pb.h"
 
 TEST(StreamTest, TCPOpenTest) {
   std::unique_ptr<base::Stream> stream;

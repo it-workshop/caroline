@@ -11,6 +11,8 @@
 #include <utility>
 #include <vector>
 
+#include "base/stream.h"
+#include "base/logging.h"
 #include "core/depth_map.h"
 #include "core/image_capture_impl.h"
 #include "core/mesh.h"
@@ -19,6 +21,13 @@
 #include "core/scene3d.h"
 
 namespace bitdata {
+
+class GlobalMessage {
+public:
+
+std::string GetStream() { return stream_name_; }
+
+void SetStream(const std::string& stream);
 
 /// Seriallize Depth map with protobuf.
 /// @param[in] depth_map Depth map to seriallize.
@@ -39,6 +48,11 @@ void GenPic(const std::vector<std::pair<cv::Mat, core::Position>>& frameset);
 /// Seriallize log message.
 /// @param[in] message Message to seriallize.
 void GenLog(const std::string& message);
+
+private:
+  std::string stream_name_;
+  std::unique_ptr<base::Stream>stream_;
+};
 
 }  // namespace bitdata
 
