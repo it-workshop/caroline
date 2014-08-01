@@ -65,16 +65,16 @@ class CameraCalibration {
     /// @param[in] second Matrix 3x3
     void set_second(const cv::Matx33d& second) { second_ = second; }
 
+    int return_size() const {return VPoints1.size(); }
+
     /// @returns recorded matrix
     cv::Matx33d first() const { return first_; }
     /// @returns recorded matrix
     cv::Matx33d second() const { return second_; }
 
  private:
-    /// Vector of left images
-    std::vector<cv::Mat> left_images_;
-    /// Vector of right images
-    std::vector<cv::Mat> right_images_;
+    /// Vector for one image
+    cv::Mat for_image_size_;
     /// Vector of pattern corners coordinates for each stereo pair
     std::vector<cv::Point3f> object_points_;
     /// Vector of corners coordinate of left images
@@ -82,11 +82,13 @@ class CameraCalibration {
     /// Vector of corners coordinate of left images
     std::vector<std::vector<cv::Point2f>> VPoints2;
     /// Vector of distortion coefficients
-    std::vector<double> D;
+    std::vector<double> D_;
     /// Matrix of internal paramaters left camera
     cv::Matx33d first_;
     /// Matrix of internal paramaters right camera
     cv::Matx33d second_;
+    /// Image size.
+    cv::Size image_size_;
 };
 
 }  // namespace core

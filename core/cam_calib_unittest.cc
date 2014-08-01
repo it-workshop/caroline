@@ -26,12 +26,12 @@ TEST(CamerasCalibrateTest, Test1) {
     calib.addImagePair(left_im, right_im, 9, 6);
   }
 
-  calib.HarvestChessboardIdealPointList(9, 6, 2.8);
+  calib.HarvestChessboardIdealPointList(9, 6, 28);
   cam = calib.calibrate(9, 6, 2.8);
 
-  EXPECT_LE((fabs(cam.P2()(0, 3) - (-8.7705))), epsilon);
-  EXPECT_LE((fabs(cam.P2()(1, 3) - (-0.0513309))), epsilon);
-  EXPECT_LE((fabs(cam.P2()(2, 3) - (-8.7705))), epsilon);
+  EXPECT_LE((fabs(cam.P2()(0, 3) - (-79.2473))), epsilon);
+  EXPECT_LE((fabs(cam.P2()(1, 3) - (6.77501))), epsilon);
+  EXPECT_LE((fabs(cam.P2()(2, 3) - (-79.2473))), epsilon);
 }
 
 TEST(CamerasCalibrateTest, TestForOneCam) {
@@ -50,9 +50,9 @@ TEST(CamerasCalibrateTest, TestForOneCam) {
     calib.addImagePair(left_im, right_im, 9, 6);
   }
 
-  calib.HarvestChessboardIdealPointList(9, 6, 2.8);
+  calib.HarvestChessboardIdealPointList(9, 6, 28);
   intr_mat = calib.CalebrationOneCamera(
-        core::CameraCalibration::kLeft, 9, 6, 2.8);
+        core::CameraCalibration::kLeft, 9, 6, 28);
 
   calib.set_first(intr_mat);
 
@@ -60,7 +60,7 @@ TEST(CamerasCalibrateTest, TestForOneCam) {
   EXPECT_LE((fabs(intr_mat(1, 2) - 239.406)), epsilon);
 
   intr_mat = calib.CalebrationOneCamera(
-        core::CameraCalibration::kRight, 9, 6, 2.8);
+        core::CameraCalibration::kRight, 9, 6, 28);
   calib.set_second(intr_mat);
 
   EXPECT_LE((fabs(intr_mat(0, 2) - 319.581)), epsilon);

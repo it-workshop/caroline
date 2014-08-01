@@ -3,6 +3,29 @@
 // LICENSE file.
 /// @author: Kukleva Anna <Kuklevaanna@gmail.com>
 
-int main() {
-  return 0;
+
+#include "base/command_line.h"
+#include "base/logging.h"
+#include "demo/calibratedemo/stereo_calib_demo.h"
+#include "core/config.h"
+#include "core/switches.h"
+
+
+int main(int argc, const char* argv[]) {
+//  auto command_line(base::CommandLine::GetForCurrentProcess());
+//  base::CommandLine::ParseArgs(argv, command_line.get());
+
+//  auto config = core::Config::GetInstance();
+//  if (command_line->HasSwitch(core::switches::kConfigSwitch)) {
+//    config->LoadFromFile(
+//        command_line->GetSwitchData(core::switches::kConfigSwitch));
+//  }
+
+    demo::StereoCalibDemo application;
+
+    if (!application.Init()) {
+      return -1;
+    }
+
+  return application.Run();
 }

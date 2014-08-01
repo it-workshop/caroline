@@ -12,7 +12,6 @@ namespace core {
 
 Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
   int n = nx * ny;
-  int len;
   int count_of_pairs;
   cv::Matx33d K1_;
   cv::Matx33d K2_;
@@ -20,12 +19,12 @@ Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
   cv::Matx31d T_;
   cv::Matx33d E_;
   cv::Matx33d F_;
+  cv::Mat D1_;
+  cv::Mat D2_;
   std::vector<double> D1(5, 0);
   std::vector<double> D2(5, 0);
 
-  cv::Size imageSize = {0, 0};
-  imageSize = left_images_.at(0).size();
-  len = left_images_.size();
+  image_size_ = for_image_size_.size();
 
   // HARVEST CHESSBOARD 3D OBJECT POINT LIST:
   count_of_pairs = VPoints1.size();
@@ -37,14 +36,17 @@ Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
   }
 
   first_ = CalebrationOneCamera(kLeft, nx, ny, square_size);
-  D1 = D;
+  D1 = D_;
   second_ = CalebrationOneCamera(kRight, nx, ny, square_size);
-  D2 = D;
+  D2 = D_;
+
+  D1_ = cv::Mat(D1);
+  D2_ = cv::Mat(D2);
 
   // StereoCalibrate
   cv::stereoCalibrate(VobjectPoints, VPoints1,
       VPoints2, first_, D1, second_, D2,
-      imageSize, R_, T_, E_, F_);
+      image_size_, R_, T_, E_, F_);
 
   cv::Matx34d P1_(1, 0, 0, 0,
                   0, 1, 0, 0,
@@ -58,20 +60,22 @@ Cameras CameraCalibration::calibrate(int nx, int ny, float square_size) {
   cameras_par.set_K2(second_);
   cameras_par.set_P1(P1_);
   cameras_par.set_P2(P2_);
+  cameras_par.set_R(R_);
+  cameras_par.set_T(T_);
+  cameras_par.set_D1(D1_);
+  cameras_par.set_D2(D2_);
 
   return cameras_par;
 }
 
 void CameraCalibration::addImagePair(const cv::Mat &image1,
                                      const cv::Mat &image2, int nx, int ny) {
-  left_images_.push_back(image1);
-  right_images_.push_back(image2);
+  for_image_size_ = image1;
 
   // harvest points of corners for one image
   std::vector<cv::Point2f> temp1(nx * ny);
   std::vector<cv::Point2f> temp2(nx * ny);
 
-  int len;
   int result1 = 0;
   int result2 = 0;
 
@@ -109,27 +113,20 @@ void CameraCalibration::HarvestChessboardIdealPointList(
 cv::Matx33d CameraCalibration::CalebrationOneCamera(int CameraOrientation,
                                           int nx, int ny, float square_size) {
   std::vector<std::vector<cv::Point2f>> VPoints;
-  std::vector<cv::Mat> images;
   if (CameraOrientation == kLeft) {
-    images = left_images_;
     VPoints = VPoints1;
   } else {
-    images = right_images_;
     VPoints = VPoints2;
   }
 
   int result = 0;
   int n = nx * ny;
   int counter;
-  int length;
   std::vector<cv::Point2f> temp(n);
-  cv::Size imageSize = {0, 0};
-  imageSize = images.at(0).size();
+  image_size_ = for_image_size_.size();
   cv::Matx33d K;
   std::vector<cv::Mat> vrvec;
   std::vector<cv::Mat> tvec;
-
-  length = images.size();
 
   counter = VPoints.size();
   std::vector<std::vector<cv::Point3f>> VobjectPoints(counter);
@@ -141,10 +138,9 @@ cv::Matx33d CameraCalibration::CalebrationOneCamera(int CameraOrientation,
   cv::setIdentity(K);
 
   cv::calibrateCamera(
-        VobjectPoints, VPoints, imageSize, K, D, vrvec, tvec, 0,
+        VobjectPoints, VPoints, image_size_, K, D_, vrvec, tvec, 0,
         cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT,
                          30, 0.01));
-
   return K;
 }
 

@@ -188,6 +188,7 @@ add_application(demo_stereo_calib
 
 target_link_libraries(demo_stereo_calib
   ${OpenCV_LIBS}
+  ${PROTOBUF_LIBRARIES}
   )
 
 enable_testing()
