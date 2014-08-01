@@ -48,7 +48,7 @@ TEST(StreamTest, TCPOpenTest) {
 }
 
 TEST(StreamTest, PipeTest) {
-  std::string path = "/home/rayman/Downloads/my_pipe";
+  std::string path = "/tmp/caroline_pipe";
 
   std::unique_ptr<base::Stream> stream =
       base::Stream::Open("pipe://" + path, base::Stream::kReadWrite);
@@ -78,4 +78,6 @@ TEST(StreamTest, PipeTest) {
 
   stream2->Close();
   stream->Close();
+
+  unlink(path.c_str());
 }
