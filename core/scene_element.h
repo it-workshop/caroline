@@ -76,7 +76,6 @@ class SceneElement {
   void Transform(Point3D* point, const Point3D& mean_point) const;
 
  protected:
-
   Point3D FindMin(void) const;
   Point3D FindMax(void) const;
   Point3D FindMeanPoint(void) const;

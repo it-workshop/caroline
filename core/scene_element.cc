@@ -191,12 +191,12 @@ Mesh SceneElement::Merge(const Mesh& mesh,
                                       begin,
                                       end,
                                       curr_point.x() - merge_error,
-                                      '<');
+                                      LESS);
     int right_border = BinarySearchByX(new_scene.Vertexes(),
                                       begin,
                                       end,
                                       curr_point.x() + merge_error,
-                                      '>');
+                                      MORE);
 
     for (int j = left_border; j <= right_border; j++)
       if ((fabs(curr_point.x() - new_scene.Vertexes().at(j).x())

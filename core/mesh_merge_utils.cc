@@ -18,15 +18,15 @@ void TopDownMerge(std::vector<int>* old_order,
   int i0 = begin;
   int i1 = middle;
   for (int j = begin; j < end; j++) {
-      if ((i0 < middle) && ((i1 >= end) ||
+    if ((i0 < middle) && ((i1 >= end) ||
         (vertexes.at(old_order->at(i0)).x() <
          vertexes.at(old_order->at(i1)).x()))) {
-          new_order->at(j) = old_order->at(i0);
-          i0 = i0 + 1;
-      } else {
-          new_order->at(j) = old_order->at(i1);
-          i1 = i1 + 1;
-      }
+      new_order->at(j) = old_order->at(i0);
+      i0 = i0 + 1;
+    } else {
+      new_order->at(j) = old_order->at(i1);
+      i1 = i1 + 1;
+    }
   }
   for (int j = begin; j < end; j++)
     old_order->at(j) = new_order->at(j);
@@ -76,18 +76,18 @@ int BinarySearchByX(std::vector<Point3D> vertexes,
                     int begin,
                     int end,
                     double searched_value,
-                    char sign) {
+                    Sign sign) {
   // end is excluded, begin is included
   int result = -1;
   if ( end - begin == 1 ) return begin;
-  if (sign == '<') {
+  if (sign == LESS) {
     int middle = (begin + end) / 2;
     if (vertexes.at(middle).x() < searched_value) {
       result = BinarySearchByX(vertexes, middle, end, searched_value, sign);
     } else {
       result = BinarySearchByX(vertexes, begin, middle, searched_value, sign);
     }
-  } else if (sign == '>') {
+  } else if (sign == MORE) {
     int middle = (begin + end) / 2;
     if (vertexes.at(middle).x() < searched_value) {
       result = BinarySearchByX(vertexes, middle, end, searched_value, sign);

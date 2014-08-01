@@ -14,11 +14,16 @@ namespace core {
 
 Mesh MergeSortByX(const Mesh& mesh);
 
+enum Sign {
+  MORE,
+  LESS
+};
+
 int BinarySearchByX(std::vector<Point3D> vertexes,
                     int begin,
                     int end,
                     double searched_value,
-                    char sign);
+                    Sign sign);
 
 }  // namespace core
 
