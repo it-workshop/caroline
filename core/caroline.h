@@ -7,6 +7,9 @@
 #define CORE_CAROLINE_H_
 
 #include <memory>
+ 
+#include "core/serialization.h"
+#include "base/logging.h"
 
 namespace base {
 
@@ -33,6 +36,8 @@ class Caroline {
  private:
   base::CommandLine* command_line_;
   Config* config_;
+  bool send_message_;
+  bitdata::GlobalMessage* message_;
   std::unique_ptr<ImageCaptureManager> image_capture_manager_;
   std::unique_ptr<OpticalFlowProcessor> optical_flow_processor_;
   std::unique_ptr<Cameras> cameras_properties_;

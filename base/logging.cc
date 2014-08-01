@@ -49,7 +49,6 @@ void Logger::InitInstance(std::shared_ptr<Logger> self,
 }
 
 void Logger::PostMessage(const std::string& message) {
-  bitdata::GenLog(message);
   PostMessageImpl(message);
 }
 

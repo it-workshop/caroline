@@ -9,20 +9,35 @@
 #include <utility>
 #include <vector>
 
+#include <google/protobuf/message_lite.h>
+#include "base/stream.h"
 #include "protocol.pb.h"  // NOLINT
 
 namespace bitdata {
 
-void GenDMap(const core::DepthMap& depth_map) {
+GlobalMessage::GlobalMessage() : stream_name_() {
+base::Logger::Init("log_file",base::Logger::LOG_INFO);
+log_ = base::Logger::GetInstance();
+}
+
+void GlobalMessage::SetStream(const std::string& stream) {
+stream_name_ = stream;
+stream_ = base::Stream::Open(stream_name_,base::Stream::kRead);
+}
+
+void GlobalMessage::GenDMap(const core::DepthMap& depth_map) {
   std::unique_ptr<Message> message(new Message());
   message->mutable_depth_map()->set_width(depth_map.width());
   message->mutable_depth_map()->set_height(depth_map.height());
   for (double depth : depth_map)
     message->mutable_depth_map()->add_data(depth);
   message->set_type(Message::DEPTH_MAP);
+  char* bit_message = new char[message->ByteSize()];
+  message->SerializeToArray(bit_message,message->GetCachedSize());
+  stream_->Write(bit_message,message->GetCachedSize()); 
 }
 
-void GenOptFlow(const core::OpticalFlow& optical_flow) {
+void GlobalMessage::GenOptFlow(const core::OpticalFlow& optical_flow) {
   std::unique_ptr<Message>message(new Message);
   for (auto pair : optical_flow) {
     OpticalFlowItem* item = message->mutable_optical_flow()->add_item();
@@ -32,9 +47,12 @@ void GenOptFlow(const core::OpticalFlow& optical_flow) {
     item->mutable_right()->set_y(pair.second.y);
   }
   message->set_type(Message::OPTICAL_FLOW);
+  char* bit_message = new char[message->ByteSize()];
+  message->SerializeToArray(bit_message,message->GetCachedSize());
+  stream_->Write(bit_message,message->GetCachedSize());
 }
 
-void GenModel(core::Scene3D scene) {
+void GlobalMessage::GenModel(const core::Scene3D& scene) {
   std::unique_ptr<Message>message(new Message());
   std::vector<core::Point3D> vertexes;
   std::vector<core::Triangle> faces;
@@ -57,9 +75,13 @@ void GenModel(core::Scene3D scene) {
     vertex_base_index += scene_element->mesh()->vertexes().size();
   }
   message->set_type(Message::MODEL);
+  char* bit_message = new char[message->ByteSize()];
+  message->SerializeToArray(bit_message,message->GetCachedSize());
+  stream_->Write(bit_message,message->GetCachedSize());
 }
 
-void GenPic(const std::vector<std::pair<cv::Mat, core::Position>>& frameset) {
+void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
+            core::Position>>& frameset) {
   std::unique_ptr<Message>message(new Message());
   const cv::Mat& left = frameset[0].first;
   const cv::Mat& right = frameset[1].first;
@@ -80,12 +102,19 @@ void GenPic(const std::vector<std::pair<cv::Mat, core::Position>>& frameset) {
     message->mutable_images()->mutable_right()->add_data(*it);
   }
   message->set_type(Message::IMAGES);
+  char* bit_message = new char[message->ByteSize()];
+  message->SerializeToArray(bit_message,message->GetCachedSize());
+  stream_->Write(bit_message,message->GetCachedSize());
 }
 
-void GenLog(const std::string& message) {
+void GlobalMessage::GenLog(const std::string& message) {
+  log_->PostMessage(message);
   std::unique_ptr<Message>proto_message(new Message());
   proto_message->mutable_log()->set_line(message);
   proto_message->set_type(Message::LOG);
+  char* bit_message = new char[proto_message->ByteSize()];
+  proto_message->SerializeToArray(bit_message,proto_message->GetCachedSize());
+  stream_->Write(bit_message,proto_message->GetCachedSize());
 }
 
 }  // namespace bitdata
