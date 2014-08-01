@@ -188,6 +188,19 @@ target_link_libraries(demo_flowdemo
   ${PROTOBUF_LIBRARIES}
   )
 
+add_application(demo_stereo_calib
+  demo/calibratedemo/main.cc
+  demo/calibratedemo/stereo_calib_demo.cc
+  demo/calibratedemo/stereo_calib_demo.h
+  $<TARGET_OBJECTS:base>
+  $<TARGET_OBJECTS:core>
+  )
+
+target_link_libraries(demo_stereo_calib
+  ${OpenCV_LIBS}
+  ${PROTOBUF_LIBRARIES}
+  )
+
 enable_testing()
 include_directories(third_party/gtest/include)
 add_application(unit_tests

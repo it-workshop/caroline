@@ -27,11 +27,19 @@ class Cameras {
   void set_K2(const cv::Matx33d& K2) { K2_ = K2; }
   void set_P1(const cv::Matx34d& P1) { P1_ = P1; }
   void set_P2(const cv::Matx34d& P2) { P2_ = P2; }
+  void set_D1(const cv::Mat& D1) { D1_ = D1; }
+  void set_D2(const cv::Mat& D2) { D2_ = D2; }
+  void set_R(const cv::Matx33d& R) {R_ = R; }
+  void set_T(const cv::Matx31d& T) {T_ = T; }
 
   cv::Matx33d K1() const { return K1_; }
   cv::Matx33d K2() const { return K2_; }
   cv::Matx34d P1() const { return P1_; }
   cv::Matx34d P2() const { return P2_; }
+  cv::Mat D1() const { return D1_; }
+  cv::Mat D2() const { return D2_; }
+  cv::Matx33d R() const { return R_; }
+  cv::Matx31d T() const { return T_; }
 
  private:
   // camera one matrix
@@ -42,6 +50,12 @@ class Cameras {
   cv::Matx34d P1_;
   // projective matrix two
   cv::Matx34d P2_;
+
+  cv::Matx33d R_;
+  cv::Matx31d T_;
+
+  cv::Mat D1_;
+  cv::Mat D2_;
 };
 
 }  // namespace core
