@@ -12,20 +12,9 @@
 
 
 int main(int argc, const char* argv[]) {
-//  auto command_line(base::CommandLine::GetForCurrentProcess());
-//  base::CommandLine::ParseArgs(argv, command_line.get());
-
-//  auto config = core::Config::GetInstance();
-//  if (command_line->HasSwitch(core::switches::kConfigSwitch)) {
-//    config->LoadFromFile(
-//        command_line->GetSwitchData(core::switches::kConfigSwitch));
-//  }
-
     demo::StereoCalibDemo application;
-
     if (!application.Init()) {
       return -1;
     }
-
   return application.Run();
 }

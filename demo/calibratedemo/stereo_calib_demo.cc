@@ -62,12 +62,10 @@ int StereoCalibDemo::Run() {
     cv::moveWindow("right", 500, 0);
 
     cv::waitKey(-1);
-
-    if (i == (k - 1)) {
-      cv::destroyWindow("left");
-      cv::destroyWindow("right");
-    }
   }
+
+  cv::destroyWindow("left");
+  cv::destroyWindow("right");
 
   if (!calib.return_size()) {
     std::cout << "No chessboard on images.\n";

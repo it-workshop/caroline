@@ -49,44 +49,25 @@ class CameraCalibration {
     /// @param[in] ny Number of internal corners vertically
     /// @param[in] squre_size Size of square on the chessboard in cm
     /// @returns matrix internal parameters
-    cv::Matx33d CalebrationOneCamera(int CameraOrientation,
-                                     int nx, int ny, float square_size);
+    void CalibrationOneCamera(int CameraOrientation,
+                             int nx, int ny, float square_size,
+                             cv::Matx33d* K, std::vector<double>* D);
     /// Records coordinates pattern into vector
     /// @param[in] nx Number of internal corners horizontally
     /// @param[in] ny Number of internal corners vertically
     /// @param[in] squre_size Size of square on the chessboard in cm
     void HarvestChessboardIdealPointList(int nx, int ny,
                                          float square_size);
-
-    /// Records matrix in private variable
-    /// @param[in] first Matrix 3x3
-    void set_first(const cv::Matx33d& first) { first_ = first; }
-    /// Records matrix in private variable
-    /// @param[in] second Matrix 3x3
-    void set_second(const cv::Matx33d& second) { second_ = second; }
-
-    int return_size() const {return VPoints1.size(); }
-
-    /// @returns recorded matrix
-    cv::Matx33d first() const { return first_; }
-    /// @returns recorded matrix
-    cv::Matx33d second() const { return second_; }
+    /// Returns size
+    int return_size() const { return VPoints1.size(); }
 
  private:
-    /// Vector for one image
-    cv::Mat for_image_size_;
     /// Vector of pattern corners coordinates for each stereo pair
     std::vector<cv::Point3f> object_points_;
     /// Vector of corners coordinate of left images
     std::vector<std::vector<cv::Point2f>> VPoints1;
     /// Vector of corners coordinate of left images
     std::vector<std::vector<cv::Point2f>> VPoints2;
-    /// Vector of distortion coefficients
-    std::vector<double> D_;
-    /// Matrix of internal paramaters left camera
-    cv::Matx33d first_;
-    /// Matrix of internal paramaters right camera
-    cv::Matx33d second_;
     /// Image size.
     cv::Size image_size_;
 };

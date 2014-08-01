@@ -40,6 +40,7 @@ TEST(CamerasCalibrateTest, TestForOneCam) {
   cv::Matx33d intr_mat;
   double epsilon = 2.002;
   std::string str = "0";
+  std::vector<double> D;
 
   for ( int i = 0; i < 4; i++ ) {
     cv::Mat left_im = cv::imread("test_images/camera_calibration/left0" +
@@ -51,17 +52,14 @@ TEST(CamerasCalibrateTest, TestForOneCam) {
   }
 
   calib.HarvestChessboardIdealPointList(9, 6, 28);
-  intr_mat = calib.CalebrationOneCamera(
-        core::CameraCalibration::kLeft, 9, 6, 28);
-
-  calib.set_first(intr_mat);
+  calib.CalibrationOneCamera(
+        core::CameraCalibration::kLeft, 9, 6, 28, &intr_mat, &D);
 
   EXPECT_LE((fabs(intr_mat(0, 2) - 318.873)), epsilon);
   EXPECT_LE((fabs(intr_mat(1, 2) - 239.406)), epsilon);
 
-  intr_mat = calib.CalebrationOneCamera(
-        core::CameraCalibration::kRight, 9, 6, 28);
-  calib.set_second(intr_mat);
+  calib.CalibrationOneCamera(
+        core::CameraCalibration::kRight, 9, 6, 28, &intr_mat, &D);
 
   EXPECT_LE((fabs(intr_mat(0, 2) - 319.581)), epsilon);
   EXPECT_LE((fabs(intr_mat(1, 2) - 239.706)), epsilon);
