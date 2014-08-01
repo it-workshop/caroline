@@ -18,7 +18,7 @@ namespace bitdata {
 
 void GlobalMessage::SetStream(const std::string& stream) {
 stream_name_ = stream;
-stream_ = base::Stream::Open(stream_name_,base::Stream::kRead);
+stream_ = base::Stream::Open(stream_name_,base::Stream::kWrite);
 }
 
 void GlobalMessage::GenDMap(const core::DepthMap& depth_map) {

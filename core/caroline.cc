@@ -40,7 +40,6 @@ bool Caroline::Init() {
   if (config_->dictionary()->GetValue(StreamConfigFieldName)) {   
     adress = config_->dictionary()->GetValue(StreamConfigFieldName)->
         AsString()->value();
-    base::Logger::Init("logfile.xxx",base::Logger::LOG_DEBUG);
     base::Logger::GetInstance()->Set_Connection_Data(adress); 
     message_->SetStream(adress);
   }
@@ -58,8 +57,13 @@ int Caroline::Run() {
     if (frameset.size() < 2)
       return RETURN_WRONG_FRAMES_COUNT;
 
+    if (send_message_) 
+      message_->GenPic(frameset);
+
     auto optical_flow = optical_flow_processor_->Process(
         frameset.at(0).first, frameset.at(1).first);
+
+    if (send_message_) message_->GenOptFlow(optical_flow);
 
     int w = frameset.at(0).first.size().width;
     int h = frameset.at(0).first.size().height;
@@ -89,6 +93,8 @@ int Caroline::Run() {
     auto depth_map = DepthMap::BuildMap(
           optical_flow, *cameras_properties_, w, h);
 
+    if (send_message_) message_->GenDMap(*depth_map.get());
+
     std::unique_ptr<Mesh> mesh(new DepthMesh(*depth_map, 0, INT_MAX));
     std::unique_ptr<Scene3D> scene(new Scene3D);
 
@@ -96,12 +102,8 @@ int Caroline::Run() {
 
     scene->AddElement(element.get());
 
-    if (send_message_){
-      message_->GenOptFlow(optical_flow);
-      message_->GenPic(frameset);
+    if (send_message_)
       message_->GenModel(*scene);
-      message_->GenDMap(*depth_map.get());
-    }
   }
 
   return RETURN_OK;
