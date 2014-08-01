@@ -50,16 +50,3 @@ TEST(StreamTest, TCPOpenTest) {
   stream->Close();
 }
 
-TEST(StreamTest, LocalTest) {
-std::unique_ptr<base::Stream>stream;
-stream = base::Stream::Open("tcp://192.168.1.103:12345", base::Stream::kReadWrite);
-std::string str = "Hello, I'm little message";
-std::unique_ptr<bitdata::Message>mess(new bitdata::Message);
-mess->mutable_log()->set_line(str);
-mess->set_type(bitdata::Message::LOG);
-int size = mess->ByteSize();
-char* Arr = new char[size];
-mess->SerializeToArray(Arr,size);
-stream->Write(Arr,size);
-ASSERT_NE(stream,nullptr);
-}
