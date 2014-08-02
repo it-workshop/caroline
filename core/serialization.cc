@@ -88,12 +88,12 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
   message->mutable_images()->mutable_right()->
       set_width(right.size().width);
   message->mutable_images()->mutable_right()->
-      set_width(right.size().width);
-  for (auto it = left.begin<double>(), end = left.end<double>();
+      set_height(right.size().height);
+  for (auto it = left.begin<int>(), end = left.end<int>();
       it != end; ++it) {
     message->mutable_images()->mutable_left()->add_data(*it);
   }
-  for (auto it = right.begin<double>(), end = right.end<double>();
+  for (auto it = right.begin<int>(), end = right.end<int>();
       it != end; ++it) {
     message->mutable_images()->mutable_right()->add_data(*it);
   }
