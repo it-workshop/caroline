@@ -1,13 +1,13 @@
 [submodule "third_party/gtest"]
 	path = third_party/gtest
-	url = http://stash.technoworks/scm/CAROLINE/thirdparty-gtest.git
+	url = http://stash.technoworks.ru/scm/CAROLINE/thirdparty-gtest.git
 [submodule "build/cpplint"]
 	path = build/cpplint
-	url = http://stash.technoworks/scm/CAROLINE/thirdparty-cpplint.git
+	url = http://stash.technoworks.ru/scm/CAROLINE/thirdparty-cpplint.git
 [submodule "third_party/opencv"]
 	path = third_party/opencv
-	url = http://stash.technoworks/scm/CAROLINE/thirdparty-opencv.git
+	url = http://stash.technoworks.ru/scm/CAROLINE/thirdparty-opencv.git
 [submodule "api"]
 	path = api
-	url = http://stash.technoworks/scm/mob/carolineproto.git
+	url = http://stash.technoworks.ru/scm/mob/carolineproto.git
 
