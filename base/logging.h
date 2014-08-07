@@ -95,9 +95,11 @@ class Logger {
   /// @returns path to the log.
   std::string file() const { return file_; }
 
-  void Set_Connection_Data(std::string data) {connection_data_ = data; }
+  void set_connection_address(const std::string& address) {
+    connection_address_ = address;
+  }
 
-protected:
+ protected:
   /// Internal function that writes a string to the log.
   /// @param[in] message Message to write.
   void PostMessage(const std::string& message);
@@ -118,7 +120,7 @@ protected:
 
   Level minimum_level_;
   std::string file_;
-  std::string connection_data_;
+  std::string connection_address_;
   std::weak_ptr<Logger> self_;
 
   /// Copy consturctor is disallowed.

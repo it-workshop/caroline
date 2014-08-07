@@ -16,7 +16,7 @@ option(use_own_opencv
   "Own sources of opencv will be used on the non-linux systems."
   ${default_use_own_opencv})
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${Caroline_SOURCE_DIR}/cmake")
 include(cxx11_support)
 include(platform_utils)
 include(targets_utils)
@@ -40,9 +40,9 @@ if (NOT use_own_opencv)
   find_package(OpenCV REQUIRED)
 else ()
   file (GLOB OpenCV_INCLUDE_DIRS
-      "${CMAKE_SOURCE_DIR}/third_party/opencv/modules/*/include")
+      "${Caroline_SOURCE_DIR}/third_party/opencv/modules/*/include")
   list (APPEND OpenCV_INCLUDE_DIRS
-      "${CMAKE_SOURCE_DIR}/third_party/opencv/include")
+      "${Caroline_SOURCE_DIR}/third_party/opencv/include")
   set (OpenCV_LIBS
     opencv_core
     opencv_highgui
@@ -52,25 +52,29 @@ else ()
     )
 endif ()
 include_directories("${OpenCV_INCLUDE_DIRS}")
+include_directories("${Caroline_SOURCE_DIR}/third_party/jsoncpp/include")
 
-include_directories("${CMAKE_SOURCE_DIR}")
-
-include_directories("${CMAKE_BINARY_DIR}")
+include_directories("${Caroline_SOURCE_DIR}")
+include_directories("${Caroline_BINARY_DIR}")
 
 find_package(Protobuf REQUIRED)
 include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
+
+list(APPEND Caroline_LIBRARIES
+    ${OpenCV_LIBS}
+    jsoncpp_lib
+    ${PROTOBUF_LIBRARIES}
+    )
 
 protobuf_generate_cpp(PROTO_SOURCES PROTO_HEADERS
   "api/protocol.proto"
   )
 
-file (COPY test_images DESTINATION ${CMAKE_BINARY_DIR})
+file (COPY test_images DESTINATION ${Caroline_BINARY_DIR})
 
 add_module(base OBJECT
   base/command_line.cc
   base/command_line.h
-  base/json.cc
-  base/json.h
   base/logging.cc
   base/logging.h
   base/logging_posix.cc
@@ -81,8 +85,6 @@ add_module(base OBJECT
   base/stream_net_posix.h
   base/stream_pipe_posix.cc
   base/stream_pipe_posix.h
-  base/values.cc
-  base/values.h
   )
 
 add_module(core OBJECT
@@ -171,8 +173,7 @@ add_application(caroline
   $<TARGET_OBJECTS:core>
   )
 target_link_libraries(caroline
-  ${OpenCV_LIBS}
-  ${PROTOBUF_LIBRARIES}
+  ${Caroline_LIBRARIES}
   )
 
 add_application(demo_flowdemo
@@ -184,8 +185,7 @@ add_application(demo_flowdemo
   )
 
 target_link_libraries(demo_flowdemo
-  ${OpenCV_LIBS}
-  ${PROTOBUF_LIBRARIES}
+  ${Caroline_LIBRARIES}
   )
 
 add_application(demo_stereo_calib
@@ -197,8 +197,7 @@ add_application(demo_stereo_calib
   )
 
 target_link_libraries(demo_stereo_calib
-  ${OpenCV_LIBS}
-  ${PROTOBUF_LIBRARIES}
+  ${Caroline_LIBRARIES}
   )
 
 enable_testing()
@@ -206,8 +205,6 @@ include_directories(third_party/gtest/include)
 add_application(unit_tests
   base/stream_unittest.cc
   base/command_line_unittest.cc
-  base/json_unittest.cc
-  base/values_unittest.cc
   base/stream_unittest.cc
   core/cam_calib_unittest.cc
   core/cameras_unittest.cc
@@ -215,30 +212,25 @@ add_application(unit_tests
   core/opencv_unittest.cc
   core/filter_unittest.cc
   core/recognise_unittest.cc
-  unit_tests_main.cc
   $<TARGET_OBJECTS:base>
   $<TARGET_OBJECTS:core>
   )
 target_link_libraries(unit_tests
-  gtest
-  ${OpenCV_LIBS}
-  ${PROTOBUF_LIBRARIES}
+  gtest_main
+  ${Caroline_LIBRARIES}
   )
 add_test(unit_tests unit_tests)
-
 
 find_program(DOXYGEN doxygen)
 if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
   configure_file(
-    "${CMAKE_SOURCE_DIR}/Doxyfile.in"
-    "${CMAKE_BINARY_DIR}/Doxyfile"
+    "${Caroline_SOURCE_DIR}/Doxyfile.in"
+    "${Caroline_BINARY_DIR}/Doxyfile"
     NEWLINE_STYLE UNIX)
   add_custom_target(docs
-      "${DOXYGEN}" "${CMAKE_BINARY_DIR}/Doxyfile"
-      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+      "${DOXYGEN}" "${Caroline_BINARY_DIR}/Doxyfile"
+      WORKING_DIRECTORY "${Caroline_BINARY_DIR}"
       COMMENT Build documentation.)
 endif ()
-
-
 
 

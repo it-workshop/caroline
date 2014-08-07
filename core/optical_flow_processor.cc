@@ -8,7 +8,6 @@
 #include <string>
 
 #include "core/farneback_optical_flow_processor.h"
-#include "base/values.h"
 #include "core/config.h"
 #include "core/lucas_kanade_optical_flow_processor.h"
 
@@ -33,14 +32,16 @@ OpticalFlowProcessor::Create(const Config* config) {
   if (!dictionary)
     return std::unique_ptr<OpticalFlowProcessor>();
 
-  auto settings =
-      base::ToDictionary(dictionary->GetValue(kOpticalFlowNode));
-  if (!settings)
-    return std::unique_ptr<OpticalFlowProcessor>();
+  if (dictionary->isMember(kOpticalFlowNode)) {
+    const Json::Value& settings = (*dictionary)[kOpticalFlowNode];
+    if (!settings.isObject() || !settings.isMember(kAlgorithmNameNode))
+      return std::unique_ptr<OpticalFlowProcessor>();
 
-  auto algorithm_node = base::ToString(settings->GetValue(kAlgorithmNameNode));
-  if (algorithm_node) {
-    std::string algorithm_name = algorithm_node->value();
+    const Json::Value& algorithm_node = settings[kAlgorithmNameNode];
+    if (!algorithm_node.isString())
+      return std::unique_ptr<OpticalFlowProcessor>();
+
+    const std::string& algorithm_name = algorithm_node.asString();
 
     if (kLucasKanadeAlgorithmName == algorithm_name) {
       return LucasKanadeOpticalFlowProcessor::Create(settings);

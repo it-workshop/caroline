@@ -7,9 +7,9 @@
 
 #include <string>
 
-#include "base/values.h"
 #include "core/predefined_position_controller.h"
 #include "core/undefined_position_controller.h"
+#include "json/value.h"
 
 namespace core {
 
@@ -24,15 +24,15 @@ const char kControllerTypeUndefined[] = "undefined";
 // static
 std::unique_ptr<PositionController>
 PositionController::Create(TimeController* time_controller,
-    base::DictionaryValue* settings) {
-  if (!settings)
+    const Json::Value& settings) {
+  if (!settings.isObject()
+      || settings.isMember(kControllerTypeNode))
     return std::unique_ptr<PositionController>();
 
-  auto controller_type =
-      base::ToString(settings->GetValue(kControllerTypeNode));
-  if (!controller_type)
+  const Json::Value& controller_type = settings[kControllerTypeNode];
+  if (!controller_type.isString())
     return std::unique_ptr<PositionController>();
-  std::string controller_type_string = controller_type->value();
+  const std::string& controller_type_string = controller_type.asString();
 
   if (kControllerTypePredefined == controller_type_string)
     return PredefinedPositionController::Create(time_controller, settings);

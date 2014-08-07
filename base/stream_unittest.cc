@@ -4,11 +4,12 @@
 /// @author Konstantin Bormotov <bormotovk@gmail.com>
 /// @author Vladimir Glazachev <glazachev.vladimir@gmail.com>
 
-#include "gtest/gtest.h"
-#include "base/stream.h"
 #include <string>
+
+#include "base/stream.h"
 #include "core/serialization.h"
-#include "protocol.pb.h"
+#include "gtest/gtest.h"
+#include "protocol.pb.h"  // NOLINT
 
 TEST(StreamTest, TCPOpenTest) {
   std::unique_ptr<base::Stream> stream;

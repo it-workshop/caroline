@@ -7,7 +7,7 @@
 #define CORE_CAROLINE_H_
 
 #include <memory>
- 
+
 #include "core/serialization.h"
 #include "base/logging.h"
 
