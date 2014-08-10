@@ -10,7 +10,6 @@
 #include <vector>
 #include <utility>
 
-#include "base/values.h"
 #include "core/config.h"
 #include "core/image_capture_impl.h"
 #include "core/image_time_controller.h"
@@ -57,84 +56,125 @@ const double kDpiToDpmMultiplier = 39.37;
 
 // static
 std::unique_ptr<ImageCaptureManager>
-ImageCaptureManager::Create(Config* config) {
+ImageCaptureManager::Create(const Config* config) {
   std::unique_ptr<ImageCaptureManager> manager;
   if (!config)
     return manager;
 
-  auto config_root = config->dictionary();
-  if (!config_root)
+  const Json::Value* config_root = config->dictionary();
+  if (!config_root || config_root->isMember(kTimeSettingsNode))
     return manager;
 
   std::unique_ptr<TimeController> time_controller;
-  auto time_settings =
-      base::ToDictionary(config_root->GetValue(kTimeSettingsNode));
-  if (time_settings) {
-    auto controller_type =
-        base::ToString(time_settings->GetValue(kTimeControllerNode));
-    if (controller_type) {
-      const std::string& type_string = controller_type->value();
+  const Json::Value& time_settings = (*config_root)[kTimeSettingsNode];
+  if (time_settings.isObject() && time_settings.isMember(kTimeControllerNode)) {
+    const Json::Value& controller_type = time_settings[kTimeControllerNode];
+    if (controller_type.isString()) {
+      const std::string& type_string = controller_type.asString();
       if (type_string == kTimeControllerTypeImage) {
-        auto fps = base::ToInteger(time_settings->GetValue(kTimeFpsNode));
-        time_controller.reset(new ImageTimeController(fps ? fps->value() : 1));
+        if (time_settings.isMember(kTimeFpsNode)) {
+          const Json::Value& fps = time_settings[kTimeFpsNode];
+          time_controller.reset(
+              new ImageTimeController(fps.isUInt() ? fps.asUInt() : 1));
+        } else {
+          time_controller.reset(
+              new ImageTimeController(1));
+        }
       }
     }
   }
   if (!time_controller)
     time_controller.reset(new VideoTimeController());
 
-  auto captures_list = base::ToList(config_root->GetValue(kCapturesNode));
-  if (!captures_list || captures_list->empty())
+  const Json::Value& captures_list = (*config_root)[kCapturesNode];
+  if (!captures_list.isArray() || captures_list.empty())
     return manager;
 
   std::vector<std::unique_ptr<ImageCapture>> captures;
-  for (size_t i = 0; i < captures_list->size(); ++i) {
-    auto capture = base::ToDictionary(captures_list->GetValueAt(i));
-    if (!capture)
+  for (auto it = captures_list.begin(),
+      end = captures_list.end(); it != end; ++it) {
+    const Json::Value& capture = *it;
+    if (!capture.isObject())
       continue;
 
-    auto capture_type = base::ToString(capture->GetValue(kCaptureTypeNode));
-    const std::string& capture_type_string =
-        capture_type ? capture_type->value() : std::string();
-    auto capture_source = base::ToString(capture->GetValue(kCaptureSourceNode));
-    const std::string& capture_source_string =
-        capture_source ? capture_source->value() : std::string();
-    auto capture_id = base::ToInteger(capture->GetValue(kCaptureIdNode));
+    std::string capture_type_string;
+    if (capture.isMember(kCaptureTypeNode)) {
+      const Json::Value& capture_type = capture[kCaptureTypeNode];
+      if (capture_type.isString())
+        capture_type_string = capture_type.asString();
+    }
 
-    auto focus_length =
-        base::ToFloat(capture->GetValue(kCaptureFocusLengthNode));
+    std::string capture_source_string;
+    if (capture.isMember(kCaptureSourceNode)) {
+      const Json::Value& capture_source = capture[kCaptureSourceNode];
+      if (capture_source.isString())
+        capture_source_string = capture_source.asString();
+    }
 
-    auto dpm = base::ToInteger(capture->GetValue(kCaptureDpmNode));
-    auto dpi = base::ToInteger(capture->GetValue(kCaptureDpiNode));
+    uint64_t capture_id_int = 0;
+    bool capture_id_present = false;
+    if (capture.isMember(kCaptureIdNode)) {
+      const Json::Value& capture_id = capture[kCaptureIdNode];
+      if (capture_id.isUInt64()) {
+        capture_id_present = true;
+        capture_id_int = capture_id.asUInt64();
+      }
+    }
 
-    auto position_settings =
-        base::ToDictionary(capture->GetValue(kCapturePositionSettingsNode));
+    double focus_length_double = 0;
+    bool focus_length_present = false;
+    if (capture.isMember(kCaptureFocusLengthNode)) {
+      const Json::Value& focus_length = capture[kCaptureFocusLengthNode];
+      if (focus_length.isDouble()) {
+        focus_length_present = true;
+        focus_length_double = focus_length.asDouble();
+      }
+    }
 
-    auto position_controller = PositionController::Create(time_controller.get(),
-        position_settings);
+    uint64_t dpm_int = kDefaultDpi * kDpiToDpmMultiplier;
+    bool dpm_present = false;
+    if (capture.isMember(kCaptureDpmNode)) {
+      const Json::Value& dpm = capture[kCaptureDpmNode];
+      if (dpm.isUInt64()) {
+        dpm_present = true;
+        dpm_int = dpm.asUInt64();
+      }
+    }
+    uint64_t dpi_int = kDefaultDpi;
+    bool dpi_present = false;
+    if (capture.isMember(kCaptureDpiNode)) {
+      const Json::Value& dpi = capture[kCaptureDpiNode];
+      if (dpi.isUInt64()) {
+        dpi_present = true;
+        dpi_int = dpi.asUInt64();
+      }
+    }
+
+    std::unique_ptr<PositionController> position_controller;
+    if (capture.isMember(kCapturePositionSettingsNode)) {
+      const Json::Value& position_settings =
+          capture[kCapturePositionSettingsNode];
+      position_controller = PositionController::Create(
+          time_controller.get(),
+          position_settings);
+    }
 
     std::unique_ptr<ImageCaptureImpl> image_capture;
-    if (capture_type_string == kCaptureTypeDevice && capture_id)
+    if (capture_type_string == kCaptureTypeDevice && capture_id_present)
       image_capture.reset(
-          new ImageCaptureImpl(std::move(position_controller),
-              capture_id->value()));
+          new ImageCaptureImpl(std::move(position_controller), capture_id_int));
 
-    int64_t dpm_value = kDefaultDpi * static_cast<int64_t>(kDpiToDpmMultiplier);
-    if (!image_capture) {
-      if (dpm)
-        dpm_value = dpm->value();
-      else if (dpi)
-        dpm_value = dpi->value() * static_cast<int64_t>(kDpiToDpmMultiplier);
-    }
+    if (!dpm_present && dpi_present)
+      dpm_int = dpi_int * kDpiToDpmMultiplier;
 
     if (!image_capture && capture_type_string == kCaptureTypeVideo &&
         !capture_source_string.empty()) {
       image_capture.reset(
           new ImageCaptureImpl(std::move(position_controller),
               ImageCapture::Type::VIDEO, capture_source_string));
-      image_capture->set_dpm(dpm_value);
-      image_capture->set_focus_length(focus_length ?
-          focus_length->value() : kDefaultFocusLength);
+      image_capture->set_dpm(dpm_int);
+      image_capture->set_focus_length(focus_length_present ?
+          focus_length_double : kDefaultFocusLength);
     }
 
     if (!image_capture && capture_type_string == kCaptureTypeImage &&
@@ -142,9 +182,9 @@ ImageCaptureManager::Create(Config* config) {
       image_capture.reset(
           new ImageCaptureImpl(std::move(position_controller),
               ImageCapture::Type::IMAGE, capture_source_string));
-      image_capture->set_dpm(dpm_value);
-      image_capture->set_focus_length(focus_length ?
-          focus_length->value() : kDefaultFocusLength);
+      image_capture->set_dpm(dpm_int);
+      image_capture->set_focus_length(focus_length_present ?
+          focus_length_double : kDefaultFocusLength);
     }
 
     if (!image_capture)

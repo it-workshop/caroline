@@ -239,7 +239,7 @@ size_t UDPBindPOSIX::Write(const char *buffer, size_t size) {
   int sock;
   sock = socketdf();
 
-  int bytes_write = sendto(sock, buffer, size, 0, NULL, NULL);
+  int bytes_write = sendto(sock, buffer, size, 0, NULL, 0);
   if (bytes_write < 0) {
     LOG(INFO) << "Socket - data not write UDP";
   }

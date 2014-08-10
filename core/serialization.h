@@ -23,33 +23,36 @@
 namespace bitdata {
 
 class GlobalMessage {
-public:
+ public:
+  virtual ~GlobalMessage() {}
 
-std::string GetStream() { return stream_name_; }
+  std::string stream_name() const {
+    return stream_name_;
+  }
 
-void SetStream(const std::string& stream);
+  void SetStream(const std::string& stream);
 
-/// Seriallize Depth map with protobuf.
-/// @param[in] depth_map Depth map to seriallize.
-void GenDMap(const core::DepthMap& depth_map);
+  /// Seriallize Depth map with protobuf.
+  /// @param[in] depth_map Depth map to seriallize.
+  void GenDMap(const core::DepthMap& depth_map);
 
-/// Seriallize Optical flow with protobuf.
-/// @param[in] seriallize Optical flow to seriallize.
-void GenOptFlow(const core::OpticalFlow& optical_flow);
+  /// Seriallize Optical flow with protobuf.
+  /// @param[in] seriallize Optical flow to seriallize.
+  void GenOptFlow(const core::OpticalFlow& optical_flow);
 
-/// Seriallize Model with protobuf.
-/// @param[in] scene Scene to se
-void GenModel(const core::Scene3D& scene);
+  /// Seriallize Model with protobuf.
+  /// @param[in] scene Scene to se
+  void GenModel(const core::Scene3D& scene);
 
-// Seriallize images from cameras.
-/// @param[in] frameset Collection of images.
-void GenPic(const std::vector<std::pair<cv::Mat, core::Position>>& frameset);
+  // Seriallize images from cameras.
+  /// @param[in] frameset Collection of images.
+  void GenPic(const std::vector<std::pair<cv::Mat, core::Position>>& frameset);
 
-/// Seriallize log message.
-/// @param[in] message Message to seriallize.
-void GenLog(const std::string& message);
+  /// Seriallize log message.
+  /// @param[in] message Message to seriallize.
+  void GenLog(const std::string& message);
 
-private:
+ private:
   std::string stream_name_;
   std::unique_ptr<base::Stream>stream_;
 };

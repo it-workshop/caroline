@@ -52,9 +52,13 @@ class StreamNetPOSIX : public Stream::Impl {
   virtual ~StreamNetPOSIX() {}
 
   /// Not needed for sockets, so empty impl
-  bool Seek(ssize_t offset, Stream::SeekType type) {}
+  virtual bool Seek(ssize_t offset, Stream::SeekType type) override {
+    return false;
+  }
   /// Empty impl
-  size_t GetSize() {}
+  virtual size_t GetSize() override {
+    return 0;
+  }
 
   /// Close the stream.
   void Close();

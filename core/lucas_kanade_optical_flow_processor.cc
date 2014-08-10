@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "base/values.h"
+#include "json/value.h"
 #include "opencv2/core/mat.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/video/video.hpp"
@@ -30,7 +30,7 @@ const char kSubPixIterationsNode[] = "sub_pix_iterations";
 const char kSubPixEpsilonNode[] = "sub_pix_epsilon";
 const char kWindowWidthNode[] = "window_width";
 const char kWindowHeightNode[] = "window_height";
-const char kMaxLevel[] = "max_level";
+const char kMaxLevelNode[] = "max_level";
 const char kOpticalFlowIterationsNode[] = "optical_flow_iterations";
 const char kOpticalFlowEpsilonNode[] = "optical_flow_epsilon";
 
@@ -38,78 +38,104 @@ const char kOpticalFlowEpsilonNode[] = "optical_flow_epsilon";
 
 // static
 std::unique_ptr<OpticalFlowProcessor>
-LucasKanadeOpticalFlowProcessor::Create(const base::DictionaryValue* settings) {
+LucasKanadeOpticalFlowProcessor::Create(const Json::Value& settings) {
   std::unique_ptr<LucasKanadeOpticalFlowProcessor> processor(
       new LucasKanadeOpticalFlowProcessor());
 
-  auto max_corners_count = base::ToInteger(settings->GetValue(kMaxCornersNode));
-  if (max_corners_count)
-    processor->set_max_corners_count(max_corners_count->value());
+  if (settings.isMember(kMaxCornersNode)) {
+    const Json::Value& max_corners_count = settings[kMaxCornersNode];
+    if (max_corners_count.isUInt64())
+      processor->set_max_corners_count(max_corners_count.asUInt64());
+  }
 
-  auto corners_quality = base::ToFloat(settings->GetValue(kCornersQualityNode));
-  if (corners_quality)
-    processor->set_corners_quality(corners_quality->value());
+  if (settings.isMember(kCornersQualityNode)) {
+    const Json::Value& corners_quality = settings[kCornersQualityNode];
+    if (corners_quality.isDouble())
+      processor->set_corners_quality(corners_quality.asDouble());
+  }
 
-  auto corners_distance =
-      base::ToFloat(settings->GetValue(kCornersDistanceNode));
-  if (corners_distance)
-    processor->set_corners_distance(corners_distance->value());
+  if (settings.isMember(kCornersDistanceNode)) {
+    const Json::Value& corners_distance = settings[kCornersDistanceNode];
+    if (corners_distance.isDouble())
+      processor->set_corners_distance(corners_distance.asDouble());
+  }
 
-  auto sub_pix_search_window_half_width =
-      base::ToInteger(settings->GetValue(kSubPixSearchWindowHalfWidthNode));
-  if (sub_pix_search_window_half_width)
-    processor->set_sub_pix_search_window_half_width(
-        sub_pix_search_window_half_width->value());
+  if (settings.isMember(kSubPixSearchWindowHalfWidthNode)) {
+    const Json::Value& sub_pix_search_window_half_width =
+        settings[kSubPixSearchWindowHalfWidthNode];
+    if (sub_pix_search_window_half_width.isUInt64())
+      processor->set_sub_pix_search_window_half_width(
+          sub_pix_search_window_half_width.asUInt64());
+  }
 
-  auto sub_pix_search_window_half_height =
-      base::ToInteger(settings->GetValue(kSubPixSearchWindowHalfHeightNode));
-  if (sub_pix_search_window_half_height)
-    processor->set_sub_pix_search_window_half_height(
-        sub_pix_search_window_half_height->value());
+  if (settings.isMember(kSubPixSearchWindowHalfHeightNode)) {
+    const Json::Value& sub_pix_search_window_half_height =
+        settings[kSubPixSearchWindowHalfHeightNode];
+    if (sub_pix_search_window_half_height.isUInt64())
+      processor->set_sub_pix_search_window_half_height(
+          sub_pix_search_window_half_height.asUInt64());
+  }
 
-  auto sub_pix_zero_zone_half_width =
-      base::ToInteger(settings->GetValue(kSubPixZeroZoneHalfWidthNode));
-  if (sub_pix_zero_zone_half_width)
-    processor->set_sub_pix_zero_zone_half_width(
-        sub_pix_zero_zone_half_width->value());
+  if (settings.isMember(kSubPixZeroZoneHalfWidthNode)) {
+    const Json::Value& sub_pix_zero_zone_half_width =
+        settings[kSubPixZeroZoneHalfWidthNode];
+    if (sub_pix_zero_zone_half_width.isUInt64())
+      processor->set_sub_pix_zero_zone_half_width(
+          sub_pix_zero_zone_half_width.asUInt64());
+  }
 
-  auto sub_pix_zero_zone_half_height =
-      base::ToInteger(settings->GetValue(kSubPixZeroZoneHalfHeightNode));
-  if (sub_pix_zero_zone_half_height)
-    processor->set_sub_pix_zero_zone_half_height(
-        sub_pix_zero_zone_half_height->value());
+  if (settings.isMember(kSubPixZeroZoneHalfHeightNode)) {
+    const Json::Value& sub_pix_zero_zone_half_height =
+        settings[kSubPixZeroZoneHalfHeightNode];
+    if (sub_pix_zero_zone_half_height.isUInt64())
+      processor->set_sub_pix_zero_zone_half_height(
+          sub_pix_zero_zone_half_height.asUInt64());
+  }
 
-  auto sub_pix_iterations = base::ToInteger(
-      settings->GetValue(kSubPixIterationsNode));
-  if (sub_pix_iterations)
-    processor->set_sub_pix_iterations(sub_pix_iterations->value());
+  if (settings.isMember(kSubPixIterationsNode)) {
+    const Json::Value& sub_pix_iterations = settings[kSubPixIterationsNode];
+    if (sub_pix_iterations.isDouble())
+      processor->set_sub_pix_iterations(sub_pix_iterations.asUInt64());
+  }
 
-  auto sub_pix_epsilon =
-      base::ToFloat(settings->GetValue(kSubPixEpsilonNode));
-  if (sub_pix_epsilon)
-    processor->set_sub_pix_epsilon(sub_pix_epsilon->value());
+  if (settings.isMember(kSubPixEpsilonNode)) {
+    const Json::Value& sub_pix_epsilon = settings[kSubPixEpsilonNode];
+    if (sub_pix_epsilon.isDouble())
+      processor->set_sub_pix_epsilon(sub_pix_epsilon.asDouble());
+  }
 
-  auto window_width = base::ToInteger(settings->GetValue(kWindowWidthNode));
-  if (window_width)
-    processor->set_window_width(window_width->value());
+  if (settings.isMember(kWindowWidthNode)) {
+    const Json::Value& window_width = settings[kWindowWidthNode];
+    if (window_width.isUInt64())
+      processor->set_window_width(window_width.asUInt64());
+  }
 
-  auto window_height = base::ToInteger(settings->GetValue(kWindowHeightNode));
-  if (window_height)
-    processor->set_window_height(window_height->value());
+  if (settings.isMember(kWindowHeightNode)) {
+    const Json::Value& window_height = settings[kWindowHeightNode];
+    if (window_height.isUInt64())
+      processor->set_window_height(window_height.asUInt64());
+  }
 
-  auto max_level = base::ToInteger(settings->GetValue(kMaxLevel));
-  if (max_level)
-    processor->set_max_level(max_level->value());
+  if (settings.isMember(kMaxLevelNode)) {
+    const Json::Value& max_level = settings[kMaxLevelNode];
+    if (max_level.isUInt64())
+      processor->set_max_level(max_level.asUInt64());
+  }
 
-  auto optical_flow_iterations =
-      base::ToInteger(settings->GetValue(kOpticalFlowIterationsNode));
-  if (optical_flow_iterations)
-    processor->set_optical_flow_iterations(optical_flow_iterations->value());
+  if (settings.isMember(kOpticalFlowIterationsNode)) {
+    const Json::Value& optical_flow_iterations =
+        settings[kOpticalFlowIterationsNode];
+    if (optical_flow_iterations.isUInt64())
+      processor->set_optical_flow_iterations(
+          optical_flow_iterations.asUInt64());
+  }
 
-  auto optical_flow_epsilon =
-      base::ToFloat(settings->GetValue(kOpticalFlowEpsilonNode));
-  if (optical_flow_epsilon)
-    processor->set_optical_flow_epsilon(optical_flow_epsilon->value());
+  if (settings.isMember(kOpticalFlowEpsilonNode)) {
+    const Json::Value& optical_flow_epsilon =
+        settings[kOpticalFlowEpsilonNode];
+    if (optical_flow_epsilon.isDouble())
+      processor->set_optical_flow_epsilon(optical_flow_epsilon.asDouble());
+  }
 
   return std::unique_ptr<OpticalFlowProcessor>(processor.release());
 }

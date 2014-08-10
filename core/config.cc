@@ -5,15 +5,29 @@
 
 #include <fstream>  // NOLINT
 #include <string>
+#include <vector>
 
-#include "base/json.h"
-#include "base/values.h"
+#include "base/logging.h"
 #include "core/config.h"
 
 namespace core {
 
+namespace {
+
+Json::Features ConfigJsonFeatures() {
+  Json::Features features;
+  features.allowComments_ = true;
+  features.strictRoot_ = true;
+  features.allowDroppedNullPlaceholders_ = false;
+  features.allowNumericKeys_ = false;
+  return features;
+}
+
+}  // namespace
+
 Config::Config()
-  : dictionary_(new base::DictionaryValue()) {}
+  : parser_(ConfigJsonFeatures()),
+    loaded_(false) {}
 
 Config::~Config() {}
 
@@ -42,23 +56,29 @@ bool Config::LoadFromFile(const std::string& filename) {
 }
 
 bool Config::LoadFromString(const std::string& json) {
-  std::unique_ptr<base::Value> parsed(base::json::Parse(json));
-  if (!parsed || !parsed->IsDictionary())
+  Json::Value root;
+  if (parser_.parse(json, root, true)) {
+    std::vector<Json::Reader::StructuredError> errors =
+        parser_.getStructuredErrors();
+    for (auto error : errors) {
+      LOG(ERROR) << '[' << error.offset_start << ".." << error.offset_limit
+          << "] " << error.message;
+    }
     return false;
+  }
 
-  std::unique_ptr<base::DictionaryValue> dictionary(
-      parsed.release()->AsDictionary());
+  if (!root.isObject()) {
+    LOG(ERROR) << "Config root node must be a dictionary!";
+    return false;
+  }
 
-  dictionary_.swap(dictionary);
+  dictionary_ = root;
+  loaded_ = true;
   return true;
 }
 
 std::string Config::SaveToString() const {
-  base::json::Generator generator;
-  generator.set_tab_size(2);
-  generator.set_space_after_colon(true);
-  generator.set_wrap_mode(base::json::Generator::WRAP_IF_NOT_SINGLE);
-  return generator.Generate(dictionary_.get());
+  return loaded_ ? generator_.write(dictionary_) : std::string();
 }
 
 bool Config::SaveToFile(const std::string& filename) const {

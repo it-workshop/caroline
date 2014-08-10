@@ -21,7 +21,8 @@ class ImageCaptureManager {
  public:
   virtual ~ImageCaptureManager();
 
-  static std::unique_ptr<ImageCaptureManager> Create(core::Config* config);
+  static std::unique_ptr<ImageCaptureManager>
+  Create(const core::Config* config);
 
   virtual ImageCapture::Type GetType() const = 0;
   virtual size_t GetCapturesCount() const = 0;

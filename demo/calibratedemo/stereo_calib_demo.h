@@ -11,7 +11,6 @@
 #include "opencv2/opencv.hpp"
 
 #include "core/camera_calibration.h"
-#include "base/values.h"
 #include "demo/calibratedemo/stereo_calib_demo.h"
 #include "core/config.h"
 #include "core/image_capture_manager.h"
@@ -36,7 +35,7 @@ class StereoCalibDemo {
   int Run();
 
  protected:
-  base::DictionaryValue *MatxToJSON(const cv::Mat& matx);
+  Json::Value MatxToJSON(const cv::Mat& matx);
 
  private:
   core::CameraCalibration calib_;
