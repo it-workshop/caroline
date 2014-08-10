@@ -9,7 +9,6 @@
 #include <utility>
 #include <algorithm>
 
-#include "base/values.h"
 #include "core/config.h"
 #include "core/image_capture_manager.h"
 #include "core/optical_flow_processor.h"
@@ -58,30 +57,37 @@ FlowDemo::FlowDemo(base::CommandLine* command_line, core::Config* config)
   if (!config)
     return;
 
-  auto dictionary = config->dictionary();
-  if (!dictionary)
+  const Json::Value* dictionary = config->dictionary();
+  if (!dictionary || !dictionary->isMember(kFlowDemoNode))
     return;
 
-  auto settings =
-      base::ToDictionary(dictionary->GetValue(kFlowDemoNode));
-  if (!settings)
+  const Json::Value& settings = (*dictionary)[kFlowDemoNode];
+  if (!settings.isObject())
     return;
 
-  auto resize_factor_x = base::ToFloat(settings->GetValue(kResizeFactorXNode));
-  if (resize_factor_x)
-    resize_factor_x_ = resize_factor_x->value();
+  if (settings.isMember(kResizeFactorXNode)) {
+    const Json::Value& resize_factor_x = settings[kResizeFactorXNode];
+    if (resize_factor_x.isDouble())
+      resize_factor_x_ = resize_factor_x.asDouble();
+  }
 
-  auto resize_factor_y = base::ToFloat(settings->GetValue(kResizeFactorYNode));
-  if (resize_factor_y)
-    resize_factor_y_ = resize_factor_y->value();
+  if (settings.isMember(kResizeFactorYNode)) {
+    const Json::Value& resize_factor_y = settings[kResizeFactorYNode];
+    if (resize_factor_y.isDouble())
+      resize_factor_y_ = resize_factor_y.asDouble();
+  }
 
-  auto cap_number = base::ToInteger(settings->GetValue(kCapNumberNode));
-  if (cap_number)
-    cap_number_ = static_cast<int>(cap_number->value());
+  if (settings.isMember(kCapNumberNode)) {
+    const Json::Value& cap_number = settings[kCapNumberNode];
+    if (cap_number.isUInt64())
+      cap_number_ = cap_number.asUInt64();
+  }
 
-  auto step = base::ToInteger(settings->GetValue(kStepNode));
-  if (step)
-    step_ = static_cast<int>(step->value());
+  if (settings.isMember(kStepNode)) {
+    const Json::Value& step = settings[kStepNode];
+    if (step.isUInt64())
+      step_ = step.asUInt64();
+  }
 }
 
 FlowDemo::~FlowDemo() {}

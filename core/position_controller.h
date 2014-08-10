@@ -13,11 +13,11 @@
 
 #include "core/time_controller.h"
 
-namespace base {
+namespace Json {
 
-class DictionaryValue;
+class Value;
 
-}  // namespace base
+}  // namespace Json
 
 namespace core {
 
@@ -25,7 +25,7 @@ class PositionController {
  public:
   static std::unique_ptr<PositionController> Create(
       TimeController* time_controller,
-      base::DictionaryValue* settings);
+      const Json::Value& settings);
 
   explicit PositionController(TimeController* time_controller);
   virtual ~PositionController();

@@ -9,11 +9,8 @@
 #include <memory>
 #include <string>
 
-namespace base {
-
-class DictionaryValue;
-
-}  // namespace base
+#include "json/reader.h"
+#include "json/writer.h"
 
 namespace core {
 
@@ -24,8 +21,10 @@ class Config {
 
   static std::shared_ptr<Config> GetInstance();
 
-  base::DictionaryValue* dictionary() { return dictionary_.get(); }
-  const base::DictionaryValue* dictionary() const { return dictionary_.get(); }
+  Json::Value* dictionary() { return loaded_ ? &dictionary_ : nullptr; }
+  const Json::Value* dictionary() const {
+    return loaded_ ? &dictionary_ : nullptr;
+  }
 
   // Returns false on error.
   bool LoadFromFile(const std::string& filename);
@@ -35,7 +34,10 @@ class Config {
   bool SaveToFile(const std::string& filename) const;
 
  private:
-  std::unique_ptr<base::DictionaryValue> dictionary_;
+  Json::Reader parser_;
+  mutable Json::StyledWriter generator_;
+  bool loaded_;
+  Json::Value dictionary_;
 };
 
 }  // namespace core

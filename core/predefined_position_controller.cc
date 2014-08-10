@@ -5,7 +5,7 @@
 
 #include "core/predefined_position_controller.h"
 
-#include "base/values.h"
+#include "json/value.h"
 
 namespace  core {
 
@@ -24,57 +24,64 @@ const size_t kRotationAxes = 4;
 // static
 std::unique_ptr<PositionController>
 PredefinedPositionController::Create(
-    TimeController* time_controller, base::DictionaryValue* settings) {
-  if (!settings)
+    TimeController* time_controller, const Json::Value& settings) {
+  if (!settings.isObject() || !settings.isMember(kTimeLineNode))
     return std::unique_ptr<PositionController>();
 
-  auto positions = base::ToList(settings->GetValue(kTimeLineNode));
-  if (!positions)
+  const Json::Value& positions = settings[kTimeLineNode];
+  if (!positions.isArray())
     return std::unique_ptr<PositionController>();
 
   std::unique_ptr<PredefinedPositionController> controller(
       new PredefinedPositionController(time_controller));
 
-  for (size_t i = 0, size = positions->size(); i < size; ++i) {
-    auto position = base::ToDictionary(positions->GetValueAt(i));
-    if (!position)
+  for (auto it = positions.begin(), end = positions.end(); it != end; ++it) {
+    const Json::Value& position = *it;
+    if (!position.isObject()
+        || !position.isMember(kPositionTimeNode)
+        || !position.isMember(kPositionLocationNode)
+        || !position.isMember(kPositionRotationNode))
       continue;
 
-    auto time = base::ToInteger(position->GetValue(kPositionTimeNode));
-    auto location =
-        base::ToList(position->GetValue(kPositionLocationNode));
-    auto rotation =
-        base::ToList(position->GetValue(kPositionRotationNode));
+    const Json::Value& time = position[kPositionTimeNode];
+    const Json::Value& location = position[kPositionLocationNode];
+    const Json::Value& rotation = position[kPositionRotationNode];
 
-    if (!time || !location || !rotation
-        || location->size() != kLocationAxes
-        || rotation->size() != kRotationAxes)
+    if (!time.isUInt64()
+        || !location.isArray() || location.size() != kLocationAxes
+        || !rotation.isArray() || rotation.size() != kRotationAxes)
       continue;
 
-    auto l_x = base::ToFloat(location->GetValueAt(0));
-    auto l_y = base::ToFloat(location->GetValueAt(1));
-    auto l_z = base::ToFloat(location->GetValueAt(2));
+    const Json::Value& l_x_node = location[0];
+    const Json::Value& l_y_node = location[1];
+    const Json::Value& l_z_node = location[2];
 
-    auto r_w = base::ToFloat(rotation->GetValueAt(0));
-    auto r_x = base::ToFloat(rotation->GetValueAt(1));
-    auto r_y = base::ToFloat(rotation->GetValueAt(2));
-    auto r_z = base::ToFloat(rotation->GetValueAt(3));
+    const Json::Value& r_w_node = rotation[0];
+    const Json::Value& r_x_node = rotation[1];
+    const Json::Value& r_y_node = rotation[2];
+    const Json::Value& r_z_node = rotation[3];
 
-    if (!l_x || !l_y || !l_z || !r_w || !r_x || !r_y || !r_z)
+    if (!l_x_node.isDouble()
+        || !l_y_node.isDouble()
+        || !l_z_node.isDouble()
+        || !r_w_node.isDouble()
+        || !r_x_node.isDouble()
+        || !r_y_node.isDouble()
+        || !r_z_node.isDouble())
       continue;
+
+    double l_x = l_x_node.asDouble();
+    double l_y = l_y_node.asDouble();
+    double l_z = l_z_node.asDouble();
+
+    double r_w = r_w_node.asDouble();
+    double r_x = r_x_node.asDouble();
+    double r_y = r_y_node.asDouble();
+    double r_z = r_z_node.asDouble();
 
     controller->time_mapped_position_.insert(std::make_pair(
-        uint64_t(time->value()),
-        Position(
-            cv::Point3d(
-                l_x->value(),
-                l_y->value(),
-                l_z->value()),
-            Quaternion(
-                r_w->value(),
-                r_x->value(),
-                r_y->value(),
-                r_z->value()))));
+        time.asUInt64(),
+        Position(cv::Point3d(l_x, l_y, l_z), Quaternion(r_w, r_x, r_y, r_z))));
   }
 
   if (controller->time_mapped_position_.empty())

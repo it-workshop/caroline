@@ -9,16 +9,16 @@
 #include <utility>
 #include <vector>
 
-#include <google/protobuf/message_lite.h>
 #include "base/stream.h"
+#include "google/protobuf/message_lite.h"
 #include "protocol.pb.h"  // NOLINT
 
 namespace bitdata {
 
 
 void GlobalMessage::SetStream(const std::string& stream) {
-stream_name_ = stream;
-stream_ = base::Stream::Open(stream_name_,base::Stream::kWrite);
+  stream_name_ = stream;
+  stream_ = base::Stream::Open(stream_name_, base::Stream::kWrite);
 }
 
 void GlobalMessage::GenDMap(const core::DepthMap& depth_map) {
@@ -29,8 +29,8 @@ void GlobalMessage::GenDMap(const core::DepthMap& depth_map) {
     message->mutable_depth_map()->add_data(depth);
   message->set_type(Message::DEPTH_MAP);
   char* bit_message = new char[message->ByteSize()];
-  message->SerializeToArray(bit_message,message->GetCachedSize());
-  stream_->Write(bit_message,message->GetCachedSize()); 
+  message->SerializeToArray(bit_message, message->GetCachedSize());
+  stream_->Write(bit_message, message->GetCachedSize());
 }
 
 void GlobalMessage::GenOptFlow(const core::OpticalFlow& optical_flow) {
@@ -44,8 +44,8 @@ void GlobalMessage::GenOptFlow(const core::OpticalFlow& optical_flow) {
   }
   message->set_type(Message::OPTICAL_FLOW);
   char* bit_message = new char[message->ByteSize()];
-  message->SerializeToArray(bit_message,message->GetCachedSize());
-  stream_->Write(bit_message,message->GetCachedSize());
+  message->SerializeToArray(bit_message, message->GetCachedSize());
+  stream_->Write(bit_message, message->GetCachedSize());
 }
 
 void GlobalMessage::GenModel(const core::Scene3D& scene) {
@@ -73,8 +73,8 @@ void GlobalMessage::GenModel(const core::Scene3D& scene) {
   }
   message->set_type(Message::MODEL);
   char* bit_message = new char[message->ByteSize()];
-  message->SerializeToArray(bit_message,message->GetCachedSize());
-  stream_->Write(bit_message,message->GetCachedSize());
+  message->SerializeToArray(bit_message, message->GetCachedSize());
+  stream_->Write(bit_message, message->GetCachedSize());
 }
 
 void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
@@ -100,8 +100,8 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
   }
   message->set_type(Message::IMAGES);
   char* bit_message = new char[message->ByteSize()];
-  message->SerializeToArray(bit_message,message->GetCachedSize());
-  stream_->Write(bit_message,message->GetCachedSize());
+  message->SerializeToArray(bit_message, message->GetCachedSize());
+  stream_->Write(bit_message, message->GetCachedSize());
 }
 
 void GlobalMessage::GenLog(const std::string& message) {
@@ -109,8 +109,8 @@ void GlobalMessage::GenLog(const std::string& message) {
   proto_message->mutable_log()->set_line(message);
   proto_message->set_type(Message::LOG);
   char* bit_message = new char[proto_message->ByteSize()];
-  proto_message->SerializeToArray(bit_message,proto_message->GetCachedSize());
-  stream_->Write(bit_message,proto_message->GetCachedSize());
+  proto_message->SerializeToArray(bit_message, proto_message->GetCachedSize());
+  stream_->Write(bit_message, proto_message->GetCachedSize());
 }
 
 }  // namespace bitdata
