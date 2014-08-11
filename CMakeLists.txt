@@ -154,12 +154,22 @@ add_module(base STATIC
   base/logging.h
   base/logging_posix.cc
   base/logging_win.cc
+  base/path.cc
+  base/path.h
+  base/path_impl_posix.cc
+  base/path_impl_posix.h
+  base/path_service.cc
+  base/path_service.h
+  base/path_service_posix.cc
+  base/path_service_posix.h
   base/stream.cc
   base/stream.h
   base/stream_net_posix.cc
   base/stream_net_posix.h
   base/stream_pipe_posix.cc
   base/stream_pipe_posix.h
+  base/utils_posix.cc
+  base/utils_posix.h
   )
 target_link_libraries(base
   jsoncpp_lib
