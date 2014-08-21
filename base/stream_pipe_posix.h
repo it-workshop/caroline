@@ -23,8 +23,12 @@ class StreamPipePOSIX : public Stream::Impl {
   virtual ~StreamPipePOSIX() {}
 
   /// Used only for File schema
-  virtual bool Seek(ssize_t offset, Stream::SeekType type) override {}
-  virtual size_t GetSize() override {}
+  virtual bool Seek(ssize_t offset, Stream::SeekType type) override {
+    return false;
+  }
+  virtual size_t GetSize() override {
+    return 0;
+  }
 
   virtual size_t Write(const char *buffer, size_t size) override;
   virtual size_t Read(char *buffer, size_t size) override;

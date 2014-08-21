@@ -8,7 +8,6 @@
 #include <utility>
 #include <vector>
 
-#include "base/values.h"
 #include "core/config.h"
 #include "opencv2/core/mat.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
@@ -30,37 +29,51 @@ const char kFlagsNode[] = "flags";
 
 // static
 std::unique_ptr<OpticalFlowProcessor>
-FarnebackOpticalFlowProcessor::Create(const base::DictionaryValue *settings) {
+FarnebackOpticalFlowProcessor::Create(const Json::Value& settings) {
   std::unique_ptr<FarnebackOpticalFlowProcessor> processor(
         new FarnebackOpticalFlowProcessor());
 
-  auto pyr_scale = base::ToFloat(settings->GetValue(kPyrScaleNode));
-  if (pyr_scale)
-    processor->set_pyr_scale(pyr_scale->value());
+  if (settings.isMember(kPyrScaleNode)) {
+    const Json::Value& pyr_scale = settings[kPyrScaleNode];
+    if (pyr_scale.isDouble())
+      processor->set_pyr_scale(pyr_scale.asDouble());
+  }
 
-  auto levels = base::ToInteger(settings->GetValue(kLevelsNode));
-  if (levels)
-    processor->set_levels(levels->value());
+  if (settings.isMember(kLevelsNode)) {
+    const Json::Value& levels = settings[kLevelsNode];
+    if (levels.isUInt64())
+      processor->set_levels(levels.asUInt64());
+  }
 
-  auto winsize = base::ToInteger(settings->GetValue(kWinsizeNode));
-  if (winsize)
-    processor->set_winsize(winsize->value());
+  if (settings.isMember(kWinsizeNode)) {
+    const Json::Value& winsize = settings[kWinsizeNode];
+    if (winsize.isUInt64())
+      processor->set_winsize(winsize.asUInt64());
+  }
 
-  auto iterations = base::ToInteger(settings->GetValue(kIterationsNode));
-  if (iterations)
-    processor->set_iterations(iterations->value());
+  if (settings.isMember(kIterationsNode)) {
+    const Json::Value& iterations = settings[kIterationsNode];
+    if (iterations.isUInt64())
+      processor->set_iterations(iterations.asUInt64());
+  }
 
-  auto poly_n = base::ToInteger(settings->GetValue(kPolyNNode));
-  if (poly_n)
-    processor->set_poly_n(poly_n->value());
+  if (settings.isMember(kPolyNNode)) {
+    const Json::Value& poly_n = settings[kPolyNNode];
+    if (poly_n.isUInt64())
+      processor->set_poly_n(poly_n.asUInt64());
+  }
 
-  auto poly_sigma = base::ToFloat(settings->GetValue(kPolySigmaNode));
-  if (poly_sigma)
-    processor->set_poly_sigma(poly_sigma->value());
+  if (settings.isMember(kPolySigmaNode)) {
+    const Json::Value& poly_sigma = settings[kPolySigmaNode];
+    if (poly_sigma.isUInt64())
+      processor->set_poly_sigma(poly_sigma.asUInt64());
+  }
 
-  auto flags = base::ToInteger(settings->GetValue(kFlagsNode));
-  if (flags)
-    processor->set_flags(flags->value());
+  if (settings.isMember(kFlagsNode)) {
+    const Json::Value& flags = settings[kFlagsNode];
+    if (flags.isUInt64())
+      processor->set_flags(flags.asUInt64());
+  }
 
   return std::unique_ptr<OpticalFlowProcessor>(processor.release());
 }

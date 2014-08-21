@@ -14,3 +14,5 @@ if (use_own_opencv)
   add_subdirectory(opencv)
 endif ()
 
+add_subdirectory(jsoncpp)
+

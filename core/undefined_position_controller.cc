@@ -10,7 +10,7 @@ namespace core {
 // static
 std::unique_ptr<PositionController>
 UndefinedPositionController::Create(
-    TimeController* time_controller, base::DictionaryValue* settings) {
+    TimeController* time_controller, const Json::Value& settings) {
 // TODO(alex-ac): Implement this.
   return std::unique_ptr<PositionController>();
 }

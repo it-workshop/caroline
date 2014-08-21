@@ -5,7 +5,8 @@
 
 #include "core/caroline.h"
 
-#include "base/values.h"
+#include <string>
+
 #include "core/cameras.h"
 #include "core/config.h"
 #include "core/depth_map.h"
@@ -19,7 +20,7 @@
 #include "core/time_controller.h"
 #include "opencv2/core/mat.hpp"
 
-const std::string StreamConfigFieldName = "Connection";
+const std::string kStreamConfigFieldName = "connection";
 
 namespace core {
 
@@ -28,7 +29,7 @@ Caroline::Caroline(base::CommandLine* command_line, Config* config)
     config_(config),
     cameras_properties_(new Cameras),
     message_(new bitdata::GlobalMessage),
-    send_message_(true)  {
+    send_message_(false)  {
 }
 
 Caroline::~Caroline() {}
@@ -36,15 +37,16 @@ Caroline::~Caroline() {}
 bool Caroline::Init() {
   image_capture_manager_ = ImageCaptureManager::Create(config_);
   optical_flow_processor_ = OpticalFlowProcessor::Create(config_);
-  std::string adress;
-  if (config_->dictionary()->GetValue(StreamConfigFieldName)) {   
-    adress = config_->dictionary()->GetValue(StreamConfigFieldName)->
-        AsString()->value();
-    base::Logger::GetInstance()->Set_Connection_Data(adress); 
-    message_->SetStream(adress);
+  const Json::Value* dictionary = config_->dictionary();
+  if (dictionary && dictionary->isMember(kStreamConfigFieldName)) {
+    const Json::Value& address_node = (*dictionary)[kStreamConfigFieldName];
+    if (address_node.isString()) {
+      const std::string& address = address_node.asString();
+      base::Logger::GetInstance()->set_connection_address(address);
+      message_->SetStream(address);
+      send_message_ = true;
+    }
   }
-  else send_message_=false;
-  
 
   return image_capture_manager_ &&
       image_capture_manager_->GetCapturesCount() < 2 &&
@@ -57,7 +59,7 @@ int Caroline::Run() {
     if (frameset.size() < 2)
       return RETURN_WRONG_FRAMES_COUNT;
 
-    if (send_message_) 
+    if (send_message_)
       message_->GenPic(frameset);
 
     auto optical_flow = optical_flow_processor_->Process(

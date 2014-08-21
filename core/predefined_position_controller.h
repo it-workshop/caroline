@@ -11,12 +11,18 @@
 
 #include "core/position_controller.h"
 
+namespace Json {
+
+class Value;
+
+}  // namespace Json
+
 namespace core {
 
 class PredefinedPositionController : public PositionController {
  public:
   static std::unique_ptr<PositionController> Create(
-      TimeController* time_controller, base::DictionaryValue* settings);
+      TimeController* time_controller, const Json::Value& settings);
   explicit PredefinedPositionController(TimeController* time_controller);
   virtual ~PredefinedPositionController();
 

@@ -11,11 +11,11 @@
 
 #include "core/optical_flow_processor.h"
 
-namespace base {
+namespace Json {
 
-class DictionaryValue;
+class Value;
 
-}  // namespace base
+}  // namespace Json
 
 namespace core {
 
@@ -24,7 +24,7 @@ class Config;
 class FarnebackOpticalFlowProcessor : public OpticalFlowProcessor {
  public:
   static std::unique_ptr<OpticalFlowProcessor>
-  Create(const base::DictionaryValue* settings);
+  Create(const Json::Value& settings);
 
   FarnebackOpticalFlowProcessor();
   virtual ~FarnebackOpticalFlowProcessor() {}
