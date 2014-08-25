@@ -29,7 +29,7 @@ void SceneElement::SetMesh(Mesh *mesh) {
   mesh_ = mesh;
 }
 
-void SceneElement::AddVertex(const Point3D &point) {
+void SceneElement::AddVertex(const cv::Point3d &point) {
   mesh_->AddVertex(point);
 }
 
@@ -49,7 +49,7 @@ void SceneElement::SetScale(double scale_x, double scale_y, double scale_z) {
   scale_z_ = scale_z;
 }
 
-std::vector<Point3D> SceneElement::Vertexes() const {
+std::vector<cv::Point3d> SceneElement::Vertexes() const {
   return mesh_->vertexes();
 }
 
@@ -57,78 +57,77 @@ std::vector<Triangle> SceneElement::Faces() const {
   return mesh_->faces();
 }
 
-Point3D SceneElement::FindMin(void) const {
-  double min_x = mesh_->vertexes()[0].x();
-  double min_y = mesh_->vertexes()[0].y();
-  double min_z = mesh_->vertexes()[0].z();
+cv::Point3d SceneElement::FindMin() const {
+  double min_x = mesh_->vertexes()[0].x;
+  double min_y = mesh_->vertexes()[0].y;
+  double min_z = mesh_->vertexes()[0].z;
 
   for (int i = 0; i < mesh_->vertexes().size(); i++) {
-    if (mesh_->vertexes()[i].x() < min_x)
-      min_x = mesh_->vertexes()[i].x();
-    if (mesh_->vertexes()[i].y() < min_y)
-      min_y = mesh_->vertexes()[i].y();
-    if (mesh_->vertexes()[i].z() < min_z)
-      min_z = mesh_->vertexes()[i].z();
+    if (mesh_->vertexes()[i].x < min_x)
+      min_x = mesh_->vertexes()[i].x;
+    if (mesh_->vertexes()[i].y < min_y)
+      min_y = mesh_->vertexes()[i].y;
+    if (mesh_->vertexes()[i].z < min_z)
+      min_z = mesh_->vertexes()[i].z;
   }
-  Point3D min_point;
-  min_point.Set(min_x, min_y, min_z);
+  cv::Point3d min_point(min_x, min_y, min_z);
   return min_point;
 }
 
-Point3D SceneElement::FindMax(void) const {
-  double max_x = mesh_->vertexes()[0].x();
-  double max_y = mesh_->vertexes()[0].y();
-  double max_z = mesh_->vertexes()[0].z();
+cv::Point3d SceneElement::FindMax() const {
+  double max_x = mesh_->vertexes()[0].x;
+  double max_y = mesh_->vertexes()[0].y;
+  double max_z = mesh_->vertexes()[0].z;
 
   for (int i = 0; i < mesh_->vertexes().size(); i++) {
-    if (mesh_->vertexes()[i].x() > max_x)
-      max_x = mesh_->vertexes()[i].x();
-    if (mesh_->vertexes()[i].y() > max_y)
-      max_y = mesh_->vertexes()[i].y();
-    if (mesh_->vertexes()[i].z() > max_z)
-      max_z = mesh_->vertexes()[i].z();
+    if (mesh_->vertexes()[i].x > max_x)
+      max_x = mesh_->vertexes()[i].x;
+    if (mesh_->vertexes()[i].y > max_y)
+      max_y = mesh_->vertexes()[i].y;
+    if (mesh_->vertexes()[i].z > max_z)
+      max_z = mesh_->vertexes()[i].z;
   }
-  Point3D max_point;
-  max_point.Set(max_x, max_y, max_z);
+  cv::Point3d max_point(max_x, max_y, max_z);
   return max_point;
 }
 
-Point3D SceneElement::FindMeanPoint(void) const {
-  Point3D new_point;
-  new_point.Set((this->FindMin().x() + this->FindMax().x()) / 2,
-                (this->FindMin().y() + this->FindMax().y()) / 2,
-                (this->FindMin().z() + this->FindMax().z()) / 2);
+cv::Point3d SceneElement::FindMeanPoint() const {
+  cv::Point3d new_point(
+        (this->FindMin().x + this->FindMax().x) / 2,
+        (this->FindMin().y + this->FindMax().y) / 2,
+        (this->FindMin().z + this->FindMax().z) / 2);
   return new_point;
 }
 
-void SceneElement::Transform(Point3D* point, const Point3D& mean_point) const {
-  Point3D new_point;
+void SceneElement::Transform(
+    cv::Point3d* point, const cv::Point3d& mean_point) const {
+  cv::Point3d new_point(point->x + pos_x_,
+                        point->y + pos_y_,
+                        point->z + pos_z_);
 
-  new_point.Set(point->x() + pos_x_, point->y() + pos_y_, point->z() + pos_z_);
+  new_point.x = (new_point.x - mean_point.x) * scale_x_ + mean_point.x;
+  new_point.y = (new_point.y - mean_point.y) * scale_y_ + mean_point.y;
+  new_point.z = (new_point.z - mean_point.z) * scale_z_ + mean_point.z;
 
-  new_point.set_x((new_point.x() - mean_point.x()) * scale_x_ + mean_point.x());
-  new_point.set_y((new_point.y() - mean_point.y()) * scale_y_ + mean_point.y());
-  new_point.set_z((new_point.z() - mean_point.z()) * scale_z_ + mean_point.z());
+  cv::Point3d rotated_point;
 
-  Point3D rotated_point;
-
-  rotated_point.set_x(new_point.x() - rotation_center_x() );
-  rotated_point.set_y(new_point.y() - rotation_center_y() );
-  rotated_point.set_z(new_point.z() - rotation_center_z() );
+  rotated_point.x = new_point.x - rotation_center_x_;
+  rotated_point.y = new_point.y - rotation_center_y_;
+  rotated_point.z = new_point.z - rotation_center_z_;
 
   RotationMatrix rot_(angle_, axis_x_, axis_y_, axis_z_);
   rotated_point = rot_.Rotate(rotated_point);
 
-  new_point.set_x(rotated_point.x() + rotation_center_x() );
-  new_point.set_y(rotated_point.y() + rotation_center_y() );
-  new_point.set_z(rotated_point.z() + rotation_center_z() );
+  new_point.x = rotated_point.x + rotation_center_x_;
+  new_point.y = rotated_point.y + rotation_center_y_;
+  new_point.z = rotated_point.z + rotation_center_z_;
 
   *point = new_point;
 }
 
 void SceneElement::Transform(SceneElement* scene) const {
-  Point3D tmp;
-  Point3D mean_point = this->FindMeanPoint();
+  cv::Point3d tmp;
+  cv::Point3d mean_point = this->FindMeanPoint();
   for (int i = 0; i < scene->Vertexes().size(); i++) {
     tmp = scene->Vertexes().at(i);
     scene->Transform(&tmp, mean_point);
@@ -183,29 +182,29 @@ Mesh SceneElement::Merge(const Mesh& mesh,
   int vert_counter = new_scene.Vertexes().size();
 
   for (int i = 0; (i < shift) && (vert_counter > shift); i++) {
-    Point3D curr_point = new_scene.Vertexes().at(i);
+    cv::Point3d curr_point = new_scene.Vertexes().at(i);
 
     int begin = shift;
     int end = new_scene.Vertexes().size();
     int left_border = BinarySearchByX(new_scene.Vertexes(),
                                       begin,
                                       end,
-                                      curr_point.x() - merge_error,
+                                      curr_point.x - merge_error,
                                       LESS);
     int right_border = BinarySearchByX(new_scene.Vertexes(),
                                       begin,
                                       end,
-                                      curr_point.x() + merge_error,
+                                      curr_point.x + merge_error,
                                       MORE);
 
     for (int j = left_border; j <= right_border; j++)
-      if ((fabs(curr_point.x() - new_scene.Vertexes().at(j).x())
+      if ((fabs(curr_point.x - new_scene.Vertexes().at(j).x)
           < merge_error)
           &&
-          (fabs(curr_point.y() - new_scene.Vertexes().at(j).y())
+          (fabs(curr_point.y - new_scene.Vertexes().at(j).y)
           < merge_error)
           &&
-          (fabs(curr_point.z() - new_scene.Vertexes().at(j).z())
+          (fabs(curr_point.z - new_scene.Vertexes().at(j).z)
           < merge_error)) {
         vert_counter--;
         point_to_merge.at(j) = i;

@@ -7,8 +7,7 @@
 #define CORE_POINT_CLOUD_H_
 
 #include <vector>
-
-#include "core/point3d.h"
+#include "opencv2/core/mat.hpp"
 
 namespace core {
 
@@ -16,14 +15,14 @@ class PointCloud {
  public:
   PointCloud();
 
-  void AddPoint(const Point3D& point) { cloud_.push_back(point); }
+  void AddPoint(const cv::Point3d& point) { cloud_.push_back(point); }
 
   int Size() const { return cloud_.size(); }
 
-  std::vector<Point3D> Points() const { return cloud_; }
+  std::vector<cv::Point3d> Points() const { return cloud_; }
 
  private:
-  std::vector<Point3D> cloud_;
+  std::vector<cv::Point3d> cloud_;
 };
 
 }  // namespace core

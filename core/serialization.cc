@@ -50,7 +50,7 @@ void GlobalMessage::GenOptFlow(const core::OpticalFlow& optical_flow) {
 
 void GlobalMessage::GenModel(const core::Scene3D& scene) {
   std::unique_ptr<Message>message(new Message());
-  std::vector<core::Point3D> vertexes;
+  std::vector<cv::Point3d> vertexes;
   std::vector<core::Triangle> faces;
   core::SceneElement some_element;
   int vertex_base_index = 0;
@@ -59,9 +59,9 @@ void GlobalMessage::GenModel(const core::Scene3D& scene) {
       auto transformed_vertex = vertex;
       scene_element->Transform(&transformed_vertex, transformed_vertex);
       auto proto_vertex = message->mutable_model()->add_verticies();
-      proto_vertex->set_x(vertex.x());
-      proto_vertex->set_y(vertex.y());
-      proto_vertex->set_z(vertex.z());
+      proto_vertex->set_x(vertex.x);
+      proto_vertex->set_y(vertex.y);
+      proto_vertex->set_z(vertex.z);
     }
     for (auto face : scene_element->mesh()->faces()) {
       auto proto_face = message->mutable_model()->add_faces();

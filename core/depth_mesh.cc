@@ -47,7 +47,7 @@ DepthMesh::DepthMesh(const DepthMap& depth_map, int min, int max) {
 }
 
 void DepthMesh::AddDepthVertex(int x, int y, double depth) {
-  this->AddVertex(Point3D(x, y, depth));
+  this->AddVertex(cv::Point3d(x, y, depth));
 }
 
 void DepthMesh::AddDepthFace(int v1, int v2, int v3) {
