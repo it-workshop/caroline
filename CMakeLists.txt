@@ -4,8 +4,11 @@
 # Author: Aleksandr Derbenev <13alexac@gmail.com>
 
 cmake_minimum_required(VERSION 2.8)
-project (Caroline CXX)
 
+# Build options.
+
+# use_own_opencv enables building opencv version from third_party/opencv
+# directory. Disabled by default on linux.
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
   set (default_use_own_opencv OFF)
 else ()
@@ -16,14 +19,26 @@ option(use_own_opencv
   "Own sources of opencv will be used on the non-linux systems."
   ${default_use_own_opencv})
 
+# Build project dependencies.
+add_subdirectory(third_party)
+
+# Reset CMAKE_*_OUTPUT_DIRECTORY after including third party projects.
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${Caroline_BINARY_DIR}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${Caroilne_BINARY_DIR}/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${Caroline_BINARY_DIR}/bin")
+
+# project section.
+project (Caroline CXX)
+
+# Enable utility cmake functions.
 list(APPEND CMAKE_MODULE_PATH "${Caroline_SOURCE_DIR}/cmake")
 include(cxx11_support)
 include(platform_utils)
 include(targets_utils)
 
-add_subdirectory(third_party)
+find_package(Protobuf REQUIRED)
 
-
+# Setup build options.
 init_platform()
 set (definitions)
 platform_definitions(definitions)
@@ -36,6 +51,8 @@ if (DEFINED cxx11_flag)
   add_definitions("${cxx11_flag}")
 endif ()
 
+# While using use_own_opencv option we must to enumerate explicitly used opencv
+# modules.
 if (NOT use_own_opencv)
   find_package(OpenCV REQUIRED)
 else ()
@@ -51,28 +68,43 @@ else ()
     opencv_calib3d
     )
 endif ()
-include_directories("${OpenCV_INCLUDE_DIRS}")
-include_directories("${Caroline_SOURCE_DIR}/third_party/jsoncpp/include")
+
+# Set up include directories
+include_directories(
+  "${OpenCV_INCLUDE_DIRS}"
+  "${Caroline_SOURCE_DIR}/third_party/jsoncpp/include"
+  "${PROTOBUF_INCLUDE_DIRS}"
+  )
 
 include_directories("${Caroline_SOURCE_DIR}")
 include_directories("${Caroline_BINARY_DIR}")
 
-find_package(Protobuf REQUIRED)
-include_directories(include_directories("${PROTOBUF_INCLUDE_DIRS}"))
-
+# enumerate third party libraries for linking.
 list(APPEND Caroline_LIBRARIES
     ${OpenCV_LIBS}
     jsoncpp_lib
     ${PROTOBUF_LIBRARIES}
     )
 
+# Generate files for protobuf seriallization/deseriallization.
 protobuf_generate_cpp(PROTO_SOURCES PROTO_HEADERS
   "api/protocol.proto"
   )
 
+# Copy test images to the build directory.
 file (COPY test_images DESTINATION ${Caroline_BINARY_DIR})
 
-add_module(base OBJECT
+# API module. Must not depend from anything but protobuf.
+add_module(api STATIC
+  ${PROTO_HEADERS}
+  ${PROTO_SOURCES}
+  )
+target_link_libraries(api
+  ${PROTOBUF_LIBRARIES}
+  )
+
+# base module. Infrastructure code that will be used in the project.
+add_module(base STATIC
   base/command_line.cc
   base/command_line.h
   base/logging.cc
@@ -86,8 +118,14 @@ add_module(base OBJECT
   base/stream_pipe_posix.cc
   base/stream_pipe_posix.h
   )
+target_link_libraries(base
+  api
+  ${PROTOBUF_LIBRARIES}
+  jsoncpp_lib
+  )
 
-add_module(core OBJECT
+# core module. Main code of the application.
+add_module(core STATIC
   core/camera_calibration.cc
   core/camera_calibration.h
   core/cameras.cc
@@ -163,41 +201,49 @@ add_module(core OBJECT
   core/undefined_position_controller.h
   core/video_time_controller.cc
   core/video_time_controller.h
-  ${PROTO_SOURCES}
-  ${PROTO_HEADERS}
+  )
+target_link_libraries(core
+  api
+  base
+  ${OpenCV_LIBS}
+  ${PROTOBUF_LIBRARIES}
+  jsoncpp_lib
   )
 
 add_application(caroline
   main.cc
-  $<TARGET_OBJECTS:base>
-  $<TARGET_OBJECTS:core>
   )
 target_link_libraries(caroline
   ${Caroline_LIBRARIES}
+  api
+  base
+  core
   )
 
 add_application(demo_flowdemo
   demo/flowdemo/main.cc
   demo/flowdemo/flowdemo.cc
   demo/flowdemo/flowdemo.h
-  $<TARGET_OBJECTS:base>
-  $<TARGET_OBJECTS:core>
   )
 
 target_link_libraries(demo_flowdemo
   ${Caroline_LIBRARIES}
+  api
+  base
+  core
   )
 
 add_application(demo_stereo_calib
   demo/calibratedemo/main.cc
   demo/calibratedemo/stereo_calib_demo.cc
   demo/calibratedemo/stereo_calib_demo.h
-  $<TARGET_OBJECTS:base>
-  $<TARGET_OBJECTS:core>
   )
 
 target_link_libraries(demo_stereo_calib
   ${Caroline_LIBRARIES}
+  api
+  base
+  core
   )
 
 enable_testing()
@@ -212,12 +258,14 @@ add_application(unit_tests
   core/opencv_unittest.cc
   core/filter_unittest.cc
   core/recognise_unittest.cc
-  $<TARGET_OBJECTS:base>
-  $<TARGET_OBJECTS:core>
+  unit_tests_main.cc
   )
 target_link_libraries(unit_tests
-  gtest_main
+  gtest
   ${Caroline_LIBRARIES}
+  api
+  base
+  core
   )
 add_test(unit_tests unit_tests)
 
