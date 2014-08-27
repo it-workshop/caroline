@@ -7,6 +7,7 @@
 #define CORE_ROTATION_MATRIX_H_
 
 #include <vector>
+
 #include "opencv2/core/mat.hpp"
 
 namespace core {

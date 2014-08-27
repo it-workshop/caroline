@@ -7,6 +7,7 @@
 #define CORE_MESH_H_
 
 #include <vector>
+
 #include "opencv2/core/mat.hpp"
 
 namespace core {

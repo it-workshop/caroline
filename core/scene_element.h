@@ -7,6 +7,7 @@
 #define CORE_SCENE_ELEMENT_H_
 
 #include <vector>
+
 #include "opencv2/core/mat.hpp"
 #include "core/mesh.h"
 
