@@ -10,7 +10,7 @@ namespace core {
 Mesh::Mesh() {
 }
 
-void Mesh::AddVertex(const Point3D &point) {
+void Mesh::AddVertex(const cv::Point3d &point) {
   vertexes_.push_back(point);
 }
 
@@ -18,7 +18,7 @@ void Mesh::AddFace(const Triangle &face) {
   faces_.push_back(face);
 }
 
-void Mesh::SetVertexes(const std::vector<Point3D>& vertexes) {
+void Mesh::SetVertexes(const std::vector<cv::Point3d>& vertexes) {
   vertexes_ = vertexes;
 }
 

@@ -8,6 +8,7 @@
 
 #include <vector>
 
+#include "opencv2/core/mat.hpp"
 #include "core/mesh.h"
 
 namespace core {
@@ -19,7 +20,7 @@ enum Sign {
   LESS
 };
 
-int BinarySearchByX(std::vector<Point3D> vertexes,
+int BinarySearchByX(std::vector<cv::Point3d> vertexes,
                     int begin,
                     int end,
                     double searched_value,

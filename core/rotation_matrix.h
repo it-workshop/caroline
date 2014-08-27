@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "core/point3d.h"
+#include "opencv2/core/mat.hpp"
 
 namespace core {
 
@@ -17,7 +17,7 @@ class RotationMatrix {
   RotationMatrix();
   RotationMatrix(double angle, double axis_x, double axis_y, double axis_z);
 
-  Point3D Rotate(const Point3D& point);
+  cv::Point3d Rotate(const cv::Point3d& point);
 
   virtual ~RotationMatrix();
 

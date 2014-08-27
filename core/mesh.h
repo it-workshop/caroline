@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "core/point3d.h"
+#include "opencv2/core/mat.hpp"
 
 namespace core {
 
@@ -32,22 +32,22 @@ class Triangle {
 class Mesh {
  public:
   Mesh();
-  void AddVertex(const Point3D& point);
+  void AddVertex(const cv::Point3d& point);
   void AddFace(const Triangle& face);
 
-  const std::vector<Point3D>& vertexes() const { return vertexes_; }
+  const std::vector<cv::Point3d>& vertexes() const { return vertexes_; }
   const std::vector<Triangle>& faces() const { return faces_; }
 
-  void ChangeVertex(const Point3D& point, int i) {
+  void ChangeVertex(const cv::Point3d& point, int i) {
     vertexes_.at(i) = point;
   }
 
  protected:
-  void SetVertexes(const std::vector<Point3D>& vertexes);
+  void SetVertexes(const std::vector<cv::Point3d>& vertexes);
   void SetFaces(const std::vector<Triangle>& faces);
 
  private:
-  std::vector<Point3D> vertexes_;
+  std::vector<cv::Point3d> vertexes_;
   std::vector<Triangle> faces_;
 };
 
