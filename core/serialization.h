@@ -16,7 +16,6 @@
 #include "core/depth_map.h"
 #include "core/image_capture_impl.h"
 #include "core/mesh.h"
-#include "core/point3d.h"
 #include "core/position.h"
 #include "core/scene3d.h"
 

@@ -14,13 +14,13 @@ void TopDownMerge(std::vector<int>* old_order,
                   int middle,
                   int end,
                   std::vector<int>* new_order,
-                  const std::vector<Point3D>& vertexes) {
+                  const std::vector<cv::Point3d>& vertexes) {
   int i0 = begin;
   int i1 = middle;
   for (int j = begin; j < end; j++) {
     if ((i0 < middle) && ((i1 >= end) ||
-        (vertexes.at(old_order->at(i0)).x() <
-         vertexes.at(old_order->at(i1)).x()))) {
+        (vertexes.at(old_order->at(i0)).x <
+         vertexes.at(old_order->at(i1)).x))) {
       new_order->at(j) = old_order->at(i0);
       i0 = i0 + 1;
     } else {
@@ -36,7 +36,7 @@ void TopDownSplitMerge(std::vector<int>* old_order,
                        int begin,
                        int end,
                        std::vector<int>* new_order,
-                       std::vector<Point3D> vertexes) {
+                       std::vector<cv::Point3d> vertexes) {
   if ((end - begin) < 2) return;
   int middle = (begin + end) / 2;
   TopDownSplitMerge(old_order, begin, middle, new_order, vertexes);
@@ -47,7 +47,7 @@ void TopDownSplitMerge(std::vector<int>* old_order,
 void TopDownMergeSort(std::vector<int>* old_order,
                       std::vector<int>* new_order,
                       int n,
-                      std::vector<Point3D> vertexes) {
+                      std::vector<cv::Point3d> vertexes) {
   TopDownSplitMerge(old_order, 0, n, new_order, vertexes);
 }
 
@@ -72,7 +72,7 @@ Mesh MergeSortByX(const Mesh& mesh) {
   return new_mesh;
 }
 
-int BinarySearchByX(std::vector<Point3D> vertexes,
+int BinarySearchByX(std::vector<cv::Point3d> vertexes,
                     int begin,
                     int end,
                     double searched_value,
@@ -82,14 +82,14 @@ int BinarySearchByX(std::vector<Point3D> vertexes,
   if ( end - begin == 1 ) return begin;
   if (sign == LESS) {
     int middle = (begin + end) / 2;
-    if (vertexes.at(middle).x() < searched_value) {
+    if (vertexes.at(middle).x < searched_value) {
       result = BinarySearchByX(vertexes, middle, end, searched_value, sign);
     } else {
       result = BinarySearchByX(vertexes, begin, middle, searched_value, sign);
     }
   } else if (sign == MORE) {
     int middle = (begin + end) / 2;
-    if (vertexes.at(middle).x() < searched_value) {
+    if (vertexes.at(middle).x < searched_value) {
       result = BinarySearchByX(vertexes, middle, end, searched_value, sign);
     } else {
       result = BinarySearchByX(vertexes, begin, middle, searched_value, sign);

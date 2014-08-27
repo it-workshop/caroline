@@ -168,8 +168,6 @@ add_module(core STATIC
   core/farneback_optical_flow_processor.h
   core/ply_saver.h
   core/ply_saver.cc
-  core/point3d.h
-  core/point3d.cc
   core/point_cloud.h
   core/point_cloud.cc
   core/position_controller.cc
