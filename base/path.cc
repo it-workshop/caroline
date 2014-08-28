@@ -20,8 +20,7 @@ Path::Path(const Path& path)
 Path::Path(Path&& path)
   : impl_(path.impl_.release()) {}
 
-Path::Path()
-  : impl_(PathService::GetInstance()->root_path().impl_->Copy()) {}
+Path::Path() {}
 
 Path::Path(std::unique_ptr<Impl>&& impl)
   : impl_(std::move(impl)) {}

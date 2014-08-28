@@ -40,7 +40,7 @@ std::string ToAbsolute(const std::string& path) {
 std::vector<std::string> SplitPath(const std::string& path) {
   std::vector<std::string> parts;
   for (std::string::size_type begin = 0, end = 0;
-      end != std::string::npos; begin = end) {
+      end != std::string::npos && begin != path.size(); begin = end + 1) {
     end = path.find('/', begin);
     if (std::string::npos == end) {
       parts.push_back(path.substr(begin));
@@ -125,21 +125,26 @@ std::unique_ptr<Path::Impl> PathImplPosix::Copy() const {
 }
 
 void PathImplPosix::Optimize() {
-  for (std::vector<std::string>::iterator it = path_.begin(),
-      end = path_.end(); it != end; ++it) {
-    if ("." == *it && path_.begin() != it) {
+  if (path_.size() == 1 && "/" == path_[0]) {
+    path_.clear();
+    return;
+  }
+  for (std::vector<std::string>::iterator it = path_.begin();
+      it != path_.end();) {
+    if (it->empty()
+        || ("." == *it && path_.begin() != it)
+        || (".." == *it && path_.begin() == it)) {
       it = path_.erase(it);
-      --it;
       continue;
     }
     if (".." == *it
-        && it != path_.begin()
-        && ".." != *(it - 1)
-        && "." != *(it - 1)) {
-      it = path_.erase(it - 1, it);
-      --it;
-      continue;
+          && it != path_.begin()
+          && ".." != *(it - 1)
+          && "." != *(it - 1)) {
+        it = path_.erase(it - 1, it + 1);
+        continue;
     }
+    ++it;
   }
 }
 

@@ -17,6 +17,7 @@ class PathImplPosix : public Path::Impl {
  public:
   explicit PathImplPosix(const std::string& path);
   virtual ~PathImplPosix() {}
+
   virtual void Append(const std::string& filename) override;
   virtual void ToParentDir() override;
   virtual bool IsExists() const override;

@@ -9,7 +9,9 @@
 #include <memory>
 #include <string>
 
+#include "base/macro.h"
 #include "base/path.h"
+#include "base/singleton.h"
 
 namespace base {
 
@@ -17,20 +19,20 @@ namespace base {
 ///
 /// This service is a singleton. Use static method GetInstance() to retrive a
 /// pointer to the object.
-class PathService {
+class PathService : public Singleton<PathService> {
  public:
   PathService() {}
   /// Destructor.
   virtual ~PathService() {}
 
-  /// Retrive pointer to the instance.
-  /// @returns pointer to object.
-  static PathService* GetInstance();
-
   /// Initialize instance with path to the executable. On POSIX there is no
   /// other way to get it.
   /// @param[in] executable_path Path to the current executable file.
-  virtual bool Init(const std::string& executable_path) = 0;
+  static bool Init(const std::string& executable_path);
+
+  /// Create a Path object with given string path.
+  /// @returns Path to the given file.
+  static Path MakePath(const std::string& path);
 
   /// Root path can't change, so just keep it inside.
   /// @returns Path to the rood node of file system.
@@ -44,15 +46,9 @@ class PathService {
   Path executable_path() const { return executable_path_; }
   /// Path to the current directory.
   /// @returns Path to the current working directory.
-  virtual Path GetWorkingDirectoryPath() const = 0;
-  /// Create a Path object with given string path.
-  /// @returns Path to the given file.
-  virtual Path MakePath(const std::string& path) const = 0;
+  virtual Path GetWorkingDirectoryPath() const = 0;;
 
  protected:
-  /// Creates platform-specific instance of the class.
-  /// @returns pointer to the created object.
-  static std::unique_ptr<PathService> CreateInstance();
   /// Path to the current executable file.
   Path executable_path_;
   /// Path to the root node of filesystem.
@@ -62,13 +58,7 @@ class PathService {
   static Path PathFromImpl(std::unique_ptr<Path::Impl>&& impl);
 
  private:
-  /// Singleton instance.
-  static std::unique_ptr<PathService> instance_;
-
-  /// Copy constructor is disallowed.
-  PathService(const PathService&);
-  /// Assign operator is disallowed.
-  PathService& operator=(const PathService&);
+  DISALLOW_COPY_AND_ASSIGN(PathService);
 };
 
 }  // namespace base

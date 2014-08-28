@@ -132,6 +132,11 @@ list(APPEND Caroline_LIBRARIES
 protobuf_generate_cpp(PROTO_SOURCES PROTO_HEADERS
   "api/protocol.proto"
   )
+set_source_files_properties(
+    ${PROTO_SOURCES}
+    ${PROTO_HEADERS}
+    PROPERTIES
+    GENERATED YES)
 
 # Copy test images to the build directory.
 file (COPY test_images DESTINATION ${Caroline_BINARY_DIR})
@@ -148,6 +153,8 @@ add_dependencies(api protoc)
 
 # base module. Infrastructure code that will be used in the project.
 add_module(base STATIC
+  base/at_exit.cc
+  base/at_exit.h
   base/command_line.cc
   base/command_line.h
   base/logging.cc
@@ -258,6 +265,7 @@ target_link_libraries(core
   ${PROTOBUF_LIBRARIES}
   jsoncpp_lib
   )
+target_link_libraries(core api base)
 
 add_application(caroline
   main.cc
@@ -274,7 +282,6 @@ add_application(demo_flowdemo
   demo/flowdemo/flowdemo.cc
   demo/flowdemo/flowdemo.h
   )
-
 target_link_libraries(demo_flowdemo
   ${Caroline_LIBRARIES}
   api
@@ -287,7 +294,6 @@ add_application(demo_stereo_calib
   demo/calibratedemo/stereo_calib_demo.cc
   demo/calibratedemo/stereo_calib_demo.h
   )
-
 target_link_libraries(demo_stereo_calib
   ${Caroline_LIBRARIES}
   api
@@ -296,10 +302,13 @@ target_link_libraries(demo_stereo_calib
   )
 
 enable_testing()
+include_directories(third_party/gmock/include)
 include_directories(third_party/gtest/include)
 add_application(unit_tests
-  base/stream_unittest.cc
+  unit_tests_main.cc
+  base/at_exit_unittest.cc
   base/command_line_unittest.cc
+  base/path_service_unittest_posix.cc
   base/stream_unittest.cc
   core/cam_calib_unittest.cc
   core/cameras_unittest.cc
@@ -307,9 +316,9 @@ add_application(unit_tests
   core/opencv_unittest.cc
   core/filter_unittest.cc
   core/recognise_unittest.cc
-  unit_tests_main.cc
   )
 target_link_libraries(unit_tests
+  gmock
   gtest
   ${Caroline_LIBRARIES}
   api
@@ -329,5 +338,3 @@ if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
       WORKING_DIRECTORY "${Caroline_BINARY_DIR}"
       COMMENT Build documentation.)
 endif ()
-
-

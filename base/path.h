@@ -63,7 +63,7 @@ class Path {
   Path(Path&& path);
   /// Default constructor.
   ///
-  /// Creates path to the root.
+  /// Creates invalid path.
   Path();
 
   /// Assign-copy operator.

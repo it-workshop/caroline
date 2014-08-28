@@ -3,11 +3,13 @@
 // LICENSE file.
 /// @author Aleksandr Derbenev <13alexac@gmail.com>
 
+#include "base/at_exit.h"
 #include "base/path_service.h"
 #include "gtest/gtest.h"
 
 int main(int argc, char* argv[]) {
-  base::PathService::GetInstance()->Init(*argv);
+  base::AtExitManager at_exit_manager;
+  base::PathService::Init(*argv);
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
