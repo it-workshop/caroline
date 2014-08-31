@@ -18,17 +18,20 @@ endif ()
 option(use_own_opencv
   "Own sources of opencv will be used on the non-linux systems."
   ${default_use_own_opencv})
+option(use_own_protobuf
+  "Own sources of protobuf will be used by default."
+  YES)
 
 # Build project dependencies.
 add_subdirectory(third_party)
+
+# project section.
+project (Caroline CXX)
 
 # Reset CMAKE_*_OUTPUT_DIRECTORY after including third party projects.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${Caroline_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${Caroilne_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${Caroline_BINARY_DIR}/bin")
-
-# project section.
-project (Caroline CXX)
 
 # Enable utility cmake functions.
 list(APPEND CMAKE_MODULE_PATH "${Caroline_SOURCE_DIR}/cmake")
@@ -36,6 +39,44 @@ include(cxx11_support)
 include(platform_utils)
 include(targets_utils)
 
+if (use_own_protobuf)
+  set (PROTOBUF_LIBRARY
+    "${Protobuf_BINARY_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protobuf${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    CACHE FILEPATH
+    "The protobuf library"
+    FORCE
+    )
+  set (PROTOBUF_INCLUDE_DIR
+    "${Protobuf_SOURCE_DIR}/include"
+    CACHE PATH
+    "The include directory for protocol buffers"
+    FORCE
+    )
+  set (PROTOBUF_LIBRARY_DEBUG
+    "${Protobuf_BINARY_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protobuf${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    CACHE FILEPATH
+    "The protobuf library"
+    FORCE
+    )
+  set (PROTOBUF_PROTOC_LIBRARY
+    "${Protobuf_BINARY_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protoc-library${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    CACHE FILEPATH
+    "The protoc library"
+    FORCE
+    )
+  set (PROTOBUF_PROTOC_LIBRARY_DEBUG
+    "${Protobuf_BINARY_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protoc-library${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    CACHE FILEPATH
+    "The protoc library"
+    FORCE
+    )
+  set (PROTOBUF_PROTOC_EXECUTABLE
+    "${Protobuf_BINARY_DIR}/bin/protoc"
+    CACHE FILEPATH
+    "The protoc compiler"
+    FORCE
+    )
+endif ()
 find_package(Protobuf REQUIRED)
 
 # Setup build options.
@@ -74,6 +115,7 @@ include_directories(
   "${OpenCV_INCLUDE_DIRS}"
   "${Caroline_SOURCE_DIR}/third_party/jsoncpp/include"
   "${PROTOBUF_INCLUDE_DIRS}"
+  "${Protobuf_SOURCE_DIR}/src"
   )
 
 include_directories("${Caroline_SOURCE_DIR}")
@@ -102,6 +144,7 @@ add_module(api STATIC
 target_link_libraries(api
   ${PROTOBUF_LIBRARIES}
   )
+add_dependencies(api protoc)
 
 # base module. Infrastructure code that will be used in the project.
 add_module(base STATIC
