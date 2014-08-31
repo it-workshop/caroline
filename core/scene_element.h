@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "core/point3d.h"
+#include "opencv2/core/mat.hpp"
 #include "core/mesh.h"
 
 namespace core {
@@ -20,7 +20,7 @@ class SceneElement {
   explicit SceneElement(Mesh *mesh);
 
   void SetMesh(Mesh *mesh);
-  void AddVertex(const Point3D& point);
+  void AddVertex(const cv::Point3d& point);
   void AddFace(const Triangle& face);
 
   void set_x(double x) { pos_x_ = x; }
@@ -62,10 +62,10 @@ class SceneElement {
   double rotation_center_y() const { return rotation_center_y_; }
   double rotation_center_z() const { return rotation_center_z_; }
 
-  std::vector<Point3D> Vertexes() const;
+  std::vector<cv::Point3d> Vertexes() const;
   std::vector<Triangle> Faces() const;
 
-  void ChangeVertex(Point3D point, int i) {
+  void ChangeVertex(cv::Point3d point, int i) {
     mesh_->ChangeVertex(point, i);
   }
 
@@ -73,12 +73,12 @@ class SceneElement {
 
   Mesh Merge(const Mesh& mesh, const SceneElement& result_scene);
 
-  void Transform(Point3D* point, const Point3D& mean_point) const;
+  void Transform(cv::Point3d *point, const cv::Point3d &mean_point) const;
 
  protected:
-  Point3D FindMin(void) const;
-  Point3D FindMax(void) const;
-  Point3D FindMeanPoint(void) const;
+  cv::Point3d FindMin() const;
+  cv::Point3d FindMax() const;
+  cv::Point3d FindMeanPoint() const;
 
   void SetStandardTransform();
 

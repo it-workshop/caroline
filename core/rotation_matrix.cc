@@ -40,17 +40,15 @@ RotationMatrix::RotationMatrix(double angle, double x, double y, double z) {
   }
 }
 
-Point3D RotationMatrix::Rotate(const Point3D& point) {
-  Point3D new_point;
-  double radius_vector1[3] = {point.x(), point.y(), point.z()};
+cv::Point3d RotationMatrix::Rotate(const cv::Point3d &point) {
+  double radius_vector1[3] = {point.x, point.y, point.z};
   double radius_vector2[3] = {0, 0, 0};
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++)
       radius_vector2[i] +=
         this->RotationMatrixElement(i, j) * radius_vector1[j];
   }
-  new_point.Set(radius_vector2[0], radius_vector2[1], radius_vector2[2]);
-  return new_point;
+  return cv::Point3d(radius_vector2[0], radius_vector2[1], radius_vector2[2]);
 }
 
 RotationMatrix::~RotationMatrix() {}

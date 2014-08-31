@@ -29,7 +29,7 @@ void PlySaver::Save(Mesh *mesh) {
     return;
   }
 
-  std::vector<Point3D> vertexes = mesh->vertexes();
+  std::vector<cv::Point3d> vertexes = mesh->vertexes();
   std::vector<Triangle> faces = mesh->faces();
 
   outfile << "ply\n";
@@ -53,11 +53,11 @@ void PlySaver::Save(Mesh *mesh) {
   outfile << "end_header\n";
 
   for (size_t i = 0; i < vertexes.size(); i++) {
-    Point3D point = vertexes.at(i);
+    cv::Point3d point = vertexes.at(i);
 
-    outfile << point.x() << " "
-            << point.y() << " "
-            << point.z() << "\n";
+    outfile << point.x << " "
+            << point.y << " "
+            << point.z << "\n";
   }
 
   for (size_t i = 0; i < faces.size(); i++) {
