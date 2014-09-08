@@ -50,7 +50,8 @@ void LoggerPosix::PostMessageImpl(const std::string& message) {
     return;
 
   int fd = open(file().c_str(),
-      O_APPEND | O_CREAT | O_CLOEXEC);
+      O_APPEND | O_CREAT | O_CLOEXEC,
+      S_IWGRP | S_IWOTH);
   if (fd < 0) {
     perror("Can't open log file: ");
     return;
