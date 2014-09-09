@@ -3,4 +3,9 @@
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#include "core/stat_utils.h"
+#ifndef CORE_STAT_H_
+#define CORE_STAT_H_
+
+
+
+#endif  // CORE_STAT_H_

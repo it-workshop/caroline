@@ -3,4 +3,12 @@
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#include "core/stat_utils.h"
+#include "core/metric.h"
+
+namespace core {
+
+namespace stat {
+
+}  // namespace stat
+
+}  // namespace core

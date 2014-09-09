@@ -2,5 +2,3 @@
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
-
-#include "core/stat_utils.h"
