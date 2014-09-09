@@ -220,6 +220,8 @@ add_module(core STATIC
   core/mesh_merge_utils.cc
   core/metric.h
   core/metric.cc
+  core/metrics.h
+  core/metrics.cc
   core/optical_flow.h
   core/optical_flow.cc
   core/optical_flow_processor.cc
@@ -245,8 +247,6 @@ add_module(core STATIC
   core/scene_element.cc
   core/serialization.cc
   core/serialization.h
-  core/stat.h
-  core/stat.cc
   core/stat_utils.h
   core/stat_utils.cc
   core/surface_mesh.h
@@ -318,8 +318,8 @@ add_application(unit_tests
   base/stream_unittest.cc
   core/cam_calib_unittest.cc
   core/cameras_unittest.cc
+  core/metrics_unittest.cc
   core/scene_unittest.cc
-  core/stat_unittests.cc
   core/stat_utils_unittest.cc
   core/opencv_unittest.cc
   core/filter_unittest.cc

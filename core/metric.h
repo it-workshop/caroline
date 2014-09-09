@@ -21,8 +21,8 @@ class Metric {
  public:
   /// Constructor.
   explicit Metric(const std::string& name) :
-    name_(name)
-  {}
+    name_(name) {
+  }
 
   /// Virtual destructor.
   virtual ~Metric() {}
