@@ -145,8 +145,7 @@ void CameraCalibration::CalibrationOneCamera(
                          30, 0.01));
 #else
   cv::calibrateCamera(
-        VobjectPoints, VPoints, image_size_, *K, *D, vrvec, tvec, 0
-        );
+        VobjectPoints, VPoints, image_size_, *K, *D, vrvec, tvec, 0);
 #endif
 }
 

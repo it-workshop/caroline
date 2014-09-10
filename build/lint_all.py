@@ -42,5 +42,5 @@ for name in directories:
 
 command = ['python', cpplint, '--root=' + root]
 command.extend(sources)
-call(command)
+exit(call(command))
 
