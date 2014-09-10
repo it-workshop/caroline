@@ -9,7 +9,18 @@
 #include "core/camera_calibration.h"
 #include "core/cameras.h"
 
-TEST(CamerasCalibrateTest, Test1) {
+#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#define CV_IMREAD_GRAYSCALE cv::IMREAD_GRAYSCALE
+#else
+#define CV_IMREAD_GRAYSCALE 0
+#endif
+
+#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#define MAYBE_Test1 Test1
+#else
+#define MAYBE_Test1 DISABLED_Test1
+#endif
+TEST(CamerasCalibrateTest, MAYBE_Test1) {
   core::Cameras cam;
   core::CameraCalibration calib;
 
@@ -18,10 +29,10 @@ TEST(CamerasCalibrateTest, Test1) {
 
   for ( int i = 0; i < 4; i++ ) {
     cv::Mat left_im = cv::imread("test_images/camera_calibration/left0" +
-      str +".ppm", cv::IMREAD_GRAYSCALE);
+      str +".ppm", CV_IMREAD_GRAYSCALE);
 
     cv::Mat right_im = cv::imread("test_images/camera_calibration/right0" +
-      str +".ppm", cv::IMREAD_GRAYSCALE);
+      str +".ppm", CV_IMREAD_GRAYSCALE);
     str = std::to_string(i + 1);
     calib.addImagePair(left_im, right_im, 9, 6);
   }
@@ -34,7 +45,12 @@ TEST(CamerasCalibrateTest, Test1) {
   EXPECT_LE((fabs(cam.P2()(2, 3) - (-79.2473))), epsilon);
 }
 
-TEST(CamerasCalibrateTest, TestForOneCam) {
+#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#define MAYBE_TestForOneCam TestForOneCam
+#else
+#define MAYBE_TestForOneCam DISABLED_TestForOneCam
+#endif
+TEST(CamerasCalibrateTest, MAYBE_TestForOneCam) {
   core::CameraCalibration calib;
 
   cv::Matx33d intr_mat;
@@ -44,9 +60,9 @@ TEST(CamerasCalibrateTest, TestForOneCam) {
 
   for ( int i = 0; i < 4; i++ ) {
     cv::Mat left_im = cv::imread("test_images/camera_calibration/left0" +
-      str + ".ppm", cv::IMREAD_GRAYSCALE);
+      str + ".ppm", CV_IMREAD_GRAYSCALE);
     cv::Mat right_im = cv::imread("test_images/camera_calibration/right0" +
-      str + ".ppm", cv::IMREAD_GRAYSCALE);
+      str + ".ppm", CV_IMREAD_GRAYSCALE);
     str = std::to_string(i + 1);
     calib.addImagePair(left_im, right_im, 9, 6);
   }

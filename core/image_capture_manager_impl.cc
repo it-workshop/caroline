@@ -15,7 +15,7 @@
 #include "core/image_time_controller.h"
 #include "core/position_controller.h"
 #include "core/video_time_controller.h"
-#include "opencv2/core/mat.hpp"
+#include "opencv2/core/core.hpp"
 
 namespace core {
 

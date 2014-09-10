@@ -18,7 +18,7 @@
 #include "core/scene3d.h"
 #include "core/serialization.h"
 #include "core/time_controller.h"
-#include "opencv2/core/mat.hpp"
+#include "opencv2/core/core.hpp"
 
 const std::string kStreamConfigFieldName = "connection";
 

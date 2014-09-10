@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "json/value.h"
-#include "opencv2/core/mat.hpp"
+#include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/video/video.hpp"
 
@@ -162,7 +162,7 @@ LucasKanadeOpticalFlowProcessor::~LucasKanadeOpticalFlowProcessor() {}
 std::vector<std::pair<cv::Point2d, cv::Point2d>>
 LucasKanadeOpticalFlowProcessor::Process(
     const cv::Mat& first, const cv::Mat& second) const {
-  std::vector<cv::Point2f> corners;
+  std::vector<cv::Point2d> corners;
   cv::goodFeaturesToTrack(
       first, corners, static_cast<int>(max_corners_count_), corners_quality_,
       corners_distance_);
@@ -177,7 +177,7 @@ LucasKanadeOpticalFlowProcessor::Process(
       cv::TermCriteria(
           cv::TermCriteria::MAX_ITER | cv::TermCriteria::EPS,
           static_cast<int>(sub_pix_iterations_), sub_pix_epsilon_));
-  std::vector<cv::Point2f> matches;
+  std::vector<cv::Point2d> matches;
   std::vector<unsigned char> status;
   cv::Mat errors;
   cv::calcOpticalFlowPyrLK(
