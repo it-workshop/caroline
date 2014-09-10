@@ -70,8 +70,7 @@ function (platform_definitions definitions)
 endfunction ()
 
 function (cxx11_compiler_flag flag)
-  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
-      "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  if (NOT MSVC)
     set ("${flag}" "-std=c++11" PARENT_SCOPE)
   endif ()
 endfunction ()

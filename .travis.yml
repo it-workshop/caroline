@@ -1,3 +1,5 @@
+git:
+  submodules: false
 language: cpp
 compiler:
   - gcc
@@ -5,6 +7,12 @@ compiler:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq libopencv-dev
+  - git submodule init
+  - git submodule update third_party/jsoncpp
+  - git submodule update third_party/gtest
+  - git submodule update third_party/protobuf
+  - git submodule update build/cpplint
+  - git submodule update api
 script:
   - cmake -Duse_own_opencv=no .
   - make -j4
