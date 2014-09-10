@@ -9,6 +9,10 @@
 
 #include "core/position_controller.h"
 
+#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#define CV_CAP_PROP_FORMAT cv::CAP_PROP_FORMAT;
+#endif
+
 namespace core {
 
 ImageCaptureImpl::ImageCaptureImpl(
@@ -17,7 +21,7 @@ ImageCaptureImpl::ImageCaptureImpl(
     const std::string& source_name)
   : ImageCapture(std::move(position_controller), type),
     capture_(new cv::VideoCapture(source_name)) {
-  if (!capture_->isOpened() || !capture_->set(cv::CAP_PROP_FORMAT, CV_8U))
+  if (!capture_->isOpened() || !capture_->set(CV_CAP_PROP_FORMAT, CV_8U))
     capture_.reset();
 }
 
@@ -26,7 +30,7 @@ ImageCaptureImpl::ImageCaptureImpl(
     int64_t camera_id)
   : ImageCapture(std::move(position_controller), Type::CAPTURE),
     capture_(new cv::VideoCapture(static_cast<int>(camera_id))) {
-  if (!capture_->isOpened() || !capture_->set(cv::CAP_PROP_FORMAT, CV_8U))
+  if (!capture_->isOpened() || !capture_->set(CV_CAP_PROP_FORMAT, CV_8U))
     capture_.reset();
 }
 

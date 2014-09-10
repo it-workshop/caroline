@@ -50,8 +50,9 @@ void Logger::InitInstance(std::shared_ptr<Logger> self,
 
 void Logger::PostMessage(const std::string& message) {
   bitdata::GlobalMessage output;
-  output.SetStream(connection_address_);
-  output.GenLog(message);
+  // TODO(alex-ac): Fix modules dependencies.
+  // output.SetStream(connection_address_);
+  // output.GenLog(message);
   PostMessageImpl(message);
 }
 

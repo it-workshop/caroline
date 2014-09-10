@@ -16,3 +16,7 @@ endif ()
 
 add_subdirectory(jsoncpp)
 
+if (use_own_protobuf)
+  add_subdirectory(protobuf)
+endif ()
+

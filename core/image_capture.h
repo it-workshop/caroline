@@ -6,6 +6,7 @@
 #ifndef CORE_IMAGE_CAPTURE_H_
 #define CORE_IMAGE_CAPTURE_H_
 
+#include <cinttypes>
 #include <memory>
 
 namespace cv {

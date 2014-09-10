@@ -8,6 +8,10 @@
 #include "core/image_capture_impl.h"
 #include "opencv2/highgui/highgui.hpp"
 
+#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#define CV_CAP_PROP_POS_MSEC cv::CAP_PROP_POS_MSEC
+#endif
+
 namespace core {
 
 namespace {
@@ -37,9 +41,9 @@ bool VideoTimeController::Grab() {
     if (!capture->GrabNextImage())
       return false;
     if (first)
-      current_time_ = (int64_t) capture->capture()->get(cv::CAP_PROP_POS_MSEC);
+      current_time_ = (int64_t) capture->capture()->get(CV_CAP_PROP_POS_MSEC);
     else if (current_time_ !=
-        capture->capture()->get(cv::CAP_PROP_POS_MSEC))
+        capture->capture()->get(CV_CAP_PROP_POS_MSEC))
       return false;
     first = false;
   }
