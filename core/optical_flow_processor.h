@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "opencv2/core/types.hpp"
+#include "opencv2/core/core.hpp"
 
 namespace cv {
 

@@ -7,7 +7,7 @@
 #define CORE_POSITION_H_
 
 #include "core/quaternion.h"
-#include "opencv2/core/mat.hpp"
+#include "opencv2/core/core.hpp"
 
 namespace core {
 

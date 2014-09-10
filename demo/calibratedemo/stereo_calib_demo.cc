@@ -11,6 +11,10 @@ const char kCapNumberNode[] = "cap_number";
 const char kFlowDemoNode[] = "demo_flowdemo";
 }
 
+#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#define cvMoveWindow cv::moveWindow
+#endif
+
 namespace demo {
 
 const int x = 7;
@@ -58,8 +62,8 @@ int StereoCalibDemo::Run() {
     cv::imshow("left", frame1_);
     cv::imshow("right", frame2_);
 
-    cv::moveWindow("left", 0, 0);
-    cv::moveWindow("right", 500, 0);
+    cvMoveWindow("left", 0, 0);
+    cvMoveWindow("right", 500, 0);
 
     cv::waitKey(-1);
   }

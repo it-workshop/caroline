@@ -14,7 +14,7 @@
 #include "core/optical_flow_processor.h"
 #include "core/position.h"
 #include "core/time_controller.h"
-#include "opencv2/core/mat.hpp"
+#include "opencv2/core/core.hpp"
 
 namespace demo {
 

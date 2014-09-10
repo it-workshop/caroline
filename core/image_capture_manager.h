@@ -6,6 +6,7 @@
 #ifndef CORE_IMAGE_CAPTURE_MANAGER_H_
 #define CORE_IMAGE_CAPTURE_MANAGER_H_
 
+#include <cinttypes>
 #include <vector>
 #include <utility>
 

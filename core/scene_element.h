@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "opencv2/core/mat.hpp"
+#include "opencv2/core/core.hpp"
 #include "core/mesh.h"
 
 namespace core {
