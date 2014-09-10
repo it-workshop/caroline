@@ -41,7 +41,7 @@ include(targets_utils)
 
 if (use_own_protobuf)
   set (PROTOBUF_LIBRARY
-    "${Protobuf_BINARY_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protobuf${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${Protobuf_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}protobuf${CMAKE_STATIC_LIBRARY_SUFFIX}"
     CACHE FILEPATH
     "The protobuf library"
     FORCE
@@ -53,19 +53,19 @@ if (use_own_protobuf)
     FORCE
     )
   set (PROTOBUF_LIBRARY_DEBUG
-    "${Protobuf_BINARY_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protobuf${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${Protobuf_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}protobuf${CMAKE_STATIC_LIBRARY_SUFFIX}"
     CACHE FILEPATH
     "The protobuf library"
     FORCE
     )
   set (PROTOBUF_PROTOC_LIBRARY
-    "${Protobuf_BINARY_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protoc-library${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${Protobuf_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}protoc-library${CMAKE_STATIC_LIBRARY_SUFFIX}"
     CACHE FILEPATH
     "The protoc library"
     FORCE
     )
   set (PROTOBUF_PROTOC_LIBRARY_DEBUG
-    "${Protobuf_BINARY_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protoc-library${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${Protobuf_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}protoc-library${CMAKE_STATIC_LIBRARY_SUFFIX}"
     CACHE FILEPATH
     "The protoc library"
     FORCE
