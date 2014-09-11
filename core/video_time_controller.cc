@@ -8,7 +8,7 @@
 #include "core/image_capture_impl.h"
 #include "opencv2/highgui/highgui.hpp"
 
-#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
 #define CV_CAP_PROP_POS_MSEC cv::CAP_PROP_POS_MSEC
 #endif
 

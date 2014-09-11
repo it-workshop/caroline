@@ -138,7 +138,7 @@ void CameraCalibration::CalibrationOneCamera(
 
   cv::setIdentity(*K);
 
-#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
   cv::calibrateCamera(
         VobjectPoints, VPoints, image_size_, *K, *D, vrvec, tvec, 0,
         cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT,
