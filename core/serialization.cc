@@ -11,6 +11,8 @@
 
 #include "base/stream.h"
 #include "google/protobuf/message_lite.h"
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/io/zero_copy_stream_impl_lite.h"
 #include "protocol.pb.h"  // NOLINT
 
 namespace bitdata {
@@ -28,9 +30,15 @@ void GlobalMessage::GenDMap(const core::DepthMap& depth_map) {
   for (double depth : depth_map)
     message->mutable_depth_map()->add_data(depth);
   message->set_type(Message::DEPTH_MAP);
-  char* bit_message = new char[message->ByteSize()];
-  message->SerializeToArray(bit_message, message->GetCachedSize());
-  stream_->Write(bit_message, message->GetCachedSize());
+  int intsize = google::protobuf::io::CodedOutputStream::VarintSize32(message->ByteSize());
+  size_t bit_size = message->ByteSize() + intsize;
+  char* bit_message = new char[bit_size];
+  google::protobuf::io::ArrayOutputStream stream_message(bit_message,bit_size);
+  google::protobuf::io::CodedOutputStream coded_message(&stream_message);
+  coded_message.WriteVarint32(message->GetCachedSize());
+  message->SerializeToCodedStream(&coded_message);
+  stream_->Write(bit_message, bit_size);
+  delete bit_message;
 }
 
 void GlobalMessage::GenOptFlow(const core::OpticalFlow& optical_flow) {
@@ -43,9 +51,15 @@ void GlobalMessage::GenOptFlow(const core::OpticalFlow& optical_flow) {
     item->mutable_right()->set_y(pair.second.y);
   }
   message->set_type(Message::OPTICAL_FLOW);
-  char* bit_message = new char[message->ByteSize()];
-  message->SerializeToArray(bit_message, message->GetCachedSize());
-  stream_->Write(bit_message, message->GetCachedSize());
+  int intsize = google::protobuf::io::CodedOutputStream::VarintSize32(message->ByteSize());
+  size_t bit_size = message->ByteSize() + intsize;
+  char* bit_message = new char[bit_size];
+  google::protobuf::io::ArrayOutputStream stream_message(bit_message,bit_size);
+  google::protobuf::io::CodedOutputStream coded_message(&stream_message);
+  coded_message.WriteVarint32(message->GetCachedSize());
+  message->SerializeToCodedStream(&coded_message);
+  stream_->Write(bit_message, bit_size);
+  delete bit_message;
 }
 
 void GlobalMessage::GenModel(const core::Scene3D& scene) {
@@ -72,9 +86,15 @@ void GlobalMessage::GenModel(const core::Scene3D& scene) {
     vertex_base_index += scene_element->mesh()->vertexes().size();
   }
   message->set_type(Message::MODEL);
-  char* bit_message = new char[message->ByteSize()];
-  message->SerializeToArray(bit_message, message->GetCachedSize());
-  stream_->Write(bit_message, message->GetCachedSize());
+  int intsize = google::protobuf::io::CodedOutputStream::VarintSize32(message->ByteSize());
+  size_t bit_size = message->ByteSize() + intsize;
+  char* bit_message = new char[bit_size];
+  google::protobuf::io::ArrayOutputStream stream_message(bit_message,bit_size);
+  google::protobuf::io::CodedOutputStream coded_message(&stream_message);
+  coded_message.WriteVarint32(message->GetCachedSize());
+  message->SerializeToCodedStream(&coded_message);
+  stream_->Write(bit_message, bit_size);
+  delete bit_message;
 }
 
 void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
@@ -89,28 +109,40 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
   message->mutable_images()->mutable_right()->
       set_width(right.size().width);
   message->mutable_images()->mutable_right()->
-      set_width(right.size().width);
-  for (auto it = left.begin<double>(), end = left.end<double>();
+      set_height(right.size().height);
+  for (auto it = left.begin<int>(), end = left.end<int>();
       it != end; ++it) {
     message->mutable_images()->mutable_left()->add_data(*it);
   }
-  for (auto it = right.begin<double>(), end = right.end<double>();
+  for (auto it = right.begin<int>(), end = right.end<int>();
       it != end; ++it) {
     message->mutable_images()->mutable_right()->add_data(*it);
   }
   message->set_type(Message::IMAGES);
-  char* bit_message = new char[message->ByteSize()];
-  message->SerializeToArray(bit_message, message->GetCachedSize());
-  stream_->Write(bit_message, message->GetCachedSize());
+  int intsize = google::protobuf::io::CodedOutputStream::VarintSize32(message->ByteSize());
+  size_t bit_size = message->ByteSize() + intsize;
+  char* bit_message = new char[bit_size];
+  google::protobuf::io::ArrayOutputStream stream_message(bit_message,bit_size);
+  google::protobuf::io::CodedOutputStream coded_message(&stream_message);
+  coded_message.WriteVarint32(message->GetCachedSize());
+  message->SerializeToCodedStream(&coded_message);
+  stream_->Write(bit_message, bit_size);
+  delete bit_message;
 }
 
 void GlobalMessage::GenLog(const std::string& message) {
   std::unique_ptr<Message>proto_message(new Message());
   proto_message->mutable_log()->set_line(message);
   proto_message->set_type(Message::LOG);
-  char* bit_message = new char[proto_message->ByteSize()];
-  proto_message->SerializeToArray(bit_message, proto_message->GetCachedSize());
-  stream_->Write(bit_message, proto_message->GetCachedSize());
+  int intsize = google::protobuf::io::CodedOutputStream::VarintSize32(proto_message->ByteSize());
+  size_t bit_size = proto_message->ByteSize() + intsize;
+  char* bit_message = new char[bit_size];
+  google::protobuf::io::ArrayOutputStream stream_message(bit_message,bit_size);
+  google::protobuf::io::CodedOutputStream coded_message(&stream_message);
+  coded_message.WriteVarint32(proto_message->GetCachedSize());
+  proto_message->SerializeToCodedStream(&coded_message);
+  stream_->Write(bit_message, bit_size);
+  delete bit_message;
 }
 
 }  // namespace bitdata
