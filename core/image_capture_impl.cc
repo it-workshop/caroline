@@ -9,8 +9,8 @@
 
 #include "core/position_controller.h"
 
-#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
-#define CV_CAP_PROP_FORMAT cv::CAP_PROP_FORMAT;
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
+#define CV_CAP_PROP_FORMAT cv::CAP_PROP_FORMAT
 #endif
 
 namespace core {

@@ -7,16 +7,9 @@
 #define BASE_LOGGING_H_
 
 #include <memory>
+#include <set>
 #include <sstream>
 #include <string>
-
-#include "protocol.pb.h"  // NOLINT
-
-namespace bitdata {
-
-class GlobalMessage;
-
-}
 
 namespace base {
 
@@ -72,6 +65,17 @@ class Logger {
     const bool visible_;
   };
 
+  // Observer class for log listeners.
+  class Observer {
+   public:
+    // Destructor.
+    virtual ~Observer() {}
+
+    /// Called on each message submit.
+    /// @param[in] message Log message.
+    virtual void Observe(const std::string& message) = 0;
+  };
+
   /// Default constructor.
   Logger();
   /// Destructor.
@@ -95,9 +99,18 @@ class Logger {
   /// @returns path to the log.
   std::string file() const { return file_; }
 
-  void set_connection_address(const std::string& address) {
-    connection_address_ = address;
-  }
+  /// Add new observer to the logger.
+  /// @param[in] observer Object that will be notified about log messages.
+  void AddObserver(Observer* observer);
+
+  /// Check that logger notifies this observer about messages.
+  /// @param[in] observer Object to check.
+  /// @returns true if observer is notified about messages.
+  bool HasObserver(Observer* observer) const;
+
+  /// Remove observer from the listeners list.
+  /// @param[in] observer Object to remove from the list.
+  void RemoveObserver(Observer* observer);
 
  protected:
   /// Internal function that writes a string to the log.
@@ -120,8 +133,9 @@ class Logger {
 
   Level minimum_level_;
   std::string file_;
-  std::string connection_address_;
   std::weak_ptr<Logger> self_;
+
+  std::set<Observer*> observers_;
 
   /// Copy consturctor is disallowed.
   Logger(const Logger&);

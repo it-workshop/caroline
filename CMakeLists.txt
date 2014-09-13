@@ -162,8 +162,6 @@ add_module(base STATIC
   base/stream_pipe_posix.h
   )
 target_link_libraries(base
-  api
-  ${PROTOBUF_LIBRARIES}
   jsoncpp_lib
   )
 

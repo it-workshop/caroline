@@ -21,7 +21,7 @@
 
 namespace bitdata {
 
-class GlobalMessage {
+class GlobalMessage : public base::Logger::Observer {
  public:
   virtual ~GlobalMessage() {}
 
@@ -50,6 +50,9 @@ class GlobalMessage {
   /// Seriallize log message.
   /// @param[in] message Message to seriallize.
   void GenLog(const std::string& message);
+
+  // Overriden from base::Logger::Observer:
+  virtual void Observe(const std::string& message) override;
 
  private:
   std::string stream_name_;

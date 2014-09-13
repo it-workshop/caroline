@@ -11,7 +11,7 @@ const char kCapNumberNode[] = "cap_number";
 const char kFlowDemoNode[] = "demo_flowdemo";
 }
 
-#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
 #define cvMoveWindow cv::moveWindow
 #endif
 

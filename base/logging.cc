@@ -5,8 +5,6 @@
 
 #include "base/logging.h"
 
-#include "core/serialization.h"
-
 namespace base {
 
 const char Logger::kLevelError[] = "error";
@@ -41,6 +39,20 @@ Logger::Message Logger::AddMessage(Level level) {
   return Message(self(), level <= minimum_level_);
 }
 
+void Logger::AddObserver(Observer* observer) {
+  observers_.insert(observer);
+}
+
+bool Logger::HasObserver(Observer* observer) const {
+  return observers_.find(observer) != observers_.end();
+}
+
+void Logger::RemoveObserver(Observer* observer) {
+  std::set<Observer*>::iterator it = observers_.find(observer);
+  if (it != observers_.end())
+  observers_.erase(it);
+}
+
 void Logger::InitInstance(std::shared_ptr<Logger> self,
     const std::string& file, Level minimum_level) {
   self_ = self;
@@ -49,11 +61,9 @@ void Logger::InitInstance(std::shared_ptr<Logger> self,
 }
 
 void Logger::PostMessage(const std::string& message) {
-  bitdata::GlobalMessage output;
-  // TODO(alex-ac): Fix modules dependencies.
-  // output.SetStream(connection_address_);
-  // output.GenLog(message);
   PostMessageImpl(message);
+  for (auto observer : observers_)
+    observer->Observe(message);
 }
 
 }  // namespace base
