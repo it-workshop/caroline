@@ -1,5 +1,7 @@
 # Caroline
 
+[![Build Status](https://travis-ci.org/it-workshop/caroline.svg?branch=master)](https://travis-ci.org/it-workshop/caroline)
+
 The cake is not a lie.
 
 Computer Vision project.
@@ -61,6 +63,8 @@ Remember to install git hooks before your first commit.
 
 ## Workflow
 
+We use youtrack: <http://team.technoworks.ru/>.
+
 Each tracker issue is assigned to a collaborator. The work on each feature
 must be subdivided into work packages (wp). Each wp has its own branch that
 must be merged into upstream branch after review i.e. you must create a pull
@@ -70,16 +74,16 @@ upstream if it has compilation errors or failed unit tests on any platform.
 ### Names of branches
 
 Each workpackage must be in a branch called
-```wp/${issue-number}/${wp-number}```. I.e. if issue #1357 has 3 workpackages,
-names of the branches would be:
+```wp/${issue-number}/${wp-number}```. I.e. if issue CAROLINE-1357 has 3
+workpackages, names of the branches would be:
 
- * ```wp/1357/1```;
- * ```wp/1357/2```;
- * ```wp/1357/3```.
+ * ```wp/CAROLINE-1357/1```;
+ * ```wp/CAROLINE-1357/2```;
+ * ```wp/CAROLINE-1357/3```.
 
 ### Commit message
 
-The commit messages must begin from ```#${issue-number}: ```. It must be
+The commit messages must begin from ```CAROLINE-${issue-number}: ```. It must be
 either a single line (up to 80 characters) or multiline text with an empty
 string after the first line.
 
@@ -91,11 +95,21 @@ http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml
 Additions:
 
  * We use C++11.
+ * We use doxygen.
+
+Each file must be started with copyright message:
+
+// Copyright (c) 2014 The Caroline authors. All rights reserved.
+// Use of this source file is governed by a MIT license that can be found in the
+// LICENSE file.
+/// @author Vasya Pupkin <vasya@example.com>
 
 ## Tests
 
 Use GTest testing framework. Each unit test must be built into the unit_tests
 target.
+
+Use GMock framework in the unit tests.
 
 Currently, the project must be tested on Linux, Windows, and Mac OS X.
 We supported the following toolkits:
