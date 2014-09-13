@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Sirotkin Dmitry <dmitriy.v.sirotkin@gmail.com
+/// @author Sirotkin Dmitry <dmitriy.v.sirotkin@gmail.com
 
 #include <vector>
 #include "core/median_map_filter.h"

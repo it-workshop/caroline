@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Kukleva Anna <Kuklevaanna@gmail.com>
+/// @author Kukleva Anna <Kuklevaanna@gmail.com>
 
 
 #ifndef DEMO_CALIBRATEDEMO_STEREO_CALIB_DEMO_H_

@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Sergey Volodin <etoestja@yandex.ru>
+/// @author Sergey Volodin <etoestja@yandex.ru>
 
 #include "core/farneback_optical_flow_processor.h"
 
