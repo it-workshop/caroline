@@ -3,8 +3,10 @@
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#ifndef CORE_METRICS_H_
-#define CORE_METRICS_H_
+#ifndef CORE_METRIC_IMPLS_H_
+#define CORE_METRIC_IMPLS_H_
+
+#include <string>
 
 #include "core/metric.h"
 
@@ -12,28 +14,31 @@ namespace core {
 
 namespace stat {
 
+const std::string kSimpleDist = "simple_dist";
+const std::string kRSquare = "RSquare";
+
 /// Computes the sum of the roots of the difference of the squares.
 class SimpleDist : public Metric {
  public:
-  SimpleDist() :
-    Metric("simple_dist") {
+  SimpleDist()
+  : Metric(kSimpleDist) {
   }
 
-  double compute(const cv::Mat &m1, const cv::Mat &m2) override;
+  long double compute(const cv::Mat &m1, const cv::Mat &m2) override;
 };
 
 /// Computes the coefficient of determination.
 class RSquare : public Metric {
  public:
-  RSquare() :
-    Metric("RSquare") {
+  RSquare()
+  : Metric(kRSquare) {
   }
 
-  double compute(const cv::Mat &m1, const cv::Mat &m2) override;
+  long double compute(const cv::Mat &m1, const cv::Mat &m2) override;
 };
 
 }  // namespace stat
 
 }  // namespace core
 
-#endif  // CORE_METRICS_H_
+#endif  // CORE_METRIC_IMPLS_H_

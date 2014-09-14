@@ -11,12 +11,14 @@ TEST(StatUtilsTest, Reduce) {
   cv::Mat src(3, 3, CV_64F, cv::Scalar(2.));
 
   double sum = core::stat::reduce<double>(
-        src, 0, [](double l, double r){ return l + r; });
+        src.begin<double>(), src.end<double>(),
+        [](double l, double r){ return l + r; });
   double mul = core::stat::reduce<double>(
-        src, 1, [](double l, double r){ return l * r; });
+        src.begin<double>(), src.end<double>(),
+        [](double l, double r){ return l * r; });
 
-  EXPECT_EQ(sum, 18);
-  EXPECT_EQ(mul, 512);
+  EXPECT_EQ(18, sum);
+  EXPECT_EQ(512, mul);
 }
 
 TEST(StatUtilsTest, Sapply) {
@@ -25,8 +27,8 @@ TEST(StatUtilsTest, Sapply) {
 
   core::stat::sapply<double>(src, &dst, [](double x){ return x + 2; });
 
-  EXPECT_EQ(src.at<double>(0, 0), 0);
-  EXPECT_EQ(src.at<double>(2, 2), 0);
-  EXPECT_EQ(dst.at<double>(0, 0), 2);
-  EXPECT_EQ(dst.at<double>(2, 2), 2);
+  EXPECT_EQ(0, src.at<double>(0, 0));
+  EXPECT_EQ(0, src.at<double>(2, 2));
+  EXPECT_EQ(2, dst.at<double>(0, 0));
+  EXPECT_EQ(2, dst.at<double>(2, 2));
 }

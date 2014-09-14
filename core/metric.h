@@ -20,8 +20,8 @@ namespace stat {
 class Metric {
  public:
   /// Constructor.
-  explicit Metric(const std::string& name) :
-    name_(name) {
+  explicit Metric(const std::string& name)
+  : name_(name) {
   }
 
   /// Virtual destructor.
@@ -31,7 +31,7 @@ class Metric {
   std::string name() const { return name_; }
 
   /// Computes the value for comparison matrices.
-  virtual double compute(const cv::Mat& m1, const cv::Mat& m2) = 0;
+  virtual long double compute(const cv::Mat& m1, const cv::Mat& m2) = 0;
 
  private:
   /// Name of the metric.

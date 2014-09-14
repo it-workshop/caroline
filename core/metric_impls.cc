@@ -3,7 +3,7 @@
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#include "core/metrics.h"
+#include "core/metric_impls.h"
 #include "core/stat_utils.h"
 
 #include "opencv2/core.hpp"
@@ -12,7 +12,7 @@ namespace core {
 
 namespace stat {
 
-double SimpleDist::compute(const cv::Mat &m1, const cv::Mat &m2) {
+long double SimpleDist::compute(const cv::Mat &m1, const cv::Mat &m2) {
   cv::Mat temp1;
   cv::Mat temp2;
   m1.convertTo(temp1, CV_32F);
@@ -26,7 +26,7 @@ double SimpleDist::compute(const cv::Mat &m1, const cv::Mat &m2) {
   return cv::sum(dst)[0];
 }
 
-double RSquare::compute(const cv::Mat &m1, const cv::Mat &m2) {
+long double RSquare::compute(const cv::Mat &m1, const cv::Mat &m2) {
   cv::Mat temp1;
   cv::Mat temp2;
   m1.convertTo(temp1, CV_32F);

@@ -7,7 +7,7 @@
 
 #include "opencv2/highgui.hpp"
 
-#include "core/metrics.h"
+#include "core/metric_factory.h"
 
 TEST(MetricsTest, SimpleDist) {
   cv::Mat im_true = cv::imread("../test_images/metrics/disparity.png",
@@ -17,8 +17,9 @@ TEST(MetricsTest, SimpleDist) {
 
   EXPECT_EQ(im_true.size, im_comp.size);
 
-  core::stat::SimpleDist obj;
-  EXPECT_LE(obj.compute(im_true, im_comp) / (im_true.rows * im_true.cols), 20);
+  std::unique_ptr<core::stat::Metric> obj =
+      core::stat::MetricFactory::Create("simple_dist");
+  EXPECT_LE(obj->compute(im_true, im_comp) / (im_true.rows * im_true.cols), 20);
 }
 
 TEST(MetricsTest, RSquare) {
@@ -29,6 +30,7 @@ TEST(MetricsTest, RSquare) {
 
   EXPECT_EQ(im_true.size, im_comp.size);
 
-  core::stat::RSquare obj;
-  EXPECT_GE(obj.compute(im_true, im_comp), 0.9);
+  std::unique_ptr<core::stat::Metric> obj =
+      core::stat::MetricFactory::Create("RSquare");
+  EXPECT_GE(obj->compute(im_true, im_comp), 0.9);
 }

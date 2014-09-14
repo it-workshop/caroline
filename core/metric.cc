@@ -4,11 +4,3 @@
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
 #include "core/metric.h"
-
-namespace core {
-
-namespace stat {
-
-}  // namespace stat
-
-}  // namespace core
