@@ -1,16 +1,25 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Aleksandr Derbenev <13alexac@gmail.com>
+/// Author: Aleksandr Derbenev <13alexac@gmail.com>
 
+#include "base/at_exit.h"
 #include "base/command_line.h"
 #include "base/logging.h"
+#include "base/path_service.h"
 #include "core/caroline.h"
 #include "core/config.h"
 #include "core/switches.h"
 #include "core/return_codes.h"
 
+/// Entry point of the program.
+/// @param argc Number of command line arguments.
+/// @param argv nullptr terminated list of command line arguments.
+/// @returns 0 on success.
 int main(int argc, const char* argv[]) {
+  base::AtExitManager at_exit_manager;
+  base::PathService::Init(*argv);
+
   auto command_line(base::CommandLine::GetForCurrentProcess());
   base::CommandLine::ParseArgs(argv, command_line.get());
 
@@ -34,7 +43,7 @@ int main(int argc, const char* argv[]) {
       minimal_level = base::Logger::LOG_DEBUG;
     std::string file =
         command_line->GetSwitchData(core::switches::kLogFile);
-    base::Logger::GetInstance()->Init(file, minimal_level);
+    base::Logger::Init(file, minimal_level);
   }
 
   core::Caroline application(command_line.get(), config.get());
