@@ -12,6 +12,7 @@ before_install:
   - git submodule init
   - git submodule update third_party/jsoncpp
   - git submodule update third_party/gtest
+  - git submodule update third_party/gmock
   - git submodule update third_party/protobuf
   - git submodule update build/cpplint
   - git submodule update api
