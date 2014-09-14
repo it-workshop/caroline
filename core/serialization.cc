@@ -113,5 +113,9 @@ void GlobalMessage::GenLog(const std::string& message) {
   stream_->Write(bit_message, proto_message->GetCachedSize());
 }
 
+void GlobalMessage::Observe(const std::string& message) {
+  GenLog(message);
+}
+
 }  // namespace bitdata
 

@@ -22,13 +22,13 @@ const char kImageExtension[] = ".ppm";
 
 }  // namespace
 
-#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
 #define CV_IMREAD_GRAYSCALE cv::IMREAD_GRAYSCALE
 #else
 #define CV_IMREAD_GRAYSCALE 0
 #endif
 
-#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
 #define MAYBE_Test1 Test1
 #else
 #define MAYBE_Test1 DISABLED_Test1
@@ -64,7 +64,7 @@ TEST(CamerasCalibrateTest, MAYBE_Test1) {
   EXPECT_LE((fabs(cam.P2()(2, 3) - (-79.2473))), kEpsilon);
 }
 
-#if CV_MAJOR > 2 || (CV_MAJOR == 2 && CV_MINOR >= 4)
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
 #define MAYBE_TestForOneCam TestForOneCam
 #else
 #define MAYBE_TestForOneCam DISABLED_TestForOneCam

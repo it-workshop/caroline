@@ -42,8 +42,8 @@ bool Caroline::Init() {
     const Json::Value& address_node = (*dictionary)[kStreamConfigFieldName];
     if (address_node.isString()) {
       const std::string& address = address_node.asString();
-      base::Logger::GetInstance()->set_connection_address(address);
       message_->SetStream(address);
+      base::Logger::GetInstance()->AddObserver(message_.get());
       send_message_ = true;
     }
   }
