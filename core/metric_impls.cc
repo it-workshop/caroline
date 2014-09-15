@@ -33,9 +33,11 @@ long double RSquare::compute(const cv::Mat &m1, const cv::Mat &m2) {
   m2.convertTo(temp2, CV_32F);
 
   cv::Scalar sd;
+  cv::Scalar mean;
   cv::Scalar sdDiff;
-  cv::meanStdDev(m1, cv::Scalar(), sd);
-  cv::meanStdDev(m1 - m2, cv::Scalar(), sdDiff);
+  cv::Scalar meanDiff;
+  cv::meanStdDev(m1, mean, sd);
+  cv::meanStdDev(m1 - m2, meanDiff, sdDiff);
 
   return (1 - sdDiff[0] / sd[0]);
 }
