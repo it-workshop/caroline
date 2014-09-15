@@ -60,11 +60,13 @@ class Singleton {
 };
 
 #define INSTANCE_SINGLETON(Type) \
+    namespace base { \
     template<> \
-    Type* ::base::Singleton<Type>::instance_ = nullptr; \
+    Type* Singleton<Type>::instance_ = nullptr; \
     template<> \
-    Type* ::base::Singleton<Type>::GetInstance() { \
+    Type* Singleton<Type>::GetInstance() { \
       return instance_; \
+    } \
     }
 
 }  // namespace base
