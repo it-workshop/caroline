@@ -10,7 +10,7 @@
 #include "base/path_service.h"
 #include "core/metric_factory.h"
 #include "gtest/gtest.h"
-#include "opencv2/highgui.hpp"
+#include "opencv2/opencv.hpp"
 
 namespace {
 
@@ -33,7 +33,7 @@ const char kDispWithNoise[] = "simplenoise.png";
 #define MAYBE_SimpleDist DISABLED_SimpleDist
 #endif
 TEST(MetricsTest, MAYBE_SimpleDist) {
-  base::Path image_directory = 
+  base::Path image_directory =
       base::PathService::GetInstance()->executable_path().
       ParentDir().ParentDir().
       Join(kTestImagesDirectory).Join(kMetricsTestImagesDirectory);
@@ -59,7 +59,7 @@ TEST(MetricsTest, MAYBE_SimpleDist) {
 #define MAYBE_RSquare DISABLED_RSquare
 #endif
 TEST(MetricsTest, MAYBE_RSquare) {
-  base::Path image_directory = 
+  base::Path image_directory =
       base::PathService::GetInstance()->executable_path().
       ParentDir().ParentDir().
       Join(kTestImagesDirectory).Join(kMetricsTestImagesDirectory);
