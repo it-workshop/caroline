@@ -1,8 +1,8 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Aleksandr Derbenev <13alexac@gmail.com>
-// Author: Sergey Volodin <etoestja@yandex.ru>
+/// @author Aleksandr Derbenev <alex@technoworks.ru>
+/// @author Sergey Volodin <etoestja@yandex.ru>
 
 #include "demo/flowdemo/flowdemo.h"
 

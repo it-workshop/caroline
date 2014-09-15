@@ -1,8 +1,8 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
-// Author: Mlodik Mikhail <mlodik_m@mail.ru>
+/// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
+/// @author Mlodik Mikhail <mlodik_m@mail.ru>
 
 #include "core/scene_element.h"
 

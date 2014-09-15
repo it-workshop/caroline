@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Mlodik Mikhail <mlodik_m@mail.ru>
+/// @author Mlodik Mikhail <mlodik_m@mail.ru>
 
 #ifndef CORE_MESH_MERGE_UTILS_H_
 #define CORE_MESH_MERGE_UTILS_H_

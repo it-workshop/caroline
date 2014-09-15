@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Glazachev Vladimir <glazachev.vladimir@gmail.com>
+/// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
 #ifndef CORE_OPTICAL_FLOW_H_
 #define CORE_OPTICAL_FLOW_H_

@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Caroline authors. All rights reserved.
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
-// Author: Konstantin Bormotov <bormotovk@gmail.com>
+/// @author Konstantin Bormotov <bormotovk@gmail.com>
 
 #include "core/image_capture_impl.h"
 
