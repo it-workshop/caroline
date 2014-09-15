@@ -3,17 +3,48 @@
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#include "gtest/gtest.h"
+#include <memory>
+#include <string>
 
+#include "base/path.h"
+#include "base/path_service.h"
+#include "core/metric_factory.h"
+#include "gtest/gtest.h"
 #include "opencv2/highgui.hpp"
 
-#include "core/metric_factory.h"
+namespace {
 
-TEST(MetricsTest, SimpleDist) {
-  cv::Mat im_true = cv::imread("../test_images/metrics/disparity.png",
-                               cv::IMREAD_GRAYSCALE);
-  cv::Mat im_comp = cv::imread("../test_images/metrics/simplenoise.png",
-                               cv::IMREAD_GRAYSCALE);
+const char kTestImagesDirectory[] = "test_images";
+const char kMetricsTestImagesDirectory[] = "metrics";
+const char kDisparity[] = "disparity.png";
+const char kDispWithNoise[] = "simplenoise.png";
+
+}  // namespace
+
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
+#define CV_IMREAD_GRAYSCALE cv::IMREAD_GRAYSCALE
+#else
+#define CV_IMREAD_GRAYSCALE 0
+#endif
+
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
+#define MAYBE_SimpleDist SimpleDist
+#else
+#define MAYBE_SimpleDist DISABLED_SimpleDist
+#endif
+TEST(MetricsTest, MAYBE_SimpleDist) {
+  base::Path image_directory = 
+      base::PathService::GetInstance()->executable_path().
+      ParentDir().ParentDir().
+      Join(kTestImagesDirectory).Join(kMetricsTestImagesDirectory);
+
+  const base::Path& true_disp_path = image_directory.Join(kDisparity);
+  const base::Path& noise_disp_path = image_directory.Join(kDispWithNoise);
+
+  cv::Mat im_true = cv::imread(true_disp_path.spec(),
+                               CV_IMREAD_GRAYSCALE);
+  cv::Mat im_comp = cv::imread(noise_disp_path.spec(),
+                               CV_IMREAD_GRAYSCALE);
 
   EXPECT_EQ(im_true.size, im_comp.size);
 
@@ -22,11 +53,24 @@ TEST(MetricsTest, SimpleDist) {
   EXPECT_LE(obj->compute(im_true, im_comp) / (im_true.rows * im_true.cols), 20);
 }
 
-TEST(MetricsTest, RSquare) {
-  cv::Mat im_true = cv::imread("../test_images/metrics/disparity.png",
-                               cv::IMREAD_GRAYSCALE);
-  cv::Mat im_comp = cv::imread("../test_images/metrics/simplenoise.png",
-                               cv::IMREAD_GRAYSCALE);
+#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
+#define MAYBE_RSquare RSquare
+#else
+#define MAYBE_RSquare DISABLED_RSquare
+#endif
+TEST(MetricsTest, MAYBE_RSquare) {
+  base::Path image_directory = 
+      base::PathService::GetInstance()->executable_path().
+      ParentDir().ParentDir().
+      Join(kTestImagesDirectory).Join(kMetricsTestImagesDirectory);
+
+  const base::Path& true_disp_path = image_directory.Join(kDisparity);
+  const base::Path& noise_disp_path = image_directory.Join(kDispWithNoise);
+
+  cv::Mat im_true = cv::imread(true_disp_path.spec(),
+                               CV_IMREAD_GRAYSCALE);
+  cv::Mat im_comp = cv::imread(noise_disp_path.spec(),
+                               CV_IMREAD_GRAYSCALE);
 
   EXPECT_EQ(im_true.size, im_comp.size);
 
