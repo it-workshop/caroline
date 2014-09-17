@@ -30,7 +30,7 @@ project (Caroline CXX)
 
 # Reset CMAKE_*_OUTPUT_DIRECTORY after including third party projects.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${Caroline_BINARY_DIR}/lib")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${Caroilne_BINARY_DIR}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${Caroline_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${Caroline_BINARY_DIR}/bin")
 
 # Enable utility cmake functions.
@@ -338,3 +338,79 @@ if (NOT "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND")
       WORKING_DIRECTORY "${Caroline_BINARY_DIR}"
       COMMENT Build documentation.)
 endif ()
+
+# Packaging
+set(CPACK_PACKAGE_NAME caroline)
+set(CPACK_PACKAGE_VENDOR TechnoWorks)
+set(CPACK_PACKAGE_VERSION_MAJOR 1)
+set(CPACK_PACKAGE_VERSION_MINOR 0)
+set(CPACK_PACKAGE_VERSION_PATCH 0)
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Computer vision system for robots.")
+set(CPACK_PACKAGE_FILE_NAME
+  "caroline-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}-unstable")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY
+  "Caroline-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_OUTPUT_CONFIG_FILE "${Caroline_SOURCE_DIR}/CPackConfig.cmake")
+set(CPACK_PACKAGE_EXECUTABLES
+  demo_flowdemo "Caroline Optical flow demo"
+  demo_stereo_calib "Caroline stereo cameras calibration demo"
+  )
+set(CPACK_STRIP_FILES YES)
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}")
+set(CPACK_SOURCE_OUTPUT_CONFIG_FILE
+  "${Caroline_BINARY_DIR}/CPackSourceConfig.cmake")
+set(CPACK_PACKAGE_CONTACT "caroline@technoworks.ru")
+
+if (${OS_WINDOWS})
+  set(CPACK_NSIS_DISPLAY_NAME "Caroline")
+  set(CPACK_NSIS_PACKAGE_NAME "Caroline")
+  set(CPACK_NSIS_HELP_LINK "https://github.com/it-workshop/caroline/")
+  set(CPACK_NSIS_URL_INFO_ABOUT "https://github.com/it-workshop/caroline/")
+  set(CPACK_NSIS_CONTACT "caroline@technoworks.ru")
+endif ()
+
+if (${OS_MACOSX})
+  set(CPACK_OSX_PACKAGE_VERSION 10.6)
+endif ()
+
+if (${OS_POSIX})
+  set(CPACK_DEBIAN_PACKAGE_NAME "caroline")
+  set(CPACK_DEBIAN_PACKAGE_VERSION
+    "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VESION_PATH}-unstable")
+  set(deb_dependencies)
+  set(rpm_dependencies)
+  if (NOT ${use_own_opencv})
+    list(APPEND deb_dependencies "libopencv")
+    list(APPEND rpm_dependencies "opencv")
+  endif ()
+  if (NOT ${use_own_protobuf})
+    list(APPEND deb_dependencies "libprotobuf7")
+    list(APPEND rpm_dependencies "protobuf")
+  endif ()
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS ${deb_dependencies})
+  set(CPACK_DEBIAN_PACKAGE_MAINTAINER "alex@technoworks.ru")
+  set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
+  set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+
+  set(CPACK_RPM_PACKAGE_RELEASE 1)
+  set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+  set(CPACK_RPM_PACKAGE_VENDOR "TechnoWorks")
+  set(CPACK_RPM_PACKAGE_REQUIRES ${rpm_dependencies})
+
+  include(CPackDEB)
+  include(CPackRPM)
+endif ()
+
+install(TARGETS
+    caroline
+    demo_flowdemo
+    demo_stereo_calib
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    )
+
+include(CPack)
