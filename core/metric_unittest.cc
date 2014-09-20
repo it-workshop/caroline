@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "base/path.h"
 #include "base/path_service.h"
@@ -48,9 +49,14 @@ TEST(MetricsTest, MAYBE_SimpleDist) {
 
   EXPECT_EQ(im_true.size, im_comp.size);
 
+  std::vector<cv::Mat> src;
+  src.push_back(im_true);
+  src.push_back(im_comp);
+
   std::unique_ptr<core::stat::Metric> obj =
       core::stat::MetricFactory::Create("simple_dist");
-  EXPECT_LE(obj->compute(im_true, im_comp) / (im_true.rows * im_true.cols), 20);
+
+  EXPECT_LE(obj->compute(src) / (im_true.rows * im_true.cols), 20);
 }
 
 #if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
@@ -74,7 +80,11 @@ TEST(MetricsTest, MAYBE_RSquare) {
 
   EXPECT_EQ(im_true.size, im_comp.size);
 
+  std::vector<cv::Mat> src;
+  src.push_back(im_true);
+  src.push_back(im_comp);
+
   std::unique_ptr<core::stat::Metric> obj =
       core::stat::MetricFactory::Create("RSquare");
-  EXPECT_GE(obj->compute(im_true, im_comp), 0.9);
+  EXPECT_GE(obj->compute(src), 0.9);
 }

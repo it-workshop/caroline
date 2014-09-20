@@ -7,6 +7,7 @@
 #define CORE_METRIC_H_
 
 #include <string>
+#include <vector>
 
 namespace cv {
 class Mat;
@@ -31,7 +32,7 @@ class Metric {
   std::string name() const { return name_; }
 
   /// Computes the value for comparison matrices.
-  virtual long double compute(const cv::Mat& m1, const cv::Mat& m2) = 0;
+  virtual long double compute(const std::vector<cv::Mat> &src) = 0;
 
  private:
   /// Name of the metric.
