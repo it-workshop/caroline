@@ -79,17 +79,17 @@ bool MapRecognise::SmoothNeighbourhood(int w, int h,
   float Special;
   if ((direction == 0) && (w > 0)) {
     Special = static_cast<float>
-        (new_map_.Depth(w, h) / new_map_.Depth(w, h));
+        (new_map_.Depth(w, h) / new_map_.Depth(w-1, h));
     --w;
   }
   if ((direction == 1) && (w < (new_map_.width() - 1))) {
     Special = static_cast<float>
-        (new_map_.Depth(w, h) / new_map_.Depth(w + 1, h));
+        (new_map_.Depth(w, h) / new_map_.Depth(w+1, h));
     ++w;
   }
   if ((direction == 2) && (h > 0)) {
     Special = static_cast<float>
-        (new_map_.Depth(w, h) / new_map_.Depth(w, h - 1));
+        (new_map_.Depth(w, h) / new_map_.Depth(w, h-1));
     --h;
   }
   if ((direction == 3) && (h < (new_map_.height() - 1))) {
