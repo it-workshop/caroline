@@ -14,7 +14,7 @@ namespace stat {
 
 long double Mean::compute(const std::vector<cv::Mat> &src) {
   if (src.size() != 1) {
-    LOG(INFO) << "Compute metric error. Need one matrices to compute.";
+    LOG(WARNING) << "Compute metric error. Need one matrices to compute.";
   }
 
   cv::Scalar sd;
@@ -29,7 +29,7 @@ long double Mean::compute(const std::vector<cv::Mat> &src) {
 
 long double SimpleDist::compute(const std::vector<cv::Mat> &src) {
   if (src.size() != 2) {
-    LOG(INFO) << "Compute metric error. Need two matrices to compute.";
+    LOG(WARNING) << "Compute metric error. Need two matrices to compute.";
   }
   cv::Mat m1 = src.at(0);
   cv::Mat m2 = src.at(1);
@@ -52,7 +52,7 @@ long double SimpleDist::compute(const std::vector<cv::Mat> &src) {
 
 long double RSquare::compute(const std::vector<cv::Mat> &src) {
   if (src.size() != 2) {
-    LOG(INFO) << "Compute metric error. Need two matrices to compute.";
+    LOG(WARNING) << "Compute metric error. Need two matrices to compute.";
   }
   cv::Mat m1 = src.at(0);
   cv::Mat m2 = src.at(1);
