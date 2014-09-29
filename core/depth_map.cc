@@ -5,10 +5,11 @@
 
 #include "core/depth_map.h"
 
+#include <memory>
 #include <utility>
 
 #include "core/cameras.h"
-#include "core/triangulation.h"
+#include "core/triangulation_eigen.h"
 #include "opencv2/core/core.hpp"
 
 namespace core {
@@ -71,14 +72,14 @@ std::unique_ptr<DepthMap> DepthMap::BuildMap(
   }
 
   std::unique_ptr<DepthMap> map(new DepthMap(w, h));
-  Triangulation triangulator;
-  triangulator.SetCameraMatrices(cam);
-
+  std::unique_ptr<Triangulation> triangulator =
+      std::unique_ptr<Triangulation>(new TriangulationEigen());
+  triangulator->SetCameraMatrices(cam);
 
   for (size_t i = 0; i < flow.size(); i++) {
     cv::Point2d p = flow.at(i).first;
 
-    double depth = triangulator.TriangulateDepth(p, flow.at(i).second);
+    double depth = triangulator->TriangulateDepth(p, flow.at(i).second);
 
     map->SetDepth(static_cast<int>(p.x), static_cast<int>(p.y), depth);
   }
