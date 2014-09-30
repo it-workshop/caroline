@@ -11,26 +11,42 @@
 
 namespace core {
 
+/// Abstract class for triangulation.
 class Triangulation {
  public:
+  /// Constructor.
   Triangulation() {}
 
+  /// Destructor.
   virtual ~Triangulation() {}
 
+  /// Sets the cameras_ = cameras.
   virtual void SetCameraMatrices(const Cameras& cameras) { cameras_ = cameras; }
-
+  /// Virtual method for triangulation.
+  /// @param[in] x1 Point2d on the first image.
+  /// @param[in] x2 Point2d on the second image.
+  /// @returns Triangulated Point3d point.
   virtual cv::Point3d Triangulate(const cv::Point2d &x1,
       const cv::Point2d &x2) const = 0;
+  /// Virtual method for triangulation.
+  /// @param[in] x1 Point2d on the first image.
+  /// @param[in] x2 Point2d on the second image.
+  /// @returns Triangulated depth of the point.
   virtual double TriangulateDepth(const cv::Point2d &x1,
       const cv::Point2d &x2) const = 0;
 
  protected:
+  /// Returns camera one matrix.
   cv::Matx33d K1() const { return cameras_.K1(); }
+  /// Returns camera two matrix.
   cv::Matx33d K2() const { return cameras_.K2(); }
+  /// Returns projective matrix of camera one.
   cv::Matx34d P1() const { return cameras_.P1(); }
+  /// Returns projective matrix of camera two.
   cv::Matx34d P2() const { return cameras_.P2(); }
 
  private:
+  /// Parameters of the cameras.
   Cameras cameras_;
 };
 
