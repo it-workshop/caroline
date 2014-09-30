@@ -28,12 +28,7 @@ const char kDispWithNoise[] = "simplenoise.png";
 #define CV_IMREAD_GRAYSCALE 0
 #endif
 
-#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
-#define MAYBE_SimpleDist SimpleDist
-#else
-#define MAYBE_SimpleDist DISABLED_SimpleDist
-#endif
-TEST(MetricsTest, MAYBE_SimpleDist) {
+TEST(MetricsTest, SimpleDist) {
   base::Path image_directory =
       base::PathService::GetInstance()->executable_path().
       ParentDir().ParentDir().
@@ -59,12 +54,7 @@ TEST(MetricsTest, MAYBE_SimpleDist) {
   EXPECT_LE(obj->compute(src) / (im_true.rows * im_true.cols), 20);
 }
 
-#if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
-#define MAYBE_RSquare RSquare
-#else
-#define MAYBE_RSquare DISABLED_RSquare
-#endif
-TEST(MetricsTest, MAYBE_RSquare) {
+TEST(MetricsTest, RSquare) {
   base::Path image_directory =
       base::PathService::GetInstance()->executable_path().
       ParentDir().ParentDir().
