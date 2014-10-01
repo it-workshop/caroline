@@ -160,6 +160,12 @@ add_module(core STATIC
   core/mesh.cc
   core/mesh_merge_utils.h
   core/mesh_merge_utils.cc
+  core/metric.h
+  core/metric.cc
+  core/metric_factory.h
+  core/metric_factory.cc
+  core/metric_impls.h
+  core/metric_impls.cc
   core/optical_flow.h
   core/optical_flow.cc
   core/optical_flow_processor.cc
@@ -252,6 +258,7 @@ add_application(unit_tests
   base/stream_unittest.cc
   core/cam_calib_unittest.cc
   core/cameras_unittest.cc
+  core/metric_unittest.cc
   core/scene_unittest.cc
   core/opencv_unittest.cc
   core/filter_unittest.cc

@@ -12,6 +12,10 @@
 
 #include "core/optical_flow.h"
 
+namespace cv {
+class Mat;
+}
+
 namespace core {
 
 class Cameras;
@@ -27,6 +31,7 @@ class DepthMap {
   int width() const { return width_; }
   int height() const { return height_; }
 
+  cv::Mat AsCVMat() const;
   std::vector<double> depthVector() const { return depth_map_; }
 
   void SetDepth(int x, int y, double depth);
