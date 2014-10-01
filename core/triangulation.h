@@ -6,52 +6,48 @@
 #ifndef CORE_TRIANGULATION_H_
 #define CORE_TRIANGULATION_H_
 
-#include "opencv2/opencv.hpp"
-
 #include "core/cameras.h"
+#include "opencv2/core/core.hpp"
 
 namespace core {
 
-// For more information about the algorithm, see
-// www.morethantechnical.com/2012/01/04/simple-triangulation-with-opencv-from-harley-zisserman-w-code  /NOLINT
+/// Abstract class for triangulation.
 class Triangulation {
  public:
-  Triangulation();
+  /// Constructor.
+  Triangulation() {}
 
-  ~Triangulation() {}
+  /// Destructor.
+  virtual ~Triangulation() {}
 
-  void SetCameraMatrices(const cv::Matx33d& K1, const cv::Matx33d& K2,
-                         const cv::Matx34d& P1, const cv::Matx34d& P2);
-
-
-  void SetIterations(int iter) { iterations_ = iter; }
-  void SetEpsilon(double eps) { epsilon_ = eps; }
-
-  int Iterations() const { return iterations_; }
-  double Epsilon() const { return epsilon_; }
-
-  void SetCameraMatrices(const Cameras& cameras);
-
-  cv::Point3d Triangulate(const cv::Point2d &x1, const cv::Point2d& x2) const;
-  double TriangulateDepth(const cv::Point2d &x1, const cv::Point2d &x2) const;
+  /// Sets the cameras_ = cameras.
+  virtual void SetCameraMatrices(const Cameras& cameras) { cameras_ = cameras; }
+  /// Virtual method for triangulation.
+  /// @param[in] x1 Point2d on the first image.
+  /// @param[in] x2 Point2d on the second image.
+  /// @returns Triangulated Point3d point.
+  virtual cv::Point3d Triangulate(const cv::Point2d &x1,
+      const cv::Point2d &x2) const = 0;
+  /// Virtual method for triangulation.
+  /// @param[in] x1 Point2d on the first image.
+  /// @param[in] x2 Point2d on the second image.
+  /// @returns Triangulated depth of the point.
+  virtual double TriangulateDepth(const cv::Point2d &x1,
+      const cv::Point2d &x2) const = 0;
 
  protected:
-  cv::Mat_<double> LinearTriangulation(const cv::Point3d &x1,
-                                       const cv::Point3d x2) const;
-  cv::Mat_<double> IterativeTriangulation(const cv::Point3d& x1,
-                                          const cv::Point3d& x2) const;
+  /// Returns camera one matrix.
+  cv::Matx33d K1() const { return cameras_.K1(); }
+  /// Returns camera two matrix.
+  cv::Matx33d K2() const { return cameras_.K2(); }
+  /// Returns projective matrix of camera one.
+  cv::Matx34d P1() const { return cameras_.P1(); }
+  /// Returns projective matrix of camera two.
+  cv::Matx34d P2() const { return cameras_.P2(); }
 
  private:
-  int iterations_;
-  double epsilon_;
-  // camera one inverted matrix
-  cv::Matx33d k_1_inv_;
-  // camera two inverted matrix
-  cv::Matx33d k_2_inv_;
-  // projective matrix one
-  cv::Matx34d p_1_;
-  // projective matrix two
-  cv::Matx34d p_2_;
+  /// Parameters of the cameras.
+  Cameras cameras_;
 };
 
 }  // namespace core

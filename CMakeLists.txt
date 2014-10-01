@@ -255,6 +255,8 @@ add_module(core STATIC
   core/switches.h
   core/triangulation.cc
   core/triangulation.h
+  core/triangulation_eigen.cc
+  core/triangulation_eigen.h
   core/time_controller.cc
   core/time_controller.h
   core/quaternion.cc
