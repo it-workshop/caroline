@@ -9,7 +9,7 @@
 
 #include "core/cameras.h"
 #include "core/triangulation.h"
-
+#include "opencv2/core/core.hpp"
 
 namespace core {
 
@@ -37,6 +37,17 @@ void DepthMap::SetDepth(int x, int y, double depth) {
   }
 
   depth_map_[width_ * y + x] = depth;
+}
+
+cv::Mat DepthMap::AsCVMat() const {
+  cv::Mat mat(width(), height(), CV_32F);
+  for (int i = 0; i < width(); i++) {
+    for (int j = 0; j < height(); j++) {
+      mat.at<float>(i, j, 0) = Depth(i, j);
+    }
+  }
+
+  return mat;
 }
 
 double DepthMap::Depth(int x, int y) const {

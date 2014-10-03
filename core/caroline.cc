@@ -6,12 +6,14 @@
 #include "core/caroline.h"
 
 #include <string>
+#include <vector>
 
 #include "core/cameras.h"
 #include "core/config.h"
 #include "core/depth_map.h"
 #include "core/depth_mesh.h"
 #include "core/image_capture_manager.h"
+#include "core/metric_factory.h"
 #include "core/optical_flow_processor.h"
 #include "core/position.h"
 #include "core/return_codes.h"
@@ -21,6 +23,7 @@
 #include "opencv2/core/core.hpp"
 
 const std::string kStreamConfigFieldName = "connection";
+const std::string kMetricsConfigFieldName = "metrics";
 
 namespace core {
 
@@ -45,6 +48,22 @@ bool Caroline::Init() {
       message_->SetStream(address);
       base::Logger::GetInstance()->AddObserver(message_.get());
       send_message_ = true;
+    }
+  }
+
+  if (dictionary && dictionary->isMember(kMetricsConfigFieldName)) {
+    const Json::Value* metric_names = &(*dictionary)[kMetricsConfigFieldName];
+    if (metric_names->isArray()) {
+      for (size_t i = 0; i < metric_names->size(); i++) {
+        const Json::Value& name = metric_names[i];
+        if (name.isString()) {
+          std::unique_ptr<stat::Metric> metric =
+              stat::MetricFactory::Create(name.asString());
+          if (metric) {
+            metrics_.push_back(std::move(metric));
+          }
+        }
+      }
     }
   }
 
@@ -94,6 +113,14 @@ int Caroline::Run() {
 
     auto depth_map = DepthMap::BuildMap(
           optical_flow, *cameras_properties_, w, h);
+
+    if (!metrics_.empty()) {
+      std::vector<cv::Mat> src;
+      src.push_back(depth_map->AsCVMat());
+      for (size_t i = 0; i < metrics_.size(); i++) {
+        metrics_[i]->compute(src);
+      }
+    }
 
     if (send_message_) message_->GenDMap(*depth_map.get());
 
