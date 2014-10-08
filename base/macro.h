@@ -19,7 +19,7 @@
 ///   DISALLOW_COPY(MyClass);
 /// };
 #define DISALLOW_COPY(class_name) \
-    class_name(const class_name& object)
+    class_name(const class_name& object) = delete
 
 /// Macro for disallowing assigning of class.
 ///
@@ -34,7 +34,7 @@
 ///   DISALLOW_ASSIGN(MyClass);
 /// };
 #define DISALLOW_ASSIGN(class_name) \
-    class_name& operator=(const class_name& object)
+    class_name& operator=(const class_name& object) = delete
 
 /// Macro for disallowing copying and assigning of class.
 ///

@@ -9,10 +9,31 @@ cmake_minimum_required(VERSION 2.8)
 
 # use_own_opencv enables building opencv version from third_party/opencv
 # directory. Disabled by default on linux.
-if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-  set (default_use_own_opencv OFF)
-else ()
+if (APPLE)
   set (default_use_own_opencv ON)
+  set (default_use_own_protobuf ON)
+  set (default_use_lock_cxx11_atomics OFF)
+  set (default_use_lock_pthread_mutex ON)
+  set (default_use_lock_pthread_spinlock OFF)
+  set (default_use_thread_cxx11 OFF)
+  set (default_use_thread_pthread ON)
+elseif (UNIX)
+  set (default_use_own_opencv OFF)
+  set (default_use_own_protobuf ON)
+  set (default_use_lock_cxx11_atomics OFF)
+  set (default_use_lock_pthread_mutex ON)
+  set (default_use_lock_pthread_spinlock OFF)
+  set (default_use_thread_cxx11 OFF)
+  set (default_use_thread_pthread ON)
+else ()
+  message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+  set (default_use_own_opencv ON)
+  set (default_use_own_protobuf ON)
+  set (default_use_lock_cxx11_atomics ON)
+  set (default_use_lock_pthread_mutex OFF)
+  set (default_use_lock_pthread_spinlock OFF)
+  set (default_use_thread_cxx11 ON)
+  set (default_use_thread_pthread OFF)
 endif ()
 
 option(use_own_opencv
@@ -20,7 +41,22 @@ option(use_own_opencv
   ${default_use_own_opencv})
 option(use_own_protobuf
   "Own sources of protobuf will be used by default."
-  YES)
+  ${default_use_own_protobuf})
+option(use_lock_cxx11_atomic
+  "Lock mechanics with C++11 atomics."
+  ${default_use_lock_cxx11_atomics})
+option(use_lock_pthread_mutex
+  "Lock mechanics with pthread mutexes."
+  ${default_use_lock_pthread_mutex})
+option(use_lock_pthread_spinlock
+  "Lock mechanics with pthread spinlocks."
+  ${default_use_lock_pthread_spinlock})
+option(use_thread_cxx11
+  "Thread mechanics with C++11"
+  ${default_use_thread_cxx11})
+option(use_thread_pthread
+  "Thread mechanics with pthread"
+  ${default_use_thread_pthread})
 
 # Build project dependencies.
 add_subdirectory(third_party)
@@ -110,6 +146,10 @@ else ()
     )
 endif ()
 
+if (use_thread_pthread OR use_lock_pthread_mutex OR use_lock_pthread_spinlock)
+  find_package(Threads REQUIRED)
+endif ()
+
 # Set up include directories
 include_directories(
   ${OpenCV_INCLUDE_DIRS}
@@ -123,11 +163,31 @@ include_directories(
   "${Caroline_BINARY_DIR}"
   )
 
+# Set up defines
+if (use_lock_cxx11_atomic)
+  add_definitions(-DUSE_LOCK_CXX11_ATOMIC)
+elseif (use_lock_pthread_mutex)
+  add_definitions(-DUSE_LOCK_PTHREAD_MUTEX)
+elseif (use_lock_pthread_spinlock)
+  add_definitions(-DUSE_LOCK_PTHREAD_SPINLOCK)
+else ()
+  message (SEND_ERROR "One of use_lock_* options must be enabled.")
+endif ()
+
+if (use_thread_cxx11)
+  add_definitions(-DUSE_THREAD_CXX11)
+elseif (use_thread_pthread)
+  add_definitions(-DUSE_THREAD_PTHREAD)
+else ()
+  message (SEND_ERROR "One of use_thread_* options must be enabled.")
+endif ()
+
 # enumerate third party libraries for linking.
 list(APPEND Caroline_LIBRARIES
     ${OpenCV_LIBS}
     jsoncpp_lib
     ${PROTOBUF_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
     )
 
 # Generate files for protobuf seriallization/deseriallization.
@@ -154,15 +214,32 @@ target_link_libraries(api
 add_dependencies(api protoc)
 
 # base module. Infrastructure code that will be used in the project.
+if (use_thread_cxx11)
+  set (conditional_thread_sources
+    base/real_thread_impl_cxx11.cc
+    base/real_thread_impl_cxx11.h
+    )
+elseif (use_thread_pthread)
+  set (conditional_thread_sources
+    base/real_thread_impl_pthread.cc
+    base/real_thread_impl_pthread.h
+    )
+endif ()
 add_module(base STATIC
   base/at_exit.cc
   base/at_exit.h
   base/command_line.cc
   base/command_line.h
+  base/threadsafe_queue.h
+  base/lock.cc
+  base/lock.h
   base/logging.cc
   base/logging.h
   base/logging_posix.cc
   base/logging_win.cc
+  base/main_thread.h
+  base/message_loop.cc
+  base/message_loop.h
   base/path.cc
   base/path.h
   base/path_impl_posix.cc
@@ -171,14 +248,21 @@ add_module(base STATIC
   base/path_service.h
   base/path_service_posix.cc
   base/path_service_posix.h
+  base/real_thread.cc
+  base/real_thread.h
   base/stream.cc
   base/stream.h
   base/stream_net_posix.cc
   base/stream_net_posix.h
   base/stream_pipe_posix.cc
   base/stream_pipe_posix.h
+  base/thread.cc
+  base/thread.h
+  base/thread_bundle.cc
+  base/thread_bundle.h
   base/utils_posix.cc
   base/utils_posix.h
+  ${conditional_thread_sources}
   )
 target_link_libraries(base
   jsoncpp_lib
@@ -315,18 +399,22 @@ enable_testing()
 include_directories(third_party/gmock/include)
 include_directories(third_party/gtest/include)
 add_application(unit_tests
-  unit_tests_main.cc
   base/at_exit_unittest.cc
   base/command_line_unittest.cc
+  base/threadsafe_queue_unittest.cc
   base/path_service_unittest_posix.cc
+  base/real_thread_unittest.cc
   base/stream_unittest.cc
   core/cam_calib_unittest.cc
   core/cameras_unittest.cc
-  core/metric_unittest.cc
-  core/scene_unittest.cc
-  core/opencv_unittest.cc
   core/filter_unittest.cc
+  core/metric_unittest.cc
+  core/opencv_unittest.cc
+  core/opencv_unittest.cc
   core/recognise_unittest.cc
+  core/scene_unittest.cc
+  core/scene_unittest.cc
+  unit_tests_main.cc
   )
 target_link_libraries(unit_tests
   gmock
