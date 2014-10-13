@@ -37,6 +37,7 @@ class Caroline {
   base::CommandLine* command_line_;
   Config* config_;
   bool send_message_;
+  bool receive_message_;
   std::unique_ptr<bitdata::GlobalMessage>message_;
   std::unique_ptr<ImageCaptureManager> image_capture_manager_;
   std::unique_ptr<OpticalFlowProcessor> optical_flow_processor_;

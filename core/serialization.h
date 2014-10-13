@@ -21,15 +21,22 @@
 
 namespace bitdata {
 
+
 class GlobalMessage {
  public:
   virtual ~GlobalMessage() {}
 
-  std::string stream_name() const {
-    return stream_name_;
+  std::string ostream_name() const {
+    return ostream_name_;
   }
 
-  void SetStream(const std::string& stream);
+  std::string istream_name() const {
+    return istream_name_; 
+  }
+
+  void SetOStream(const std::string& stream);
+
+  void SetIStream(const std::string& stream);
 
   /// Seriallize Depth map with protobuf.
   /// @param[in] depth_map Depth map to seriallize.
@@ -52,8 +59,10 @@ class GlobalMessage {
   void GenLog(const std::string& message);
 
  private:
-  std::string stream_name_;
-  std::unique_ptr<base::Stream>stream_;
+  std::string ostream_name_;
+  std::string istream_name_;
+  std::unique_ptr<base::Stream>ostream_;
+  std::unique_ptr<base::Stream>istream_;
 };
 
 }  // namespace bitdata
