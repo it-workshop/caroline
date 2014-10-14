@@ -18,6 +18,7 @@
 #include "core/mesh.h"
 #include "core/position.h"
 #include "core/scene3d.h"
+#include "protocol.pb.h" //NOLIT
 
 namespace bitdata {
 
@@ -28,11 +29,6 @@ class GlobalMessage : public base::Logger::Observer {
   std::string ostream_name() const {
     return ostream_name_;
   }
-
-  std::string istream_name() const {
-    return istream_name_; 
-  }
-
 
   std::string istream_name() const {
     return istream_name_; 
@@ -66,6 +62,8 @@ class GlobalMessage : public base::Logger::Observer {
   virtual void Observe(const std::string& message) override;
 
  private:
+  void MakeMessage(Message* message);
+
   std::string ostream_name_;
   std::string istream_name_;
   std::unique_ptr<base::Stream>ostream_;
