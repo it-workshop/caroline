@@ -33,6 +33,11 @@ class GlobalMessage : public base::Logger::Observer {
     return istream_name_; 
   }
 
+
+  std::string istream_name() const {
+    return istream_name_; 
+  }
+
   void SetOStream(const std::string& stream);
 
   void SetIStream(const std::string& stream);
