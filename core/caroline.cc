@@ -53,7 +53,7 @@ bool Caroline::Init() {
   }
   if (dictionary && dictionary->isMember(kIStreamConfigFieldName)) {
     const Json::Value& input_address = (*dictionary)[kIStreamConfigFieldName];
-    if(input_address.isString()) {
+    if (input_address.isString()) {
       const std::string& address = input_address.asString();
       message_->SetIStream(address);
       receive_message_ = true;

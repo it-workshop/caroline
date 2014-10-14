@@ -13,7 +13,6 @@
 #include "google/protobuf/message_lite.h"
 #include "google/protobuf/io/coded_stream.h"
 #include "google/protobuf/io/zero_copy_stream_impl_lite.h"
-#include "protocol.pb.h"  // NOLINT
 
 namespace bitdata {
 
@@ -26,12 +25,12 @@ void GlobalMessage::SetOStream(const std::string& ostream) {
 void GlobalMessage::SetIStream(const std::string& istream) {
   istream_name_ = istream;
   istream_ = base::Stream::Open(istream_name_, base::Stream::kRead);
- }
+}
 
 void GlobalMessage::MakeMessage(Message* message) {
   size_t size = message->ByteSize();
   int size_of_size = google::protobuf::io
-                     ::CodedOutputStream::VarintSize32(size); 
+                     ::CodedOutputStream::VarintSize32(size);
   std::unique_ptr<char[]>bit_message(new char[size + size_of_size]);
   google::protobuf::io::ArrayOutputStream stream_message(bit_message.get(),
                                                          size + size_of_size);

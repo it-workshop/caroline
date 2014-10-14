@@ -18,7 +18,7 @@
 #include "core/mesh.h"
 #include "core/position.h"
 #include "core/scene3d.h"
-#include "protocol.pb.h" //NOLIT
+#include "protocol.pb.h"  //NOLINT
 
 namespace bitdata {
 
@@ -31,7 +31,7 @@ class GlobalMessage : public base::Logger::Observer {
   }
 
   std::string istream_name() const {
-    return istream_name_; 
+    return istream_name_;
   }
 
   void SetOStream(const std::string& stream);
