@@ -112,14 +112,16 @@ endif ()
 
 # Set up include directories
 include_directories(
-  "${OpenCV_INCLUDE_DIRS}"
+  ${OpenCV_INCLUDE_DIRS}
   "${Caroline_SOURCE_DIR}/third_party/jsoncpp/include"
-  "${PROTOBUF_INCLUDE_DIRS}"
+  ${PROTOBUF_INCLUDE_DIRS}
   "${Protobuf_SOURCE_DIR}/src"
   )
 
-include_directories("${Caroline_SOURCE_DIR}")
-include_directories("${Caroline_BINARY_DIR}")
+include_directories(
+  "${Caroline_SOURCE_DIR}"
+  "${Caroline_BINARY_DIR}"
+  )
 
 # enumerate third party libraries for linking.
 list(APPEND Caroline_LIBRARIES
