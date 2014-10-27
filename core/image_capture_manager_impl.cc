@@ -13,7 +13,7 @@
 #include "core/config.h"
 #include "core/image_capture_impl.h"
 #include "core/image_time_controller.h"
-#include "core/position_controller.h"
+#include "core/position.h"
 #include "core/video_time_controller.h"
 #include "opencv2/core/core.hpp"
 
@@ -150,19 +150,10 @@ ImageCaptureManager::Create(const Config* config) {
       }
     }
 
-    std::unique_ptr<PositionController> position_controller;
-    if (capture.isMember(kCapturePositionSettingsNode)) {
-      const Json::Value& position_settings =
-          capture[kCapturePositionSettingsNode];
-      position_controller = PositionController::Create(
-          time_controller.get(),
-          position_settings);
-    }
-
     std::unique_ptr<ImageCaptureImpl> image_capture;
     if (capture_type_string == kCaptureTypeDevice && capture_id_present)
       image_capture.reset(
-          new ImageCaptureImpl(std::move(position_controller), capture_id_int));
+          new ImageCaptureImpl(capture_id_int));
 
     if (!dpm_present && dpi_present)
       dpm_int = dpi_int * kDpiToDpmMultiplier;
@@ -170,7 +161,7 @@ ImageCaptureManager::Create(const Config* config) {
     if (!image_capture && capture_type_string == kCaptureTypeVideo &&
         !capture_source_string.empty()) {
       image_capture.reset(
-          new ImageCaptureImpl(std::move(position_controller),
+          new ImageCaptureImpl(
               ImageCapture::Type::VIDEO, capture_source_string));
       image_capture->set_dpm(dpm_int);
       image_capture->set_focus_length(focus_length_present ?
@@ -180,7 +171,7 @@ ImageCaptureManager::Create(const Config* config) {
     if (!image_capture && capture_type_string == kCaptureTypeImage &&
         !capture_source_string.empty()) {
       image_capture.reset(
-          new ImageCaptureImpl(std::move(position_controller),
+          new ImageCaptureImpl(
               ImageCapture::Type::IMAGE, capture_source_string));
       image_capture->set_dpm(dpm_int);
       image_capture->set_focus_length(focus_length_present ?
@@ -223,7 +214,7 @@ ImageCaptureManagerImpl::GetNextFrameset() {
       [] (const std::unique_ptr<ImageCapture>& capture)
       -> std::pair<cv::Mat, Position> {
         return std::make_pair(capture->GetNextImage(),
-            capture->position_controller()->position());
+            capture->position());
       });
   return frameset;
 }
