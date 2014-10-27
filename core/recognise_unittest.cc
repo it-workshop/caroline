@@ -9,7 +9,7 @@
 #include "core/depth_map.h"
 #include "core/map_recognise.h"
 
-TEST(MapRecogniseTest, DISABLED_TestNumber) {
+TEST(MapRecogniseTest, TestNumber) {
   int h = 9;
   int w = 10;
   core::DepthMap maps(w, h);
