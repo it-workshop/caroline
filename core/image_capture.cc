@@ -5,15 +5,10 @@
 
 #include "core/image_capture.h"
 
-#include "core/position_controller.h"
-
 namespace core {
 
-ImageCapture::ImageCapture(
-    std::unique_ptr<PositionController>&& position_controller,
-    Type type)
-  : position_controller_(std::move(position_controller)),
-    type_(type) {}
+ImageCapture::ImageCapture(Type type)
+  : type_(type) {}
 
 ImageCapture::~ImageCapture() {}
 

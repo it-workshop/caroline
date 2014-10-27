@@ -236,12 +236,8 @@ add_module(core STATIC
   core/ply_saver.cc
   core/point_cloud.h
   core/point_cloud.cc
-  core/position_controller.cc
-  core/position_controller.h
   core/position.cc
   core/position.h
-  core/predefined_position_controller.cc
-  core/predefined_position_controller.h
   core/return_codes.h
   core/rotation_matrix.cc
   core/rotation_matrix.h
@@ -261,8 +257,6 @@ add_module(core STATIC
   core/time_controller.h
   core/quaternion.cc
   core/quaternion.h
-  core/undefined_position_controller.cc
-  core/undefined_position_controller.h
   core/video_time_controller.cc
   core/video_time_controller.h
   )
