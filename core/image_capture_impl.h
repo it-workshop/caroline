@@ -21,11 +21,9 @@ namespace core {
   // For capturing images from camera or file
 class ImageCaptureImpl : public ImageCapture {
  public:
-  ImageCaptureImpl(std::unique_ptr<PositionController>&& position_controller,
-      Type type,
+  ImageCaptureImpl(Type type,
       const std::string& source_name);
-  ImageCaptureImpl(std::unique_ptr<PositionController>&& position_controller,
-      int64_t camera_id);
+  explicit ImageCaptureImpl(int64_t camera_id);
   virtual ~ImageCaptureImpl();
 
   // Can return empty matrix.

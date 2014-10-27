@@ -9,6 +9,8 @@
 #include <cinttypes>
 #include <memory>
 
+#include "core/position.h"
+
 namespace cv {
 
 class Mat;
@@ -16,8 +18,6 @@ class Mat;
 }  // namespace cv
 
 namespace core {
-
-class PositionController;
 
 class ImageCapture {
  public:
@@ -27,14 +27,8 @@ class ImageCapture {
     CAPTURE
   };
 
-  explicit ImageCapture(
-      std::unique_ptr<PositionController>&& position_controller,
-      Type type);
+  explicit ImageCapture(Type type);
   virtual ~ImageCapture();
-
-  PositionController* position_controller() const {
-    return position_controller_.get();
-  }
 
   virtual bool GrabNextImage() = 0;
   virtual cv::Mat GetNextImage() = 0;
@@ -45,9 +39,12 @@ class ImageCapture {
   // Dots per meter.
   virtual int64_t GetDpm() const = 0;
 
+  Position position() const { return position_; }
+  void set_position(const Position& position) { position_ = position; }
+
  private:
-  std::unique_ptr<PositionController> position_controller_;
   const Type type_;
+  Position position_;
 };
 
 }  // namespace core
