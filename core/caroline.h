@@ -34,9 +34,25 @@ class Caroline {
   Caroline(base::CommandLine* command_line, Config* config);
   virtual ~Caroline();
 
-  bool Init();
+  virtual bool Init();
 
-  int Run();
+  virtual int Run();
+
+  base::CommandLine* command_line() const {
+    return command_line_;
+  }
+
+  core::Config* config() const {
+    return config_;
+  }
+
+  ImageCaptureManager* image_capture_manager() const {
+    return image_capture_manager_.get();
+  }
+
+  OpticalFlowProcessor* optical_flow_processor() const {
+    return optical_flow_processor_.get();
+  }
 
  private:
   base::CommandLine* command_line_;
