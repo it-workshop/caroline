@@ -10,6 +10,7 @@ namespace core {
 namespace switches {
 
 const char kConfigSwitch[] = "config";
+const char kDemo[] = "demo";
 const char kEnableLogging[] = "enable-logging";
 const char kLogFile[] = "log-file";
 
