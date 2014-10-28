@@ -16,6 +16,8 @@ out
 
 # vim temporary files
 *~
+.*.swp
+.*.swo
 
 # Qt project
 caroline.config

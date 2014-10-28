@@ -7,6 +7,7 @@
 #include "base/command_line.h"
 #include "base/logging.h"
 #include "base/path_service.h"
+#include "core/application_factory.h"
 #include "core/caroline.h"
 #include "core/config.h"
 #include "core/switches.h"
@@ -46,10 +47,11 @@ int main(int argc, const char* argv[]) {
     base::Logger::Init(file, minimal_level);
   }
 
-  core::Caroline application(command_line.get(), config.get());
+  std::unique_ptr<core::Caroline> application(
+      core::CreateApplication(command_line.get(), config.get()));
 
-  if (!application.Init())
+  if (!application->Init())
     return core::RETURN_APPLICATION_INIT_FAIL;
 
-  return application.Run();
+  return application->Run();
 }

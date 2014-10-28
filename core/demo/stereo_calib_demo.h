@@ -4,43 +4,38 @@
 // Author: Kukleva Anna <Kuklevaanna@gmail.com>
 
 
-#ifndef DEMO_CALIBRATEDEMO_STEREO_CALIB_DEMO_H_
-#define DEMO_CALIBRATEDEMO_STEREO_CALIB_DEMO_H_
+#ifndef CORE_DEMO_STEREO_CALIB_DEMO_H_
+#define CORE_DEMO_STEREO_CALIB_DEMO_H_
 
 #include <memory>
 #include "opencv2/opencv.hpp"
 
 #include "core/camera_calibration.h"
-#include "demo/calibratedemo/stereo_calib_demo.h"
+#include "core/caroline.h"
+#include "core/demo/stereo_calib_demo.h"
 #include "core/config.h"
 #include "core/image_capture_manager.h"
 #include "core/time_controller.h"
 #include "core/cameras.h"
 #include "core/return_codes.h"
 
-namespace base {
-
-class CommandLine;
-
-}  // namrspace base
-
 namespace demo {
 
-class StereoCalibDemo {
+class StereoCalibDemo : public core::Caroline {
  public:
-  StereoCalibDemo();
+  StereoCalibDemo(base::CommandLine* command_line, core::Config* config);
 
-  bool Init();
+  virtual bool Init() override;
 
-  int Run();
+  virtual int Run() override;
+
+  static const char kDemoName[];
 
  protected:
   Json::Value MatxToJSON(const cv::Mat& matx);
 
  private:
   core::CameraCalibration calib_;
-
-  std::unique_ptr<core::ImageCaptureManager> image_capture_manager_;
 
   cv::VideoCapture cap1_;
   cv::VideoCapture cap2_;
@@ -54,4 +49,4 @@ class StereoCalibDemo {
 
 }  // namespace demo
 
-#endif  // DEMO_CALIBRATEDEMO_STEREO_CALIB_DEMO_H_
+#endif  // CORE_DEMO_STEREO_CALIB_DEMO_H_
