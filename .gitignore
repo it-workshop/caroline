@@ -23,3 +23,7 @@ caroline.creator
 caroline.files
 caroline.includes
 caroline.creator.user
+
+# Build failes
+CPackConfig.cmake
+
