@@ -3,12 +3,17 @@
 // LICENSE file.
 /// @author: Kukleva Anna <Kuklevaanna@gmail.com>
 
-#include "demo/calibratedemo/stereo_calib_demo.h"
+#include "core/demo/stereo_calib_demo.h"
 
 namespace {
 
 const char kCapNumberNode[] = "cap_number";
 const char kFlowDemoNode[] = "demo_flowdemo";
+
+const int x = 7;
+const int y = 5;
+float sq_size = 30;
+
 }
 
 #if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
@@ -17,12 +22,13 @@ const char kFlowDemoNode[] = "demo_flowdemo";
 
 namespace demo {
 
-const int x = 7;
-const int y = 5;
-float sq_size = 30;
+// static
+const char StereoCalibDemo::kDemoName[] = "stereo_calib";
 
-StereoCalibDemo::StereoCalibDemo()
-  : cap_number1_(2),
+StereoCalibDemo::StereoCalibDemo(base::CommandLine* command_line,
+                                 core::Config* config)
+  : Caroline(command_line, config),
+    cap_number1_(2),
     cap_number2_(1) {
 }
 

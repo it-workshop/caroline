@@ -38,6 +38,7 @@ Caroline::Caroline(base::CommandLine* command_line, Config* config)
 }
 
 Caroline::~Caroline() {}
+
 bool Caroline::Init() {
   image_capture_manager_ = ImageCaptureManager::Create(config_);
   optical_flow_processor_ = OpticalFlowProcessor::Create(config_);

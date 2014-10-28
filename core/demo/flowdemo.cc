@@ -4,7 +4,7 @@
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 // Author: Sergey Volodin <etoestja@yandex.ru>
 
-#include "demo/flowdemo/flowdemo.h"
+#include "core/demo/flowdemo.h"
 
 #include <utility>
 #include <algorithm>
@@ -45,25 +45,31 @@ void FlowDemo::DrawOptFlowMap() {
   }
 }
 
+// static
+const char FlowDemo::kDemoName[] = "flow";
 
 FlowDemo::FlowDemo(base::CommandLine* command_line, core::Config* config)
-  : command_line_(command_line),
-    config_(config),
+  : Caroline(command_line, config),
     resize_factor_x_(0.3),
     resize_factor_y_(0.3),
     color_(cv::Scalar(0, 255, 0)),
     step_(7),
     cap_number_(0) {
-  if (!config)
-    return;
+}
 
-  const Json::Value* dictionary = config->dictionary();
+FlowDemo::~FlowDemo() {}
+
+bool FlowDemo::Init() {
+  if (!Caroline::Init())
+    return false;
+
+  const Json::Value* dictionary = config()->dictionary();
   if (!dictionary || !dictionary->isMember(kFlowDemoNode))
-    return;
+    return false;
 
   const Json::Value& settings = (*dictionary)[kFlowDemoNode];
   if (!settings.isObject())
-    return;
+    return false;
 
   if (settings.isMember(kResizeFactorXNode)) {
     const Json::Value& resize_factor_x = settings[kResizeFactorXNode];
@@ -88,23 +94,16 @@ FlowDemo::FlowDemo(base::CommandLine* command_line, core::Config* config)
     if (step.isUInt64())
       step_ = step.asUInt64();
   }
-}
 
-FlowDemo::~FlowDemo() {}
-
-bool FlowDemo::Init() {
   cap_ = cv::VideoCapture(cap_number_);
 
-  image_capture_manager_ = core::ImageCaptureManager::Create(config_);
-  optical_flow_processor_ = core::OpticalFlowProcessor::Create(config_);
-
-  return optical_flow_processor_ && cap_.isOpened();
+  return optical_flow_processor() && cap_.isOpened();
 }
 
 int FlowDemo::Run() {
   cv::namedWindow("flow", 1);
 
-  for ( ; ; ) {
+  for (;;) {
     cap_ >> frame_;
 
     cv::resize(frame_, frame_resized_, cv::Size(),
@@ -112,7 +111,7 @@ int FlowDemo::Run() {
     cv::cvtColor(frame_resized_, gray_, cv::COLOR_BGR2GRAY);
 
     if (prevgray_.data) {
-      flow_ = optical_flow_processor_->Process(prevgray_, gray_);
+      flow_ = optical_flow_processor()->Process(prevgray_, gray_);
       cv::cvtColor(prevgray_, output_, cv::COLOR_GRAY2BGR);
       DrawOptFlowMap();
       cv::imshow("flow", output_);

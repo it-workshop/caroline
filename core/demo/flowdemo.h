@@ -4,50 +4,34 @@
 // Author: Aleksandr Derbenev <13alexac@gmail.com>
 // Author: Sergey Volodin <etoestja@yandex.ru>
 
-#ifndef DEMO_FLOWDEMO_FLOWDEMO_H_
-#define DEMO_FLOWDEMO_FLOWDEMO_H_
+#ifndef CORE_DEMO_FLOWDEMO_H_
+#define CORE_DEMO_FLOWDEMO_H_
 
 #include <memory>
 #include <vector>
 #include <utility>
 
+#include "core/caroline.h"
 #include "opencv2/core/core.hpp"
 #include "opencv2/video/video.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-namespace base {
-
-class CommandLine;
-
-}  // namespace base
-
-namespace core {
-
-class Config;
-class ImageCaptureManager;
-class OpticalFlowProcessor;
-
-}  // namespace core
-
 namespace demo {
 
-class FlowDemo {
+class FlowDemo : public core::Caroline {
  public:
   FlowDemo(base::CommandLine* command_line, core::Config* config);
   virtual ~FlowDemo();
 
-  bool Init();
+  virtual bool Init() override;
 
-  int Run();
+  virtual int Run() override;
+
+  static const char kDemoName[];
 
  private:
   void DrawOptFlowMap();
-
-  base::CommandLine* command_line_;
-  core::Config* config_;
-  std::unique_ptr<core::ImageCaptureManager> image_capture_manager_;
-  std::unique_ptr<core::OpticalFlowProcessor> optical_flow_processor_;
 
   double resize_factor_x_;
   double resize_factor_y_;
@@ -66,4 +50,4 @@ class FlowDemo {
 
 }  // namespace demo
 
-#endif  // DEMO_FLOWDEMO_FLOWDEMO_H_
+#endif  // CORE_DEMO_FLOWDEMO_H_

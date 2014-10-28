@@ -5,6 +5,10 @@
 
 cmake_minimum_required(VERSION 2.8)
 
+# CMake policies
+
+cmake_policy(VERSION 2.8.0)
+
 # Build options.
 
 # use_own_opencv enables building opencv version from third_party/opencv
@@ -186,6 +190,8 @@ target_link_libraries(base
 
 # core module. Main code of the application.
 add_module(core STATIC
+  core/application_factory.cc
+  core/application_factory.h
   core/camera_calibration.cc
   core/camera_calibration.h
   core/cameras.cc
@@ -194,6 +200,10 @@ add_module(core STATIC
   core/caroline.h
   core/config.cc
   core/config.h
+  core/demo/flowdemo.cc
+  core/demo/flowdemo.h
+  core/demo/stereo_calib_demo.cc
+  core/demo/stereo_calib_demo.h
   core/depth_map.h
   core/depth_map.cc
   core/depth_mesh.h
@@ -273,30 +283,6 @@ add_application(caroline
   main.cc
   )
 target_link_libraries(caroline
-  ${Caroline_LIBRARIES}
-  api
-  base
-  core
-  )
-
-add_application(demo_flowdemo
-  demo/flowdemo/main.cc
-  demo/flowdemo/flowdemo.cc
-  demo/flowdemo/flowdemo.h
-  )
-target_link_libraries(demo_flowdemo
-  ${Caroline_LIBRARIES}
-  api
-  base
-  core
-  )
-
-add_application(demo_stereo_calib
-  demo/calibratedemo/main.cc
-  demo/calibratedemo/stereo_calib_demo.cc
-  demo/calibratedemo/stereo_calib_demo.h
-  )
-target_link_libraries(demo_stereo_calib
   ${Caroline_LIBRARIES}
   api
   base
@@ -409,8 +395,6 @@ endif ()
 
 install(TARGETS
     caroline
-    demo_flowdemo
-    demo_stereo_calib
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
