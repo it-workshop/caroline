@@ -208,6 +208,8 @@ add_module(core STATIC
   core/depth_map.cc
   core/depth_mesh.h
   core/depth_mesh.cc
+  core/device_manager.cc
+  core/device_manager.h
   core/image_capture.cc
   core/image_capture.h
   core/image_capture_impl.cc
