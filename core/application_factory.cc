@@ -5,6 +5,8 @@
 
 #include "core/application_factory.h"
 
+#include <string>
+
 #include "base/command_line.h"
 #include "core/demo/flowdemo.h"
 #include "core/demo/stereo_calib_demo.h"
