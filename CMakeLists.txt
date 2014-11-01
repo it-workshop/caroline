@@ -304,6 +304,8 @@ add_module(core STATIC
   core/image_capture_manager_impl.h
   core/image_time_controller.cc
   core/image_time_controller.h
+  core/json_matrix_helpers.cc
+  core/json_matrix_helpers.h
   core/lucas_kanade_optical_flow_processor.cc
   core/lucas_kanade_optical_flow_processor.h
   core/map_filter.h
@@ -389,6 +391,7 @@ add_application(unit_tests
   base/stream_unittest.cc
   core/cam_calib_unittest.cc
   core/cameras_unittest.cc
+  core/json_matrix_helpers_unittest.cc
   core/filter_unittest.cc
   core/metric_unittest.cc
   core/opencv_unittest.cc

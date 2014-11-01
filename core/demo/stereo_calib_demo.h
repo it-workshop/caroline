@@ -12,12 +12,13 @@
 
 #include "core/camera_calibration.h"
 #include "core/caroline.h"
-#include "core/demo/stereo_calib_demo.h"
 #include "core/config.h"
-#include "core/image_capture_manager.h"
-#include "core/time_controller.h"
-#include "core/cameras.h"
-#include "core/return_codes.h"
+
+namespace base {
+
+class CommandLine;
+
+}  // namespace base
 
 namespace demo {
 
