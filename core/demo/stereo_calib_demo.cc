@@ -5,10 +5,9 @@
 
 #include "core/demo/stereo_calib_demo.h"
 
-namespace {
+#include "core/cameras.h"
 
-const char kCapNumberNode[] = "cap_number";
-const char kFlowDemoNode[] = "demo_flowdemo";
+namespace {
 
 const int x = 7;
 const int y = 5;
@@ -47,7 +46,6 @@ int StereoCalibDemo::Run() {
 
   // Number of pair images
   int k = 3;
-
   for (int i = 0; i < k; i++) {
     cap1_ >> frame1_;
     cap2_ >> frame2_;
@@ -85,45 +83,12 @@ int StereoCalibDemo::Run() {
   calib.HarvestChessboardIdealPointList(x, y, sq_size);
 
   cam = calib.calibrate(x, y, sq_size);
+  
+  cam.SaveToConfig(config());
 
-  Json::Value json_K1 = MatxToJSON(cv::Mat(cam.K1()));
-  Json::Value json_K2 = MatxToJSON(cv::Mat(cam.K2()));
-  Json::Value json_P1 = MatxToJSON(cv::Mat(cam.P1()));
-  Json::Value json_P2 = MatxToJSON(cv::Mat(cam.P2()));
-  Json::Value json_D1 = MatxToJSON(cam.D1());
-  Json::Value json_D2 = MatxToJSON(cam.D2());
-  Json::Value json_R = MatxToJSON(cv::Mat(cam.R()));
-  Json::Value json_T = MatxToJSON(cv::Mat(cam.T()));
-
-  core::Config config;
-
-  (*config.dictionary())["K1"] = json_K1;
-  (*config.dictionary())["K2"] = json_K2;
-  (*config.dictionary())["P1"] = json_P1;
-  (*config.dictionary())["P2"] = json_P2;
-  (*config.dictionary())["D1"] = json_D1;
-  (*config.dictionary())["D2"] = json_D2;
-  (*config.dictionary())["R"] = json_R;
-  (*config.dictionary())["T"] = json_T;
-
-  config.SaveToFile("../im/calib_param");
+  config()->Save();
 
   return core::RETURN_OK;
-}
-
-Json::Value StereoCalibDemo::MatxToJSON(const cv::Mat& matx) {
-  Json::Value json_matrix(Json::objectValue);
-  Json::Value json_matrix_data(Json::arrayValue);
-
-  for (int i = 0; i < matx.size().height; i++)
-    for (int j = 0; j < matx.size().width; j++)
-      json_matrix_data.append(matx.at<double>(j, i));
-
-  json_matrix["data"] = json_matrix_data;
-  json_matrix["width"] = matx.size().width;
-  json_matrix["height"] = matx.size().height;
-
-  return json_matrix;
 }
 
 }  // namespace demo

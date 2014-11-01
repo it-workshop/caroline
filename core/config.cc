@@ -14,6 +14,8 @@ namespace core {
 
 namespace {
 
+const char kDefaultConfigName[] = "config.json";
+
 Json::Features ConfigJsonFeatures() {
   Json::Features features;
   features.allowComments_ = true;
@@ -27,7 +29,8 @@ Json::Features ConfigJsonFeatures() {
 
 Config::Config()
   : parser_(ConfigJsonFeatures()),
-    loaded_(false) {}
+    dictionary_(Json::objectValue),
+    path_(kDefaultConfigName) {}
 
 Config::~Config() {}
 
@@ -38,7 +41,12 @@ std::shared_ptr<Config> Config::GetInstance() {
 }
 
 bool Config::LoadFromFile(const std::string& filename) {
-  std::ifstream file(filename);
+  set_path(base::Path(filename));
+  return Load();
+}
+
+bool Config::Load() {
+  std::ifstream file(path_.spec());
   if (!file.is_open())
     return false;
 
@@ -73,12 +81,11 @@ bool Config::LoadFromString(const std::string& json) {
   }
 
   dictionary_ = root;
-  loaded_ = true;
   return true;
 }
 
 std::string Config::SaveToString() const {
-  return loaded_ ? generator_.write(dictionary_) : std::string();
+  return generator_.write(dictionary_);
 }
 
 bool Config::SaveToFile(const std::string& filename) const {
@@ -92,6 +99,10 @@ bool Config::SaveToFile(const std::string& filename) const {
     return false;
 
   return true;
+}
+
+bool Config::Save() const {
+  return SaveToFile(path_.spec());
 }
 
 }  // namespace core
