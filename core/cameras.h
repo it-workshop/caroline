@@ -11,6 +11,7 @@
 
 namespace core {
 
+class Config;
 class Quaternion;
 
 class Cameras {
@@ -19,9 +20,23 @@ class Cameras {
 
   virtual ~Cameras() {}
 
+  /// Comparasion operator.
+  /// @param [in] that Object to compare with.
+  /// @returns true if objects are equal.
+  bool operator==(const Cameras& that) const;
+
   static cv::Matx33d CameraMatrix(int dpm, double focus_length, int w, int h);
   static cv::Matx34d ProjectiveMatrix(const Quaternion& quat,
                                       const cv::Point3d& pos);
+
+  /// Apply parameters from config, if any.
+  /// @param [in] config Configuration object.
+  /// @returns true on success.
+  bool LoadFromConfig(Config* config);
+
+  /// Save parameters into config.
+  /// @param [in] config Configuration object.
+  void SaveToConfig(Config* config) const;
 
   void set_K1(const cv::Matx33d& K1) { K1_ = K1; }
   void set_K2(const cv::Matx33d& K2) { K2_ = K2; }
