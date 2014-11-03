@@ -93,23 +93,44 @@ void GlobalMessage::GenModel(const core::Scene3D& scene) {
 void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
             core::Position>>& frameset) {
   std::unique_ptr<Message>message(new Message());
-  const cv::Mat& left = frameset[0].first;
-  const cv::Mat& right = frameset[1].first;
+  std::vector<uint8_t> left, right;
+  std::vector<int> prop;
+  prop.push_back(cv::IMWRITE_JPEG_QUALITY);
+  prop.push_back(95);
+  cv::imencode("*.jpeg", frameset[0].first, left, prop);
+  cv::imencode("*.jpeg", frameset[1].first, right, prop);
   message->mutable_images()->mutable_left()->
-      set_width(left.size().width);
+      set_width(frameset[0].first.size().width);
   message->mutable_images()->mutable_left()->
-      set_height(left.size().height);
+      set_height(frameset[0].first.size().height);
   message->mutable_images()->mutable_right()->
-      set_width(right.size().width);
+      set_width(frameset[1].first.size().width);
   message->mutable_images()->mutable_right()->
-      set_height(right.size().height);
-  for (auto it = left.begin<int>(), end = left.end<int>();
-      it != end; ++it) {
-    message->mutable_images()->mutable_left()->add_data(*it);
+      set_height(frameset[1].first.size().height);
+  this->GenLog(std::to_string(left.size()));
+  this->GenLog(std::to_string(right.size()));
+
+  auto it = left.begin(), end = left.end();
+  int data = *it , count = 1;
+  while (it != end) {
+    data << 8;
+    data += *(++it);
+    if (!(count % 4) || it == end) { 
+      message->mutable_images()->mutable_left()->add_data(data);
+      data = 0;
+    }
+    ++count;
   }
-  for (auto it = right.begin<int>(), end = right.end<int>();
-      it != end; ++it) {
-    message->mutable_images()->mutable_right()->add_data(*it);
+  it = right.begin(); end = right.end();
+  data = *it; count = 1;
+  while (it != end) {
+    data << 8;
+    data += *(++it);
+    if(!(count % 4) || it == end) {
+      message->mutable_images()->mutable_right()->add_data(data);
+      data = 0;
+    }
+  count++;
   }
   message->set_type(Message::IMAGES);
   this->MakeMessage(message.get());
