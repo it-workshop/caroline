@@ -8,6 +8,7 @@
 #include "gtest/gtest.h"
 
 #include "core/cameras.h"
+#include "core/config.h"
 #include "core/quaternion.h"
 
 TEST(CamerasPropertiesTest, InitTest) {
@@ -17,9 +18,9 @@ TEST(CamerasPropertiesTest, InitTest) {
                           0, 1, 0,
                           0, 0, 1));
 
-  ASSERT_EQ(cams.K1()(0, 0), 1);
-  ASSERT_EQ(cams.K1()(1, 2), 0);
-  ASSERT_EQ(cams.K1()(2, 2), 1);
+  EXPECT_EQ(1, cams.K1()(0, 0));
+  EXPECT_EQ(0, cams.K1()(1, 2));
+  EXPECT_EQ(1, cams.K1()(2, 2));
 }
 
 TEST(CamerasPropertiesTest, CameraMatrixCompute) {
@@ -31,12 +32,12 @@ TEST(CamerasPropertiesTest, CameraMatrixCompute) {
 
   cv::Matx33d K = core::Cameras::CameraMatrix(dpm, focus_length, w, h);
 
-  ASSERT_EQ(K(0, 0), 50);
-  ASSERT_EQ(K(1, 1), 50);
-  ASSERT_EQ(K(2, 2), 1);
-  ASSERT_EQ(K(0, 1), 0);
-  ASSERT_EQ(K(0, 2), 256);
-  ASSERT_EQ(K(1, 2), 128);
+  EXPECT_EQ(50, K(0, 0));
+  EXPECT_EQ(50, K(1, 1));
+  EXPECT_EQ(1, K(2, 2));
+  EXPECT_EQ(0, K(0, 1));
+  EXPECT_EQ(256, K(0, 2));
+  EXPECT_EQ(128, K(1, 2));
 }
 
 TEST(CamerasPropertiesTest, ProjectiveMatrixCompute) {
@@ -51,9 +52,10 @@ TEST(CamerasPropertiesTest, ProjectiveMatrixCompute) {
 
   cv::Matx34d P = core::Cameras::ProjectiveMatrix(quat, pos);
 
-  ASSERT_TRUE(fabs(P(0, 0) - 1) < epsilon);
-  ASSERT_TRUE(fabs(P(1, 1) - (-1)) < epsilon);
-  ASSERT_TRUE(fabs(P(2, 2) - (-1)) < epsilon);
-  ASSERT_EQ(P(0, 3), 10);
-  ASSERT_TRUE(P(1, 0) < epsilon);
+  EXPECT_GT(epsilon, fabs(P(0, 0) - 1));
+  EXPECT_GT(epsilon, fabs(P(1, 1) - (-1)));
+  EXPECT_GT(epsilon, fabs(P(2, 2) - (-1)));
+  EXPECT_EQ(10, P(0, 3));
+  EXPECT_GT(epsilon, P(1, 0));
 }
+

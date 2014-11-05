@@ -25,10 +25,10 @@ int main(int argc, const char* argv[]) {
   base::CommandLine::ParseArgs(argv, command_line.get());
 
   auto config = core::Config::GetInstance();
-  if (command_line->HasSwitch(core::switches::kConfigSwitch)) {
-    config->LoadFromFile(
-        command_line->GetSwitchData(core::switches::kConfigSwitch));
-  }
+  if (command_line->HasSwitch(core::switches::kConfigSwitch))
+    config->set_path(base::Path(
+        command_line->GetSwitchData(core::switches::kConfigSwitch)));
+  config->Load();
 
   if (command_line->HasSwitch(core::switches::kEnableLogging)) {
     std::string level =

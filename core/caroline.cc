@@ -80,6 +80,8 @@ bool Caroline::Init() {
     }
   }
 
+  cameras_properties_->LoadFromConfig(config_);
+
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::Grab), this));
 
