@@ -104,7 +104,6 @@ void Caroline::Grab() {
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::CalculateOpticalFlow), this, frameset));
-  GrabClock.Log();
 }
 
 void Caroline::CalculateOpticalFlow(
@@ -119,7 +118,6 @@ void Caroline::CalculateOpticalFlow(
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::CalculateDepthMap),
                 this, frameset, optical_flow));
-  Clock1.Log();
 }
 
 void Caroline::CalculateDepthMap(
@@ -167,7 +165,6 @@ void Caroline::CalculateDepthMap(
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::BuildScene), this, depth_map_shared));
-  Clock1.Log();
   Clock::time_log_.ChangeLogAddress("new_time_log");
 }
 
@@ -186,7 +183,6 @@ void Caroline::BuildScene(std::shared_ptr<DepthMap> depth_map) {
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::Grab), this));
-  Clock1.Log();
 }
 
 }  // namespace core

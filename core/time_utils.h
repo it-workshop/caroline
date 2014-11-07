@@ -43,7 +43,7 @@ class Clock {
   void Log();
   const std::string GetName() { return name_; }
   TimeLog GetLog() { return time_log_; }
-  virtual ~Clock() {}
+  ~Clock() { Log(); }
  private:
   clock_t start_moment_;
   std::string name_;
