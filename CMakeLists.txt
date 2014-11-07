@@ -294,6 +294,7 @@ add_module(core STATIC
   core/depth_mesh.cc
   core/device_manager.cc
   core/device_manager.h
+  core/device_manager_linux.cc
   core/image_capture.cc
   core/image_capture.h
   core/image_capture_impl.cc
