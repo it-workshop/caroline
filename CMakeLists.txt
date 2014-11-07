@@ -359,6 +359,8 @@ add_module(core STATIC
   core/triangulation_eigen.h
   core/time_controller.cc
   core/time_controller.h
+  core/time_utils.cc
+  core/time_utils.h
   core/quaternion.cc
   core/quaternion.h
   core/video_time_controller.cc

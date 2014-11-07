@@ -22,6 +22,7 @@
 #include "core/scene3d.h"
 #include "core/serialization.h"
 #include "core/time_controller.h"
+#include "core/time_utils.h"
 #include "opencv2/core/core.hpp"
 
 const std::string kMetricsConfigFieldName = "metrics";
@@ -86,6 +87,7 @@ int Caroline::Run() {
 }
 
 void Caroline::Grab() {
+  Clock GrabClock("Grab");
   if (!image_capture_manager_->GetTimeController()->Grab()) {
     error_code_ = RETURN_OK;
     base::MessageLoop::GetCurrent()->Quit();
@@ -102,10 +104,12 @@ void Caroline::Grab() {
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::CalculateOpticalFlow), this, frameset));
+  GrabClock.Log();
 }
 
 void Caroline::CalculateOpticalFlow(
     std::vector<std::pair<cv::Mat, Position>> frameset) {
+  Clock Clock1("flow");
   auto optical_flow = optical_flow_processor_->Process(
       frameset.at(0).first, frameset.at(1).first);
 
@@ -115,11 +119,13 @@ void Caroline::CalculateOpticalFlow(
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::CalculateDepthMap),
                 this, frameset, optical_flow));
+  Clock1.Log();
 }
 
 void Caroline::CalculateDepthMap(
     std::vector<std::pair<cv::Mat, Position>> frameset,
     std::vector<std::pair<cv::Point2d, cv::Point2d>> optical_flow) {
+  Clock Clock1("map calculation");
   int w = frameset.at(0).first.size().width;
   int h = frameset.at(0).first.size().height;
 
@@ -147,7 +153,6 @@ void Caroline::CalculateDepthMap(
 
   auto depth_map = DepthMap::BuildMap(
         optical_flow, *cameras_properties_, w, h);
-
   if (!metrics_.empty()) {
     std::vector<cv::Mat> src;
     src.push_back(depth_map->AsCVMat());
@@ -162,9 +167,13 @@ void Caroline::CalculateDepthMap(
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::BuildScene), this, depth_map_shared));
+  Clock1.Log();
+  Clock::time_log_.ChangeLogAddress("new_time_log");
 }
 
 void Caroline::BuildScene(std::shared_ptr<DepthMap> depth_map) {
+  Clock Clock1("scene building");
+
   std::unique_ptr<Mesh> mesh(new DepthMesh(*depth_map, 0, INT_MAX));
   std::unique_ptr<Scene3D> scene(new Scene3D);
 
@@ -177,6 +186,7 @@ void Caroline::BuildScene(std::shared_ptr<DepthMap> depth_map) {
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::Grab), this));
+  Clock1.Log();
 }
 
 }  // namespace core

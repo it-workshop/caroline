@@ -85,6 +85,11 @@ int StereoCalibDemo::Run() {
   calib.HarvestChessboardIdealPointList(x, y, sq_size);
 
   cam = calib.calibrate(x, y, sq_size);
+<<<<<<< HEAD
+=======
+
+  cam.SaveToConfig(config());
+>>>>>>> #CAROLINE-41/1: Raw version of performance measurement is implemented via Clock and TimeLog classes. Examples of usage are in caroline.cc Also some minor style fixes are made to satisfy linter.
 
   cam.SaveToConfig();
 
