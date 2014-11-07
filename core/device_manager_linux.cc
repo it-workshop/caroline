@@ -48,7 +48,7 @@ std::vector<DeviceManager::Device> LinuxDeviceManager::GetDevices() const {
     device.index = device_index;
     devices.push_back(device);
     ++device_index;
-    close(path);
+    close(descriptor);
   }
   return devices;
 }
