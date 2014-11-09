@@ -337,6 +337,10 @@ add_module(core STATIC
   core/point_cloud.cc
   core/position.cc
   core/position.h
+  core/preferences.h
+  core/preferences.cc
+  core/preferences_service.h
+  core/preferences_service.cc
   core/return_codes.h
   core/rotation_matrix.cc
   core/rotation_matrix.h
@@ -396,7 +400,8 @@ add_application(unit_tests
   core/filter_unittest.cc
   core/metric_unittest.cc
   core/opencv_unittest.cc
-  core/opencv_unittest.cc
+  core/filter_unittest.cc
+  core/preferences_unittest.cc
   core/recognise_unittest.cc
   core/scene_unittest.cc
   core/scene_unittest.cc
