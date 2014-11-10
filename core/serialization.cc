@@ -111,10 +111,10 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
   this->GenLog(std::to_string(right.size()));
 
   auto it = left.begin(), end = left.end();
-  int data = *it , count = 1;
+  int data = 0 , count = 0;
   while (it != end) {
     data << 8;
-    data += *(++it);
+    data += *(it++);
     if (!(count % 4) || it == end) { 
       message->mutable_images()->mutable_left()->add_data(data);
       data = 0;
@@ -122,10 +122,10 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
     ++count;
   }
   it = right.begin(); end = right.end();
-  data = *it; count = 1;
+  data = 0; count = 0;
   while (it != end) {
     data << 8;
-    data += *(++it);
+    data += *(it++);
     if(!(count % 4) || it == end) {
       message->mutable_images()->mutable_right()->add_data(data);
       data = 0;
