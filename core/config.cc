@@ -32,6 +32,11 @@ Config::Config()
     dictionary_(Json::objectValue),
     path_(kDefaultConfigName) {}
 
+Config::Config(const Json::Value& dictionary)
+  : parser_(ConfigJsonFeatures()),
+    dictionary_(dictionary),
+    loaded_(true) {}
+
 Config::~Config() {}
 
 // static
@@ -41,14 +46,10 @@ std::shared_ptr<Config> Config::GetInstance() {
 }
 
 bool Config::LoadFromFile(const std::string& filename) {
-  set_path(base::Path(filename));
-  return Load();
-}
-
-bool Config::Load() {
-  std::ifstream file(path_.spec());
-  if (!file.is_open())
+  std::ifstream file(filename);
+  if (!file.is_open()) {
     return false;
+  }
 
   file.seekg(0, std::ios_base::end);
   size_t size = (size_t) file.tellg();
@@ -65,7 +66,7 @@ bool Config::Load() {
 
 bool Config::LoadFromString(const std::string& json) {
   Json::Value root;
-  if (parser_.parse(json, root, true)) {
+  if (!parser_.parse(json, root, true)) {
     std::vector<Json::Reader::StructuredError> errors =
         parser_.getStructuredErrors();
     for (auto error : errors) {

@@ -18,6 +18,7 @@ namespace core {
 class Config {
  public:
   Config();
+  explicit Config(const Json::Value& dictionary);
   virtual ~Config();
 
   static std::shared_ptr<Config> GetInstance();

@@ -9,13 +9,12 @@
 #include <memory>
 #include <string>
 
-#include "base/singleton.h"
+#include "base/macro.h"
+#include "core/preferences.h"
 
 namespace core {
 
-class Preferences;
-
-class PrefService : public base::Singleton<PrefService> {
+class PrefService {
  public:
   enum class PrefType {
     BAD,
@@ -27,11 +26,11 @@ class PrefService : public base::Singleton<PrefService> {
     DICTIONARY
   };
 
-  PrefService();
+  PrefService() {}
   virtual ~PrefService() {}
 
-  bool IsRegistered(const std::string& name) const;
-  PrefType Type(const std::string& name) const;
+  bool IsRegistered(const std::string& name);
+  PrefType Type(const std::string& name);
 
   bool Register(PrefType type, const std::string& name, bool value);
   bool Register(PrefType type, const std::string& name, int value);
@@ -40,42 +39,30 @@ class PrefService : public base::Singleton<PrefService> {
     const std::string& value);
   bool Register(PrefType type, const std::string& name);
 
-  bool GetBool(const std::string& name) const;
-  int GetInt(const std::string& name) const;
-  double GetFloat(const std::string& name) const;
-  std::string GetString(const std::string& name) const;
+  bool GetBool(const std::string& name);
+  int GetInt(const std::string& name);
+  double GetFloat(const std::string& name);
+  std::string GetString(const std::string& name);
 
-  template<typename T>
-  T GetValue(const std::string& name) const;
+  bool SetBool(const std::string& name, bool value);
+  bool SetInt(const std::string& name, int value);
+  bool SetFloat(const std::string& name, double value);
+  bool SetString(const std::string& name, const std::string& value);
+
+  bool LoadFromConfig(const std::string& filename);
+  bool WriteToConfig(const std::string& filename);
 
  protected:
+  PrefType Type(const Json::Value& value);
+
   std::string Path(const std::string& name);
   std::string Name(const std::string& name);
 
  private:
-  std::unique_ptr<Preferences> prefs_;
+  Preferences prefs_;
 };
-
-template<>
-bool PrefService::GetValue<bool>(const std::string& name) const {
-  return GetBool(name);
-}
-
-template<>
-int PrefService::GetValue<int>(const std::string& name) const {
-  return GetInt(name);
-}
-
-template<>
-double PrefService::GetValue<double>(const std::string& name) const {
-  return GetFloat(name);
-}
-
-template<>
-std::string PrefService::GetValue<std::string>(const std::string& name) const {
-  return GetString(name);
-}
 
 }  // namespace core
 
 #endif  // CORE_PREFERENCES_SERVICE_H_
+

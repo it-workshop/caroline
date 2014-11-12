@@ -14,8 +14,10 @@ namespace core {
 
 class Preferences {
  public:
-  Preferences();
-  virtual ~Preferences();
+  Preferences() {}
+  explicit Preferences(const Json::Value& dictionary);
+
+  virtual ~Preferences() {}
 
   static const char kNameSeparator = '.';
 
@@ -25,11 +27,17 @@ class Preferences {
 
   Json::Value *Get(const std::string& name);
 
+  Json::Value::Members AtomicMembers() const;
+
  private:
   Json::Value dictionary_;
+
+  void AtomicMembers(const std::string& name,
+    const Json::Value& value, Json::Value::Members* members) const;
 };
 
 }  // namespace core
 
 
 #endif  // CORE_PREFERENCES_H_
+

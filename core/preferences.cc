@@ -13,9 +13,8 @@
 
 namespace core {
 
-Preferences::Preferences() {}
-
-Preferences::~Preferences() {}
+Preferences::Preferences(const Json::Value& dictionary)
+  : dictionary_(dictionary) {}
 
 bool Preferences::Add(const std::string& path,
   const std::string& name, const Json::Value& value) {
@@ -53,6 +52,10 @@ bool Preferences::Add(const std::string& name, const Json::Value& value) {
 }
 
 Json::Value *Preferences::Get(const std::string& name) {
+  if (name.empty()) {
+    return &dictionary_;
+  }
+
   std::vector<std::string> strings;
   std::istringstream f(name);
   std::string s;
@@ -78,4 +81,36 @@ Json::Value *Preferences::Get(const std::string& name) {
   }
 }
 
+Json::Value::Members Preferences::AtomicMembers() const {
+  Json::Value::Members members;
+  Json::Value::Members curr_members = dictionary_.getMemberNames();
+
+  for (size_t i = 0; i < curr_members.size(); ++i) {
+    std::string curr_name = curr_members.at(i);
+    if (dictionary_[curr_name].isObject()) {
+      AtomicMembers(curr_name, dictionary_[curr_name], &members);
+    } else {
+      members.push_back(curr_name);
+    }
+  }
+
+  return members;
+}
+
+void Preferences::AtomicMembers(const std::string& name,
+  const Json::Value& value, Json::Value::Members* members) const {
+  Json::Value::Members curr_members = value.getMemberNames();
+
+  for (size_t i = 0; i < curr_members.size(); ++i) {
+    std::string curr_name = curr_members.at(i);
+    if (value[curr_name].isObject()) {
+      AtomicMembers(name + kNameSeparator + curr_name,
+        value[curr_name], members);
+    } else {
+      members->push_back(name + kNameSeparator + curr_name);
+    }
+  }
+}
+
 }  // namespace core
+

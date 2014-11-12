@@ -402,6 +402,7 @@ add_application(unit_tests
   core/opencv_unittest.cc
   core/filter_unittest.cc
   core/preferences_unittest.cc
+  core/preferences_service_unittest.cc
   core/recognise_unittest.cc
   core/scene_unittest.cc
   core/scene_unittest.cc
