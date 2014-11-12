@@ -13,6 +13,9 @@
 
 namespace core {
 
+Preferences::Preferences()
+  : dictionary_(Json::Value(Json::objectValue)) {}
+
 Preferences::Preferences(const Json::Value& dictionary)
   : dictionary_(dictionary) {}
 
