@@ -133,6 +133,12 @@ Json::Value* PrefService::GetDict(const std::string& name) {
   return nullptr;
 }
 
+Json::Value* PrefService::GetList(const std::string& name) {
+  if (Type(name) == PrefType::LIST)
+    return prefs_->Get(name);
+  return nullptr;
+}
+
 bool PrefService::SetBool(const std::string& name, bool value) {
   if (Type(name) == PrefType::BOOLEAN) {
     *(prefs_->Get(name)) = Json::Value(value);

@@ -5,7 +5,10 @@
 
 #include "core/demo/stereo_calib_demo.h"
 
+#include <string>
+
 #include "core/cameras.h"
+#include "core/preferences_service.h"
 
 namespace {
 
@@ -24,9 +27,8 @@ namespace demo {
 // static
 const char StereoCalibDemo::kDemoName[] = "stereo_calib";
 
-StereoCalibDemo::StereoCalibDemo(base::CommandLine* command_line,
-                                 core::Config* config)
-  : Caroline(command_line, config),
+StereoCalibDemo::StereoCalibDemo(base::CommandLine* command_line)
+  : Caroline(command_line),
     cap_number1_(2),
     cap_number2_(1) {
 }
@@ -86,7 +88,31 @@ int StereoCalibDemo::Run() {
   
   cam.SaveToConfig(config());
 
-  config()->Save();
+  Json::Value json_K1 = MatxToJSON(cv::Mat(cam.K1()));
+  Json::Value json_K2 = MatxToJSON(cv::Mat(cam.K2()));
+  Json::Value json_P1 = MatxToJSON(cv::Mat(cam.P1()));
+  Json::Value json_P2 = MatxToJSON(cv::Mat(cam.P2()));
+  Json::Value json_D1 = MatxToJSON(cam.D1());
+  Json::Value json_D2 = MatxToJSON(cam.D2());
+  Json::Value json_R = MatxToJSON(cv::Mat(cam.R()));
+  Json::Value json_T = MatxToJSON(cv::Mat(cam.T()));
+
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  if (!prefs) {
+    return core::RETURN_OK;
+  }
+  Json::Value *dict = prefs->GetDict(std::string());
+
+  (*dict)["K1"] = json_K1;
+  (*dict)["K2"] = json_K2;
+  (*dict)["P1"] = json_P1;
+  (*dict)["P2"] = json_P2;
+  (*dict)["D1"] = json_D1;
+  (*dict)["D2"] = json_D2;
+  (*dict)["R"] = json_R;
+  (*dict)["T"] = json_T;
+
+  prefs->WriteToConfig("../im/calib_param");
 
   return core::RETURN_OK;
 }

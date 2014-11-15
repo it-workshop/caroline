@@ -35,11 +35,13 @@ OpticalFlowProcessor::Create() {
     + kNameSeparator + kAlgorithmNameNode);
 
   if (kLucasKanadeAlgorithmName == algorithm_name) {
-    return LucasKanadeOpticalFlowProcessor::Create(*prefs->GetDict(kOpticalFlowNode));
+    return LucasKanadeOpticalFlowProcessor::Create(
+      *prefs->GetDict(kOpticalFlowNode));
   }
 
   if (kFarnebackAlgorithmName == algorithm_name) {
-    return FarnebackOpticalFlowProcessor::Create(*prefs->GetDict(kOpticalFlowNode));
+    return FarnebackOpticalFlowProcessor::Create(
+      *prefs->GetDict(kOpticalFlowNode));
   }
 
   // There is no matched algorithm. Return empty pointer.

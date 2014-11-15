@@ -11,7 +11,7 @@
 
 #include "base/message_loop.h"
 #include "core/cameras.h"
-#include "core/config.h"
+#include "core/preferences_service.h"
 #include "core/depth_map.h"
 #include "core/depth_mesh.h"
 #include "core/image_capture_manager.h"
@@ -28,9 +28,8 @@ const std::string kMetricsConfigFieldName = "metrics";
 
 namespace core {
 
-Caroline::Caroline(base::CommandLine* command_line, Config* config)
+Caroline::Caroline(base::CommandLine* command_line)
   : command_line_(command_line),
-    config_(config),
     cameras_properties_(new Cameras),
     message_(new bitdata::GlobalMessage),
     send_message_(false),
@@ -41,13 +40,38 @@ Caroline::Caroline(base::CommandLine* command_line, Config* config)
 Caroline::~Caroline() {}
 
 bool Caroline::Init() {
-  image_capture_manager_ = ImageCaptureManager::Create(config_);
+  image_capture_manager_ = ImageCaptureManager::Create();
   optical_flow_processor_ = OpticalFlowProcessor::Create();
   send_message_ = message_->SetOStream(config_);
   if (send_message_)
     base::Logger::GetInstance()->AddObserver(message_.get());
   receive_message_ = message_->SetIStream(config_);
-  const Json::Value* dictionary = config_->dictionary();
+
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  if (!prefs) {
+    return false;
+  }
+
+  const Json::Value* dictionary = prefs->GetDict(std::string());
+  if (dictionary && dictionary->isMember(kOStreamConfigFieldName)) {
+    const Json::Value& address_node = (*dictionary)[kOStreamConfigFieldName];
+    if (address_node.isString()) {
+      const std::string& address = address_node.asString();
+      message_->SetOStream(address);
+      base::Logger::GetInstance()->AddObserver(message_.get());
+      send_message_ = true;
+    }
+  }
+  if (dictionary && dictionary->isMember(kIStreamConfigFieldName)) {
+    const Json::Value& input_address = (*dictionary)[kIStreamConfigFieldName];
+    if (input_address.isString()) {
+      const std::string& address = input_address.asString();
+      message_->SetIStream(address);
+      receive_message_ = true;
+    }
+  }
+
+>>>>>>> wp/CAROLINE-37/1: remove config dependent and add prefservice to app.
   if (dictionary && dictionary->isMember(kMetricsConfigFieldName)) {
     const Json::Value* metric_names = &(*dictionary)[kMetricsConfigFieldName];
     if (metric_names->isArray()) {

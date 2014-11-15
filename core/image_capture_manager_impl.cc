@@ -10,16 +10,19 @@
 #include <vector>
 #include <utility>
 
-#include "core/config.h"
 #include "core/image_capture_impl.h"
 #include "core/image_time_controller.h"
 #include "core/position.h"
+#include "core/preferences_service.h"
 #include "core/video_time_controller.h"
 #include "opencv2/core/core.hpp"
+#include "json/value.h"
 
 namespace core {
 
 namespace {
+
+const char kNameSeparator = '.';
 
 // {
 const char kTimeSettingsNode[] = "time";
@@ -56,12 +59,14 @@ const double kDpiToDpmMultiplier = 39.37;
 
 // static
 std::unique_ptr<ImageCaptureManager>
-ImageCaptureManager::Create(const Config* config) {
+ImageCaptureManager::Create() {
   std::unique_ptr<ImageCaptureManager> manager;
-  if (!config)
+
+  PrefService* prefs = PrefService::GetInstance();
+  if (!prefs)
     return manager;
 
-  const Json::Value* config_root = config->dictionary();
+  const Json::Value* config_root = prefs->GetDict(std::string());
   if (!config_root || config_root->isMember(kTimeSettingsNode))
     return manager;
 

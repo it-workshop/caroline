@@ -3,12 +3,8 @@
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
 
-#ifndef CORE_PREFS_REGISTRATION_H_
-#define CORE_PREFS_REGISTRATION_H_
 
-#include <string>
-
-#include "core/preferences_service.h"
+#include "core/preferences_registration.h"
 
 namespace {
 
@@ -17,7 +13,7 @@ const std::string kAlgorithmNameNode = "algorithm";
 const std::string kLucasKanadeAlgorithmName = "lucas-kanade";
 const std::string kFarnebackAlgorithmName = "farneback";
 
-}
+}  // namespace
 
 namespace core {
 
@@ -40,5 +36,3 @@ bool RegisterOpticalFlow() {
 }
 
 }  // namespace core
-
-#endif  // CORE_PREFS_REGISTRATION_H_
