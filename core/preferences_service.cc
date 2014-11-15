@@ -7,9 +7,11 @@
 
 #include <algorithm>
 #include <string>
+#include <memory>
 
 #include "base/logging.h"
-#include "core/config.h"
+
+INSTANCE_SINGLETON(core::PrefService);
 
 namespace {
 
@@ -22,12 +24,19 @@ const std::string kDefaultString = "";
 
 namespace core {
 
+PrefService::PrefService()
+  : prefs_(std::unique_ptr<Preferences>(new Preferences)) {}
+
+bool PrefService::Init() {
+  return new PrefService();
+}
+
 bool PrefService::IsRegistered(const std::string& name) {
-  return (prefs_.Get(name) != nullptr);
+  return (prefs_->Get(name) != nullptr);
 }
 
 PrefService::PrefType PrefService::Type(const std::string& name) {
-  return Type(*prefs_.Get(name));
+  return Type(*prefs_->Get(name));
 }
 
 PrefService::PrefType PrefService::Type(const Json::Value& value) {
@@ -46,64 +55,48 @@ PrefService::PrefType PrefService::Type(const Json::Value& value) {
   return PrefType::BAD;
 }
 
-bool PrefService::Register(PrefType type,
-  const std::string& name, bool value) {
-  if (type == PrefType::BOOLEAN) {
-    return prefs_.Add(Path(name), Name(name), Json::Value(value));
-  } else {
-    return false;
-  }
+bool PrefService::RegisterBool(const std::string& name, bool value) {
+  return prefs_->Add(name, Json::Value(value));
 }
 
-bool PrefService::Register(PrefType type,
-  const std::string& name, int value) {
-  if (type == PrefType::INTEGER) {
-    return prefs_.Add(Path(name), Name(name), Json::Value(value));
-  } else {
-    return false;
-  }
+bool PrefService::RegisterInt(const std::string& name, int value) {
+  return prefs_->Add(name, Json::Value(value));
 }
 
-bool PrefService::Register(PrefType type,
-  const std::string& name, double value) {
-  if (type == PrefType::FLOAT) {
-    return prefs_.Add(Path(name), Name(name), Json::Value(value));
-  } else {
-    return false;
-  }
+bool PrefService::RegisterFloat(const std::string& name, double value) {
+  return prefs_->Add(name, Json::Value(value));
 }
 
-bool PrefService::Register(PrefType type,
+bool PrefService::RegisterString(
   const std::string& name, const std::string& value) {
-  if (type == PrefType::STRING) {
-    return prefs_.Add(Path(name), Name(name), Json::Value(std::string(value)));
-  } else {
-    return false;
-  }
+  return prefs_->Add(name, Json::Value(std::string(value)));
 }
 
+bool PrefService::RegisterDict(const std::string& name) {
+  return prefs_->Add(name, Json::Value(Json::objectValue));
+}
 
 bool PrefService::Register(PrefType type, const std::string& name) {
   switch (type) {
   case PrefType::BAD:
     return false;
   case PrefType::BOOLEAN:
-    return prefs_.Add(Path(name), Name(name),
+    return prefs_->Add(name,
       Json::Value(kDefaultBool));
   case PrefType::INTEGER:
-    return prefs_.Add(Path(name), Name(name),
+    return prefs_->Add(name,
       Json::Value(kDefaultInt));
   case PrefType::FLOAT:
-    return prefs_.Add(Path(name), Name(name),
+    return prefs_->Add(name,
       Json::Value(kDefaultFloat));
   case PrefType::STRING:
-    return prefs_.Add(Path(name), Name(name),
+    return prefs_->Add(name,
       Json::Value(kDefaultString));
   case PrefType::LIST:
-    return prefs_.Add(Path(name), Name(name),
+    return prefs_->Add(name,
       Json::Value(Json::arrayValue));
   case PrefType::DICTIONARY:
-    return prefs_.Add(Path(name), Name(name),
+    return prefs_->Add(name,
       Json::Value(Json::objectValue));
   default:
     return false;
@@ -112,31 +105,31 @@ bool PrefService::Register(PrefType type, const std::string& name) {
 
 bool PrefService::GetBool(const std::string& name) {
   if (Type(name) == PrefType::BOOLEAN)
-    return prefs_.Get(name)->asBool();
+    return prefs_->Get(name)->asBool();
   return kDefaultBool;
 }
 
 int PrefService::GetInt(const std::string& name) {
   if (Type(name) == PrefType::INTEGER)
-    return prefs_.Get(name)->asInt();
+    return prefs_->Get(name)->asInt();
   return kDefaultInt;
 }
 
 double PrefService::GetFloat(const std::string& name) {
   if (Type(name) == PrefType::FLOAT)
-    return prefs_.Get(name)->asDouble();
+    return prefs_->Get(name)->asDouble();
   return kDefaultFloat;
 }
 
 std::string PrefService::GetString(const std::string& name) {
   if (Type(name) == PrefType::STRING)
-    return prefs_.Get(name)->asString();
+    return prefs_->Get(name)->asString();
   return kDefaultString;
 }
 
 bool PrefService::SetBool(const std::string& name, bool value) {
   if (Type(name) == PrefType::BOOLEAN) {
-    *(prefs_.Get(name)) = Json::Value(value);
+    *(prefs_->Get(name)) = Json::Value(value);
     return (GetBool(name) == value);
   }
   return false;
@@ -144,7 +137,7 @@ bool PrefService::SetBool(const std::string& name, bool value) {
 
 bool PrefService::SetInt(const std::string& name, int value) {
   if (Type(name) == PrefType::INTEGER) {
-    *(prefs_.Get(name)) = Json::Value(value);
+    *(prefs_->Get(name)) = Json::Value(value);
     return (GetInt(name) == value);
   }
   return false;
@@ -152,7 +145,7 @@ bool PrefService::SetInt(const std::string& name, int value) {
 
 bool PrefService::SetFloat(const std::string& name, double value) {
   if (Type(name) == PrefType::FLOAT) {
-    *(prefs_.Get(name)) = Json::Value(value);
+    *(prefs_->Get(name)) = Json::Value(value);
     return (GetFloat(name) == value);
   }
   return false;
@@ -160,26 +153,20 @@ bool PrefService::SetFloat(const std::string& name, double value) {
 
 bool PrefService::SetString(const std::string& name, const std::string& value) {
   if (Type(name) == PrefType::STRING) {
-    *(prefs_.Get(name)) = Json::Value(value);
+    *(prefs_->Get(name)) = Json::Value(value);
     return (GetString(name) == value);
   }
   return false;
 }
 
 bool PrefService::LoadFromConfig(const std::string& filename) {
-  Config config;
-  if (!config.LoadFromFile(filename)) {
+  Preferences pref_config;
+  if (!pref_config.LoadFromFile(filename)) {
     LOG(WARNING) << "Can't load config.";
     return false;
   }
 
-  if (!config.dictionary()) {
-    LOG(WARNING) << "Config without dictionary.";
-    return false;
-  }
-
-  Preferences pref_config(*config.dictionary());
-  Json::Value::Members pref_members = prefs_.AtomicMembers();
+  Json::Value::Members pref_members = prefs_->AtomicMembers();
   Json::Value::Members conf_members = pref_config.AtomicMembers();
   Json::Value::Members both_members;
 
@@ -236,17 +223,7 @@ bool PrefService::LoadFromConfig(const std::string& filename) {
 }
 
 bool PrefService::WriteToConfig(const std::string& filename) {
-  Config config(*prefs_.Get(std::string()));
-  return config.SaveToFile(filename);
-}
-
-std::string PrefService::Path(const std::string& name) {
-  int found = name.find_last_of(Preferences::kNameSeparator);
-  return found == -1 ? "" : name.substr(0, found);
-}
-
-std::string PrefService::Name(const std::string& name) {
-  return name.substr(name.find_last_of(Preferences::kNameSeparator) + 1);
+  return prefs_->SaveToFile(filename);
 }
 
 }  // namespace core

@@ -8,7 +8,8 @@
 
 #include <string>
 
-#include "json/value.h"
+#include "json/reader.h"
+#include "json/writer.h"
 
 namespace core {
 
@@ -19,9 +20,6 @@ class Preferences {
   explicit Preferences(const Json::Value& dictionary);
   /// Destructor.
   virtual ~Preferences() {}
-
-  /// Separator for the names of hierarchical structures.
-  static const char kNameSeparator = '.';
 
   /// Adds new value to the storage.
   /// Can use hierarchical structures.
@@ -47,7 +45,25 @@ class Preferences {
   /// @returns The list of atomic elements.
   Json::Value::Members AtomicMembers() const;
 
+  bool LoadFromFile(const std::string& filename);
+  bool LoadFromString(const std::string& json);
+
+  std::string SaveToString() const;
+  bool SaveToFile(const std::string& filename) const;
+
+ protected:
+  /// Computes the path to value in storage.
+  /// @param[in] name Value name.
+  /// @returns Path of the value.
+  std::string Path(const std::string& name);
+  /// Computes the name of value in storage.
+  /// @param[in] name Value name.
+  /// @returns Name of the value.
+  std::string Name(const std::string& name);
+
  private:
+  Json::Reader parser_;
+  mutable Json::StyledWriter generator_;
   /// Storage for parameters of the Json object type.
   Json::Value dictionary_;
 

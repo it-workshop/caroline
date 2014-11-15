@@ -9,14 +9,14 @@
 #include <memory>
 #include <string>
 
-#include "base/macro.h"
+#include "base/singleton.h"
 #include "core/preferences.h"
 
 namespace core {
 
 /// Implementatio of preferences service.
 /// You can register, set and get different properties from this.
-class PrefService {
+class PrefService : public base::Singleton<PrefService>{
  public:
   /// All possible types of content.
   enum class PrefType {
@@ -29,9 +29,11 @@ class PrefService {
     DICTIONARY
   };
 
-  PrefService() {}
+  PrefService();
   /// Destructor.
   virtual ~PrefService() {}
+
+  static bool Init();
 
   /// Computes, is value registered.
   /// @param[in] name Value name.
@@ -43,18 +45,20 @@ class PrefService {
   PrefType Type(const std::string& name);
 
   /// Try to register new boolean value in storage.
-  /// @param[in] type The type of new value.
   /// @param[in] name Value name.
   /// @param[in] value Value to register.
   /// @returns true, if successfully registered.
-  bool Register(PrefType type, const std::string& name, bool value);
+  bool RegisterBool(const std::string& name, bool value);
   /// Overloaded version of the functions above to work with integer values.
-  bool Register(PrefType type, const std::string& name, int value);
+  bool RegisterInt(const std::string& name, int value);
   /// Overloaded version of the functions above to work with double values.
-  bool Register(PrefType type, const std::string& name, double value);
+  bool RegisterFloat(const std::string& name, double value);
   /// Overloaded version of the functions above to work with strings.
-  bool Register(PrefType type, const std::string& name,
-    const std::string& value);
+  bool RegisterString(const std::string& name, const std::string& value);
+  /// Try to register dictionary value in storage.
+  /// @param[in] name Value name.
+  /// @returns true, if successfully registered.
+  bool RegisterDict(const std::string& name);
   /// Try to register new property, and sets the default value.
   /// This function can be used for registration of composite objects.
   /// @param[in] type The type of new value.
@@ -99,18 +103,9 @@ class PrefService {
  protected:
   PrefType Type(const Json::Value& value);
 
-  /// Computes the path to value in storage.
-  /// @param[in] name Value name.
-  /// @returns Path of the value.
-  std::string Path(const std::string& name);
-  /// Computes the name of value in storage.
-  /// @param[in] name Value name.
-  /// @returns Name of the value.
-  std::string Name(const std::string& name);
-
  private:
   /// Storage of the properties.
-  Preferences prefs_;
+  std::unique_ptr<Preferences> prefs_;
 };
 
 }  // namespace core
