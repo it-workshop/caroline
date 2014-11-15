@@ -282,8 +282,6 @@ add_module(core STATIC
   core/cameras.h
   core/caroline.cc
   core/caroline.h
-  core/config.cc
-  core/config.h
   core/demo/flowdemo.cc
   core/demo/flowdemo.h
   core/demo/stereo_calib_demo.cc
@@ -339,6 +337,8 @@ add_module(core STATIC
   core/position.h
   core/preferences.h
   core/preferences.cc
+  core/preferences_registration.h
+  core/preferences_registration.cc
   core/preferences_service.h
   core/preferences_service.cc
   core/return_codes.h
