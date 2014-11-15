@@ -24,6 +24,7 @@
 #include "core/time_controller.h"
 #include "core/time_utils.h"
 #include "opencv2/core/core.hpp"
+#include "core/time_performance_field_names.h"
 
 const std::string kMetricsConfigFieldName = "metrics";
 
@@ -87,7 +88,7 @@ int Caroline::Run() {
 }
 
 void Caroline::Grab() {
-  Clock GrabClock("Grab");
+  Clock GrabClock(kGrabPerformance);
   if (!image_capture_manager_->GetTimeController()->Grab()) {
     error_code_ = RETURN_OK;
     base::MessageLoop::GetCurrent()->Quit();
@@ -108,7 +109,7 @@ void Caroline::Grab() {
 
 void Caroline::CalculateOpticalFlow(
     std::vector<std::pair<cv::Mat, Position>> frameset) {
-  Clock Clock1("flow");
+  Clock FlowClock(kFlowPerformance);
   auto optical_flow = optical_flow_processor_->Process(
       frameset.at(0).first, frameset.at(1).first);
 
@@ -123,7 +124,7 @@ void Caroline::CalculateOpticalFlow(
 void Caroline::CalculateDepthMap(
     std::vector<std::pair<cv::Mat, Position>> frameset,
     std::vector<std::pair<cv::Point2d, cv::Point2d>> optical_flow) {
-  Clock Clock1("map calculation");
+  Clock MapCalcClock(kMapCalculationPerformance);
   int w = frameset.at(0).first.size().width;
   int h = frameset.at(0).first.size().height;
 
@@ -168,7 +169,7 @@ void Caroline::CalculateDepthMap(
 }
 
 void Caroline::BuildScene(std::shared_ptr<DepthMap> depth_map) {
-  Clock Clock1("scene building");
+  Clock BuildSceneClock(kSceneBuildingPerformance);
 
   std::unique_ptr<Mesh> mesh(new DepthMesh(*depth_map, 0, INT_MAX));
   std::unique_ptr<Scene3D> scene(new Scene3D);

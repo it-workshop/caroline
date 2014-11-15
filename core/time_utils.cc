@@ -7,7 +7,6 @@
 
 #include <cinttypes>
 #include <ctime>
-#include <fstream>  // NOLINT
 #include <vector>
 #include <string>
 
