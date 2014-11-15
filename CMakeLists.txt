@@ -407,6 +407,7 @@ add_application(unit_tests
   core/recognise_unittest.cc
   core/scene_unittest.cc
   core/scene_unittest.cc
+  core/time_utils_unittest.cc
   unit_tests_main.cc
   )
 target_link_libraries(unit_tests

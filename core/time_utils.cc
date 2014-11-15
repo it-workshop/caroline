@@ -5,45 +5,41 @@
 
 #include "core/time_utils.h"
 
+#include <cinttypes>
 #include <ctime>
 #include <fstream>  // NOLINT
 #include <vector>
 #include <string>
 
-#include "base/path.h"
+#include "base/logging.h"
+#include "base/singleton.h"
+
+INSTANCE_SINGLETON(core::TimeLog)
 
 namespace core {
 
-TimeLog::TimeLog() {
-  log_address_ = "TimeLog.txt";
-//  timetable_ = new std::vector<std::vector<double>>;
-//  name_ = new std::vector<std::string>;
-//  average_ = new std::vector<double>;
-//  summary_ = new std::vector<double>;
-}
-
-void TimeLog::AddEntry(std::string name, double time) {
-  bool FoundInLog = false;
-  for (int i = 0; i < timetable_.size() && !FoundInLog; i++) {
-    if (!name.compare(timetable_.at(i).name_)) {
-      timetable_.at(i).data_.push_back(time);
-      FoundInLog = true;
+void TimeLog::AddEntry(std::string name, uint64_t time) {
+  bool found_in_log = false;
+  for (int i = 0; i < timetable_.size() && !found_in_log; i++) {
+    if (!name.compare(timetable_.at(i).name)) {
+      timetable_.at(i).data.push_back(time);
+      found_in_log = true;
     }
   }
-  if (!FoundInLog) {
+  if (!found_in_log) {
     Column column;
-    column.name_ = name;
-    column.data_.push_back(time);
+    column.name = name;
+    column.data.push_back(time);
     timetable_.push_back(column);
   }
 }
 
 void TimeLog::FindAverage() {
   for (int i = 0; i < timetable_.size(); i++) {
-    double sum = 0;
-    for (int j = 0; j < timetable_.at(i).data_.size(); j++)
-      sum += timetable_.at(i).data_.at(j);
-    timetable_.at(i).average_ = sum / timetable_.at(i).data_.size();
+    uint64_t sum = 0;
+    for (int j = 0; j < timetable_.at(i).data.size(); j++)
+      sum += timetable_.at(i).data.at(j);
+    timetable_.at(i).average = sum / timetable_.at(i).data.size();
   }
 }
 
@@ -51,46 +47,30 @@ void TimeLog::FindSum() {
   summary_.clear();
   int iter_number = 0;
   for (int i = 0; i < timetable_.size(); i++) {
-    if (iter_number < timetable_.at(i).data_.size())
-      iter_number = timetable_.at(i).data_.size();
+    if (iter_number < timetable_.at(i).data.size())
+      iter_number = timetable_.at(i).data.size();
   }
   for (int j = 0; j < iter_number; j++) {
-    double sum = 0;
+    uint64_t sum = 0;
     for (int i = 0; i < timetable_.size(); i++) {
-      if (j < timetable_.at(i).data_.size())
-        sum += timetable_.at(i).data_.at(j);
+      if (j < timetable_.at(i).data.size())
+        sum += timetable_.at(i).data.at(j);
     }
     summary_.push_back(sum);
   }
 }
 
-bool TimeLog::PutToLog() {
-  std::fstream file;
-  file.open(log_address_, std::fstream::out);
-  if (!file.is_open())
-    return false;
+void TimeLog::PutToLog() {
   for (int i = 0; i < timetable_.size(); i++) {
-    std::string str;
-    str.append(timetable_.at(i).name_);
-    str.append(" is running for average of ");
-    str.append(std::to_string(timetable_.at(i).average_));
-    str.append(" seconds.\n");
-    file.write(str.c_str(), str.size());
+    Column& column = timetable_.at(i);
+    LOG(INFO) << column.name <<
+      " is running of average of " <<
+      column.average << " microseconds.\n";
   }
   for (int i = 0; i < summary_.size(); i++) {
-    std::string str;
-    str.append("Iteration ");
-    str.append(std::to_string(i+1));
-    str.append(" ran for ");
-    str.append(std::to_string(summary_.at(i)));
-    str.append(" seconds.\n");
-    file.write(str.c_str(), str.size());
+    LOG(INFO) << "Iteration " << i << " ran for " <<
+      summary_.at(i) << " microseconds.\n";
   }
-  if (file.fail() || file.bad())
-    return false;
-
-  file.close();
-  return true;
 }
 
 TimeLog::~TimeLog() {
@@ -99,30 +79,23 @@ TimeLog::~TimeLog() {
   PutToLog();
 }
 
-TimeLog Clock::time_log_;
-
-Clock::Clock() {
-  start_moment_ = clock();
-}
-
 Clock::Clock(std::string name) {
   start_moment_ = clock();
   name_ = name;
 }
 
-const double Clock::Time() {
+/// @returns time from working of ctor in us.
+/// 1000000 means number of us in one second.
+uint64_t Clock::Time() {
   clock_t curr_moment = clock();
-  return static_cast<double>(curr_moment - StartMoment()) / CLOCKS_PER_SEC;
+  return static_cast<uint64_t>(curr_moment - StartMoment()) *
+     static_cast<uint64_t>(1000000) / static_cast<uint64_t>(CLOCKS_PER_SEC);
 }
 
-void Clock::ChangeLogAddress(const std::string &address) {
-  Clock::time_log_.ChangeLogAddress(address);
-}
-
-void Clock::Log() {
+void Clock::AddToTimeLog() {
   std::string name = GetName();
-  double time = Time();
-  time_log_.AddEntry(name, time);
+  uint64_t time = Time();
+  core::TimeLog::GetInstance()->AddEntry(name, time);
 }
 
 }  // namespace core

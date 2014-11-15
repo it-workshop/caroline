@@ -165,7 +165,6 @@ void Caroline::CalculateDepthMap(
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::BuildScene), this, depth_map_shared));
-  Clock::time_log_.ChangeLogAddress("new_time_log");
 }
 
 void Caroline::BuildScene(std::shared_ptr<DepthMap> depth_map) {
