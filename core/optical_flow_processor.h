@@ -20,12 +20,10 @@ class Mat;
 
 namespace core {
 
-class Config;
-
 class OpticalFlowProcessor {
  public:
   static std::unique_ptr<OpticalFlowProcessor>
-  Create(const Config* settings);
+  Create();
   virtual ~OpticalFlowProcessor() {}
 
   virtual std::vector<std::pair<cv::Point2d, cv::Point2d>> Process(

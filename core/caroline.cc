@@ -42,7 +42,7 @@ Caroline::~Caroline() {}
 
 bool Caroline::Init() {
   image_capture_manager_ = ImageCaptureManager::Create(config_);
-  optical_flow_processor_ = OpticalFlowProcessor::Create(config_);
+  optical_flow_processor_ = OpticalFlowProcessor::Create();
   send_message_ = message_->SetOStream(config_);
   if (send_message_)
     base::Logger::GetInstance()->AddObserver(message_.get());

@@ -6,8 +6,8 @@
 #include "core/preferences_service.h"
 
 #include <algorithm>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "base/logging.h"
 
@@ -125,6 +125,12 @@ std::string PrefService::GetString(const std::string& name) {
   if (Type(name) == PrefType::STRING)
     return prefs_->Get(name)->asString();
   return kDefaultString;
+}
+
+Json::Value* PrefService::GetDict(const std::string& name) {
+  if (Type(name) == PrefType::DICTIONARY)
+    return prefs_->Get(name);
+  return nullptr;
 }
 
 bool PrefService::SetBool(const std::string& name, bool value) {

@@ -77,6 +77,7 @@ class PrefService : public base::Singleton<PrefService>{
   double GetFloat(const std::string& name);
   /// Same as the function above, but returns string.
   std::string GetString(const std::string& name);
+  Json::Value *GetDict(const std::string& name);
 
   /// Try to update registered value.
   /// @param[in] name Value name.

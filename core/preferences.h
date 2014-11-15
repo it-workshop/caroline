@@ -2,6 +2,7 @@
 // Use of this source file is governed by a MIT license that can be found in the
 // LICENSE file.
 /// @author Glazachev Vladimir <glazachev.vladimir@gmail.com>
+/// @author Aleksandr Derbenev <alex@technoworks.ru>
 
 #ifndef CORE_PREFERENCES_H_
 #define CORE_PREFERENCES_H_
