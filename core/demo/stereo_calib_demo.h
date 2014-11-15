@@ -12,7 +12,7 @@
 
 #include "core/camera_calibration.h"
 #include "core/caroline.h"
-
+#include "json/value.h"
 
 namespace base {
 
