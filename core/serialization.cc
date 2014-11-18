@@ -128,7 +128,7 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
   std::vector<uint8_t> left, right;
   std::vector<int> prop;
   prop.push_back(cv::IMWRITE_JPEG_QUALITY);
-  prop.push_back(95);
+  prop.push_back(compress_level_);
   cv::imencode("*.jpeg", frameset[0].first, left, prop);
   cv::imencode("*.jpeg", frameset[1].first, right, prop);
   message->mutable_images()->mutable_left()->
