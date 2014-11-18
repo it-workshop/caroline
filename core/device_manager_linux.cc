@@ -6,12 +6,14 @@
 #include "core/device_manager.h"
 
 #include <fcntl.h>
+#include <linux/videodev2.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
 namespace {
 
-const std::string ROOT_VIDEO = "/dev/video";
+const char kVideoDeviceFileNameMask[] = "/dev/video";
+const int kMaxVideoDevices = 64;
 
 }
 
@@ -20,9 +22,9 @@ namespace core {
 class LinuxDeviceManager : public DeviceManager {
 public:
   LinuxDeviceManager();
-  ~LinuxDeviceManager();
+  virtual ~LinuxDeviceManager();
 
-  std::vector<DeviceManager::Device> GetDevices() const;
+  virtual std::vector<DeviceManager::Device> GetDevices() const override;
 };
 
 
@@ -37,15 +39,24 @@ std::unique_ptr<DeviceManager> DeviceManager::Create() {
 std::vector<DeviceManager::Device> LinuxDeviceManager::GetDevices() const {
   std::vector<DeviceManager::Device> devices;
   DeviceManager::Device device;
-  int device_index = 0, descriptor;
+  int device_index = 0, descriptor, check_value;
   std::string path;
-  for (; ;) {
-    path = ROOT_VIDEO + std::to_string(device_index);
+  struct v4l2_capability params;
+  while (device_index < kMaxVideoDevices) {
+    path = kVideoDeviceFileNameMask + std::to_string(device_index);
     descriptor = open(path.data(), O_RDONLY);
-    if (descriptor == -1) 
-      break;
-    device.accessed_by_name = true;
-    device.name = path;
+    if (descriptor == -1) {
+      ++device_index; 
+      continue;
+    }
+    check_value = ioctl(descriptor, VIDIOC_QUERYCAP, &params);
+    if (check_value == -1) {
+      ++device_index;
+      continue;
+    }
+    device.accessed_by_path = true;
+    device.name.assign(reinterpret_cast<char*>(params.card));
+    device.path = path;
     device.index = device_index;
     devices.push_back(device);
     ++device_index;
