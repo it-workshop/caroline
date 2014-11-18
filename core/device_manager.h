@@ -27,11 +27,13 @@ class DeviceManager {
   struct Device {
     /// Must be set to true if device can be accessed by device file name
     /// such as /dev/video0
-    bool accessed_by_name;
-    /// Device file name.
+    bool accessed_by_path;
+    /// Device name.
     std::string name;
     /// Device index.
     int index;
+    /// Device file name
+    std::string path; 
   };
 
   /// Enumerate devices and return them to caller.
