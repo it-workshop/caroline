@@ -140,14 +140,8 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
   message->mutable_images()->mutable_right()->
       set_height(frameset[1].first.size().height);
 
-  auto it = left.begin(), end = left.end();
-  while (it != end) {
-    message->mutable_images()->mutable_left()->add_data(*(it++));
-  }
-  it = right.begin(); end = right.end();
-  while (it != end) {
-    message->mutable_images()->mutable_right()->add_data(*(it++));
-  }
+  message->mutable_images()->mutable_left()->set_data(std::string(left.begin(), left.end()));
+  message->mutable_images()->mutable_right()->set_data(std::string(right.begin(), right.end()));
   message->set_type(Message::IMAGES);
   this->MakeMessage(message.get());
 }
