@@ -20,7 +20,7 @@ class PrefService : public base::Singleton<PrefService>{
  public:
   /// All possible types of content.
   enum class PrefType {
-    BAD,
+    NOT_REGISTERED,
     BOOLEAN,
     INTEGER,
     FLOAT,

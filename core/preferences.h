@@ -68,6 +68,10 @@ class Preferences {
   /// Storage for parameters of the Json object type.
   Json::Value dictionary_;
 
+  /// Recursive function which helps to collect the full names of values.
+  /// @param[in] name Computed prefix of the value.
+  /// @param[in] value JSON dictionary value.
+  /// @param[in] members Vector of full names of values.
   void AtomicMembers(const std::string& name,
     const Json::Value& value, Json::Value::Members* members) const;
 };

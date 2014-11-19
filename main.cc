@@ -9,7 +9,6 @@
 #include "base/path_service.h"
 #include "core/application_factory.h"
 #include "core/caroline.h"
-#include "core/preferences_registration.h"
 #include "core/preferences_service.h"
 #include "core/switches.h"
 #include "core/return_codes.h"

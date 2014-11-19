@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 
+#include "base/crash_helper.h"
 #include "base/logging.h"
 
 INSTANCE_SINGLETON(core::PrefService);
@@ -52,7 +53,7 @@ PrefService::PrefType PrefService::Type(const Json::Value& value) {
     return PrefType::LIST;
   if (value.isObject())
     return PrefType::DICTIONARY;
-  return PrefType::BAD;
+  return PrefType::NOT_REGISTERED;
 }
 
 bool PrefService::RegisterBool(const std::string& name, bool value) {
@@ -78,7 +79,7 @@ bool PrefService::RegisterDict(const std::string& name) {
 
 bool PrefService::Register(PrefType type, const std::string& name) {
   switch (type) {
-  case PrefType::BAD:
+  case PrefType::NOT_REGISTERED:
     return false;
   case PrefType::BOOLEAN:
     return prefs_->Add(name,
@@ -106,37 +107,37 @@ bool PrefService::Register(PrefType type, const std::string& name) {
 bool PrefService::GetBool(const std::string& name) {
   if (Type(name) == PrefType::BOOLEAN)
     return prefs_->Get(name)->asBool();
-  return kDefaultBool;
+  CRASH() << "Not registered value!";
 }
 
 int PrefService::GetInt(const std::string& name) {
   if (Type(name) == PrefType::INTEGER)
     return prefs_->Get(name)->asInt();
-  return kDefaultInt;
+  CRASH() << "Not registered value!";
 }
 
 double PrefService::GetFloat(const std::string& name) {
   if (Type(name) == PrefType::FLOAT)
     return prefs_->Get(name)->asDouble();
-  return kDefaultFloat;
+  CRASH() << "Not registered value!";
 }
 
 std::string PrefService::GetString(const std::string& name) {
   if (Type(name) == PrefType::STRING)
     return prefs_->Get(name)->asString();
-  return kDefaultString;
+  CRASH() << "Not registered value!";
 }
 
 Json::Value* PrefService::GetDict(const std::string& name) {
   if (Type(name) == PrefType::DICTIONARY)
     return prefs_->Get(name);
-  return nullptr;
+  CRASH() << "Not registered value!";
 }
 
 Json::Value* PrefService::GetList(const std::string& name) {
   if (Type(name) == PrefType::LIST)
     return prefs_->Get(name);
-  return nullptr;
+  CRASH() << "Not registered value!";
 }
 
 bool PrefService::SetBool(const std::string& name, bool value) {

@@ -56,9 +56,6 @@ bool Cameras::LoadFromConfig() {
   if (!prefs)
     return false;
 
-  if (!prefs->IsRegistered(kCamerasNode))
-    return false;
-
   const Json::Value& properties = *prefs->GetDict(kCamerasNode);
   if (!properties.isObject())
     return false;
@@ -103,8 +100,6 @@ bool Cameras::LoadFromConfig() {
 void Cameras::SaveToConfig() const {
   PrefService* prefs = PrefService::GetInstance();
   if (!prefs)
-    return;
-  if (!prefs->IsRegistered(kCamerasNode))
     return;
 
   Json::Value properties(Json::objectValue);

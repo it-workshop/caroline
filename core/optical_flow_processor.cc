@@ -48,4 +48,17 @@ OpticalFlowProcessor::Create() {
   return std::unique_ptr<OpticalFlowProcessor>();
 }
 
+bool OpticalFlowProcessor::RegisterPreferences() {
+  core::PrefService* pref = core::PrefService::GetInstance();
+
+  if (!pref->RegisterDict(kOpticalFlowNode))
+    return false;
+
+  if (!pref->RegisterString(kOpticalFlowNode
+    + kNameSeparator + kAlgorithmNameNode, kLucasKanadeAlgorithmName))
+    return false;
+
+  return true;
+}
+
 }  // namespace core

@@ -234,6 +234,7 @@ add_module(base STATIC
   base/at_exit.h
   base/command_line.cc
   base/command_line.h
+  base/crash_helper.h
   base/threadsafe_queue.h
   base/lock.cc
   base/lock.h
@@ -335,12 +336,10 @@ add_module(core STATIC
   core/point_cloud.cc
   core/position.cc
   core/position.h
-  core/preferences.h
   core/preferences.cc
-  core/preferences_registration.h
-  core/preferences_registration.cc
-  core/preferences_service.h
+  core/preferences.h
   core/preferences_service.cc
+  core/preferences_service.h
   core/return_codes.h
   core/rotation_matrix.cc
   core/rotation_matrix.h
