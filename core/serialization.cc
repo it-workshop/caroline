@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "base/stream.h"
+#include "core/preferences_service.h"
 #include "google/protobuf/message_lite.h"
 #include "google/protobuf/io/coded_stream.h"
 #include "google/protobuf/io/zero_copy_stream_impl_lite.h"
@@ -25,8 +26,13 @@ const int  kDefaultCompressLevel = 95;
 
 } //namespace
 
-bool GlobalMessage::SetOStream(const core::Config* settings) {
-  const Json::Value* dictionary = settings->dictionary();
+bool GlobalMessage::SetOStream() {
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  if (!prefs) {
+    return false;
+  }
+
+  const Json::Value* dictionary = prefs->GetDict(std::string());
   if (!(dictionary && dictionary->isMember(kOStreamConfigFieldName))) {
     const Json::Value& address_node = (*dictionary)[kOStreamConfigFieldName];
     if(!address_node.isString()) {
@@ -45,8 +51,13 @@ bool GlobalMessage::SetOStream(const core::Config* settings) {
   return false;
 }
 
-bool GlobalMessage::SetIStream(const core::Config* settings) {
-  const Json::Value* dictionary = settings->dictionary();
+bool GlobalMessage::SetIStream() {
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  if (!prefs) {
+    return false;
+  }
+
+  const Json::Value* dictionary = prefs->GetDict(std::string());
   if(dictionary && dictionary->isMember(kIStreamConfigFieldName)) {
     const Json::Value& address_node = (*dictionary)[kIStreamConfigFieldName];
     if (address_node.isString()) {

@@ -71,7 +71,6 @@ bool Caroline::Init() {
     }
   }
 
->>>>>>> wp/CAROLINE-37/1: remove config dependent and add prefservice to app.
   if (dictionary && dictionary->isMember(kMetricsConfigFieldName)) {
     const Json::Value* metric_names = &(*dictionary)[kMetricsConfigFieldName];
     if (metric_names->isArray()) {
