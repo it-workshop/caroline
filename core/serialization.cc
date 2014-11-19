@@ -16,15 +16,47 @@
 
 namespace bitdata {
 
+namespace {
 
-void GlobalMessage::SetOStream(const std::string& ostream) {
-  ostream_name_ = ostream;
-  ostream_ = base::Stream::Open(ostream_name_, base::Stream::kWrite);
+const char kOStreamConfigFieldName[] = "connection";
+const char kIStreamConfigFieldName[] = "brain";
+const char kCompressLevelConfigFieldName[] = "compression";
+const int  kDefaultCompressLevel = 95;
+
+} //namespace
+
+bool GlobalMessage::SetOStream(const core::Config* settings) {
+  const Json::Value* dictionary = settings->dictionary();
+  if (!(dictionary && dictionary->isMember(kOStreamConfigFieldName))) {
+    const Json::Value& address_node = (*dictionary)[kOStreamConfigFieldName];
+    if(!address_node.isString()) {
+      const std::string& ostream = address_node.asString();
+      ostream_name_ = ostream;
+      compress_level_ = kDefaultCompressLevel;
+      if(dictionary->isMember(kCompressLevelConfigFieldName)) {
+        const Json::Value compress_node = (*dictionary)[kCompressLevelConfigFieldName];
+        if(compress_node.isInt())
+          compress_level_ = compress_node.asInt();
+      }
+      ostream_ = base::Stream::Open(ostream_name_, base::Stream::kWrite);
+      return true;
+    }
+  }
+  return false;
 }
 
-void GlobalMessage::SetIStream(const std::string& istream) {
-  istream_name_ = istream;
-  istream_ = base::Stream::Open(istream_name_, base::Stream::kRead);
+bool GlobalMessage::SetIStream(const core::Config* settings) {
+  const Json::Value* dictionary = settings->dictionary();
+  if(dictionary && dictionary->isMember(kIStreamConfigFieldName)) {
+    const Json::Value& address_node = (*dictionary)[kIStreamConfigFieldName];
+    if (address_node.isString()) {
+      const std::string istream = address_node.asString();
+      istream_name_ = istream;
+      istream_ = base::Stream::Open(istream_name_, base::Stream::kRead);
+      return true;
+    }
+  }
+  return false;
 }
 
 void GlobalMessage::MakeMessage(Message* message) {
@@ -93,24 +125,23 @@ void GlobalMessage::GenModel(const core::Scene3D& scene) {
 void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
             core::Position>>& frameset) {
   std::unique_ptr<Message>message(new Message());
-  const cv::Mat& left = frameset[0].first;
-  const cv::Mat& right = frameset[1].first;
+  std::vector<uint8_t> left, right;
+  std::vector<int> prop;
+  prop.push_back(cv::IMWRITE_JPEG_QUALITY);
+  prop.push_back(compress_level_);
+  cv::imencode("*.jpeg", frameset[0].first, left, prop);
+  cv::imencode("*.jpeg", frameset[1].first, right, prop);
   message->mutable_images()->mutable_left()->
-      set_width(left.size().width);
+      set_width(frameset[0].first.size().width);
   message->mutable_images()->mutable_left()->
-      set_height(left.size().height);
+      set_height(frameset[0].first.size().height);
   message->mutable_images()->mutable_right()->
-      set_width(right.size().width);
+      set_width(frameset[1].first.size().width);
   message->mutable_images()->mutable_right()->
-      set_height(right.size().height);
-  for (auto it = left.begin<int>(), end = left.end<int>();
-      it != end; ++it) {
-    message->mutable_images()->mutable_left()->add_data(*it);
-  }
-  for (auto it = right.begin<int>(), end = right.end<int>();
-      it != end; ++it) {
-    message->mutable_images()->mutable_right()->add_data(*it);
-  }
+      set_height(frameset[1].first.size().height);
+
+  message->mutable_images()->mutable_left()->set_data(std::string(left.begin(), left.end()));
+  message->mutable_images()->mutable_right()->set_data(std::string(right.begin(), right.end()));
   message->set_type(Message::IMAGES);
   this->MakeMessage(message.get());
 }

@@ -13,6 +13,7 @@
 
 #include "base/stream.h"
 #include "base/logging.h"
+#include "core/config.h"
 #include "core/depth_map.h"
 #include "core/image_capture_impl.h"
 #include "core/mesh.h"
@@ -34,9 +35,9 @@ class GlobalMessage : public base::Logger::Observer {
     return istream_name_;
   }
 
-  void SetOStream(const std::string& stream);
+  bool SetOStream(const core::Config* settings);
 
-  void SetIStream(const std::string& stream);
+  bool SetIStream(const core::Config* settings);
 
   /// Seriallize Depth map with protobuf.
   /// @param[in] depth_map Depth map to seriallize.
@@ -64,6 +65,7 @@ class GlobalMessage : public base::Logger::Observer {
  private:
   void MakeMessage(Message* message);
 
+  int compress_level_;
   std::string ostream_name_;
   std::string istream_name_;
   std::unique_ptr<base::Stream>ostream_;
