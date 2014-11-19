@@ -42,10 +42,10 @@ Caroline::~Caroline() {}
 bool Caroline::Init() {
   image_capture_manager_ = ImageCaptureManager::Create();
   optical_flow_processor_ = OpticalFlowProcessor::Create();
-  send_message_ = message_->SetOStream(config_);
+  send_message_ = message_->SetOStream();
   if (send_message_)
     base::Logger::GetInstance()->AddObserver(message_.get());
-  receive_message_ = message_->SetIStream(config_);
+  receive_message_ = message_->SetIStream();
 
   core::PrefService* prefs = core::PrefService::GetInstance();
   if (!prefs) {
@@ -53,23 +53,6 @@ bool Caroline::Init() {
   }
 
   const Json::Value* dictionary = prefs->GetDict(std::string());
-  if (dictionary && dictionary->isMember(kOStreamConfigFieldName)) {
-    const Json::Value& address_node = (*dictionary)[kOStreamConfigFieldName];
-    if (address_node.isString()) {
-      const std::string& address = address_node.asString();
-      message_->SetOStream(address);
-      base::Logger::GetInstance()->AddObserver(message_.get());
-      send_message_ = true;
-    }
-  }
-  if (dictionary && dictionary->isMember(kIStreamConfigFieldName)) {
-    const Json::Value& input_address = (*dictionary)[kIStreamConfigFieldName];
-    if (input_address.isString()) {
-      const std::string& address = input_address.asString();
-      message_->SetIStream(address);
-      receive_message_ = true;
-    }
-  }
 
   if (dictionary && dictionary->isMember(kMetricsConfigFieldName)) {
     const Json::Value* metric_names = &(*dictionary)[kMetricsConfigFieldName];
