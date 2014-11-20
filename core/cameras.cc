@@ -5,11 +5,7 @@
 
 #include "core/cameras.h"
 
-<<<<<<< HEAD
 #include "core/preferences_service.h"
-=======
-#include "core/config.h"
->>>>>>> #CAROLINE-41/1: Raw version of performance measurement is implemented via Clock and TimeLog classes. Examples of usage are in caroline.cc Also some minor style fixes are made to satisfy linter.
 #include "core/json_matrix_helpers.h"
 #include "core/quaternion.h"
 
