@@ -7,6 +7,7 @@
 
 namespace base {
 
+const char Logger::kLevelNone[] = "none";
 const char Logger::kLevelError[] = "error";
 const char Logger::kLevelWarning[] = "warning";
 const char Logger::kLevelInfo[] = "info";
