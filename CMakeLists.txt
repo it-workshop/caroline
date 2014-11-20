@@ -359,6 +359,8 @@ add_module(core STATIC
   core/triangulation_eigen.h
   core/time_controller.cc
   core/time_controller.h
+  core/time_utils.cc
+  core/time_utils.h
   core/quaternion.cc
   core/quaternion.h
   core/video_time_controller.cc
@@ -405,6 +407,7 @@ add_application(unit_tests
   core/recognise_unittest.cc
   core/scene_unittest.cc
   core/scene_unittest.cc
+  core/time_utils_unittest.cc
   unit_tests_main.cc
   )
 target_link_libraries(unit_tests
