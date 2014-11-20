@@ -13,6 +13,12 @@
 #include "base/logging.h"
 #include "base/singleton.h"
 
+namespace {
+
+const uint64_t kUsInSecond = 1000000;
+
+}  // namespace
+
 INSTANCE_SINGLETON(core::TimeLog)
 
 namespace core {
@@ -84,11 +90,11 @@ Clock::Clock(std::string name) {
 }
 
 /// @returns time from working of ctor in us.
-/// 1000000 means number of us in one second.
+/// kUsInSecond means number of us in one second.
 uint64_t Clock::Time() {
   clock_t curr_moment = clock();
   return static_cast<uint64_t>(curr_moment - StartMoment()) *
-     static_cast<uint64_t>(1000000) / static_cast<uint64_t>(CLOCKS_PER_SEC);
+     static_cast<uint64_t>(kUsInSecond) / static_cast<uint64_t>(CLOCKS_PER_SEC);
 }
 
 void Clock::AddToTimeLog() {
