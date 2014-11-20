@@ -33,7 +33,7 @@ class DeviceManager {
     /// Device index.
     int index;
     /// Device file name
-    std::string path; 
+    std::string path;
   };
 
   /// Enumerate devices and return them to caller.

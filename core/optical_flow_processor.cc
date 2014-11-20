@@ -8,52 +8,57 @@
 #include <string>
 
 #include "core/farneback_optical_flow_processor.h"
-#include "core/config.h"
+#include "core/preferences_service.h"
 #include "core/lucas_kanade_optical_flow_processor.h"
 
 namespace core {
 
 namespace {
 
-const char kOpticalFlowNode[] = "optical-flow";
-const char kAlgorithmNameNode[] = "algorithm";
-const char kLucasKanadeAlgorithmName[] = "lucas-kanade";
-const char kFarnebackAlgorithmName[] = "farneback";
+const char kNameSeparator = '.';
+
+const std::string kOpticalFlowNode = "optical-flow";
+const std::string kAlgorithmNameNode = "algorithm";
+const std::string kLucasKanadeAlgorithmName = "lucas-kanade";
+const std::string kFarnebackAlgorithmName = "farneback";
 
 }  // namespace
 
 // static
 std::unique_ptr<OpticalFlowProcessor>
-OpticalFlowProcessor::Create(const Config* config) {
-  if (!config)
+OpticalFlowProcessor::Create() {
+  PrefService* prefs = PrefService::GetInstance();
+  if (!prefs)
     return std::unique_ptr<OpticalFlowProcessor>();
 
-  auto dictionary = config->dictionary();
-  if (!dictionary)
-    return std::unique_ptr<OpticalFlowProcessor>();
+  const std::string& algorithm_name = prefs->GetString(kOpticalFlowNode
+    + kNameSeparator + kAlgorithmNameNode);
 
-  if (dictionary->isMember(kOpticalFlowNode)) {
-    const Json::Value& settings = (*dictionary)[kOpticalFlowNode];
-    if (!settings.isObject() || !settings.isMember(kAlgorithmNameNode))
-      return std::unique_ptr<OpticalFlowProcessor>();
+  if (kLucasKanadeAlgorithmName == algorithm_name) {
+    return LucasKanadeOpticalFlowProcessor::Create(
+      *prefs->GetDict(kOpticalFlowNode));
+  }
 
-    const Json::Value& algorithm_node = settings[kAlgorithmNameNode];
-    if (!algorithm_node.isString())
-      return std::unique_ptr<OpticalFlowProcessor>();
-
-    const std::string& algorithm_name = algorithm_node.asString();
-
-    if (kLucasKanadeAlgorithmName == algorithm_name) {
-      return LucasKanadeOpticalFlowProcessor::Create(settings);
-    }
-
-    if (kFarnebackAlgorithmName == algorithm_name) {
-      return FarnebackOpticalFlowProcessor::Create(settings);
-    }
+  if (kFarnebackAlgorithmName == algorithm_name) {
+    return FarnebackOpticalFlowProcessor::Create(
+      *prefs->GetDict(kOpticalFlowNode));
   }
 
   // There is no matched algorithm. Return empty pointer.
   return std::unique_ptr<OpticalFlowProcessor>();
+}
+
+bool OpticalFlowProcessor::RegisterPreferences() {
+  core::PrefService* pref = core::PrefService::GetInstance();
+
+  if (!pref->RegisterDict(kOpticalFlowNode))
+    return false;
+
+  if (!pref->RegisterString(kOpticalFlowNode
+    + kNameSeparator + kAlgorithmNameNode, kLucasKanadeAlgorithmName))
+    return false;
+
+  return true;
 }
 
 }  // namespace core

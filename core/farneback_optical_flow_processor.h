@@ -19,8 +19,6 @@ class Value;
 
 namespace core {
 
-class Config;
-
 class FarnebackOpticalFlowProcessor : public OpticalFlowProcessor {
  public:
   static std::unique_ptr<OpticalFlowProcessor>

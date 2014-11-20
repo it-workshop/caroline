@@ -20,7 +20,7 @@ const int kMaxVideoDevices = 64;
 namespace core {
 
 class LinuxDeviceManager : public DeviceManager {
-public:
+ public:
   LinuxDeviceManager();
   virtual ~LinuxDeviceManager();
 
@@ -28,8 +28,8 @@ public:
 };
 
 
-LinuxDeviceManager::LinuxDeviceManager() {};
-LinuxDeviceManager::~LinuxDeviceManager() {};
+LinuxDeviceManager::LinuxDeviceManager() {}
+LinuxDeviceManager::~LinuxDeviceManager() {}
 
 std::unique_ptr<DeviceManager> DeviceManager::Create() {
   std::unique_ptr<DeviceManager> manager (new LinuxDeviceManager());
@@ -46,7 +46,7 @@ std::vector<DeviceManager::Device> LinuxDeviceManager::GetDevices() const {
     path = kVideoDeviceFileNameMask + std::to_string(device_index);
     descriptor = open(path.data(), O_RDONLY);
     if (descriptor == -1) {
-      ++device_index; 
+      ++device_index;
       continue;
     }
     check_value = ioctl(descriptor, VIDIOC_QUERYCAP, &params);
@@ -64,4 +64,4 @@ std::vector<DeviceManager::Device> LinuxDeviceManager::GetDevices() const {
   return devices;
 }
 
-} // core
+}  // namespace core

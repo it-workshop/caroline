@@ -15,12 +15,10 @@ class CommandLine;
 namespace core {
 
 class Caroline;
-class Config;
 
 /// Creates main application class. It can be core::Caroline or it's child for
 /// demos, for example.
-std::unique_ptr<Caroline> CreateApplication(base::CommandLine* command_line,
-                                            Config* config);
+std::unique_ptr<Caroline> CreateApplication(base::CommandLine* command_line);
 
 }  // namespace core
 

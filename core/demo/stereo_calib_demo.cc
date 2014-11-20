@@ -5,7 +5,10 @@
 
 #include "core/demo/stereo_calib_demo.h"
 
+#include <string>
+
 #include "core/cameras.h"
+#include "core/preferences_service.h"
 
 namespace {
 
@@ -24,9 +27,8 @@ namespace demo {
 // static
 const char StereoCalibDemo::kDemoName[] = "stereo_calib";
 
-StereoCalibDemo::StereoCalibDemo(base::CommandLine* command_line,
-                                 core::Config* config)
-  : Caroline(command_line, config),
+StereoCalibDemo::StereoCalibDemo(base::CommandLine* command_line)
+  : Caroline(command_line),
     cap_number1_(2),
     cap_number2_(1) {
 }
@@ -83,10 +85,8 @@ int StereoCalibDemo::Run() {
   calib.HarvestChessboardIdealPointList(x, y, sq_size);
 
   cam = calib.calibrate(x, y, sq_size);
-  
-  cam.SaveToConfig(config());
 
-  config()->Save();
+  cam.SaveToConfig();
 
   return core::RETURN_OK;
 }

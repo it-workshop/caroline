@@ -9,7 +9,7 @@
 #include "base/path_service.h"
 #include "core/application_factory.h"
 #include "core/caroline.h"
-#include "core/config.h"
+#include "core/preferences_service.h"
 #include "core/switches.h"
 #include "core/return_codes.h"
 
@@ -24,11 +24,7 @@ int main(int argc, const char* argv[]) {
   auto command_line(base::CommandLine::GetForCurrentProcess());
   base::CommandLine::ParseArgs(argv, command_line.get());
 
-  auto config = core::Config::GetInstance();
-  if (command_line->HasSwitch(core::switches::kConfigSwitch))
-    config->set_path(base::Path(
-        command_line->GetSwitchData(core::switches::kConfigSwitch)));
-  config->Load();
+  core::PrefService::Init();
 
   if (command_line->HasSwitch(core::switches::kEnableLogging)) {
     std::string level =
@@ -48,7 +44,7 @@ int main(int argc, const char* argv[]) {
   }
 
   std::unique_ptr<core::Caroline> application(
-      core::CreateApplication(command_line.get(), config.get()));
+      core::CreateApplication(command_line.get()));
 
   if (!application->Init())
     return core::RETURN_APPLICATION_INIT_FAIL;
