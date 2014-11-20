@@ -59,6 +59,7 @@ class Singleton {
   DISALLOW_COPY_AND_ASSIGN(Singleton);
 };
 
+/// Write this before any namespaces. Write full name of type in (Type).
 #define INSTANCE_SINGLETON(Type) \
     namespace base { \
     template<> \
