@@ -35,6 +35,8 @@ class Logger {
     LOG_DEBUG
   };
   // Constants for level names in the --enable-logging switch.
+  /// Logging-off parameter.
+  static const char kLevelNone[];
   /// Error level parameter.
   static const char kLevelError[];
   /// Warning level parameter.
