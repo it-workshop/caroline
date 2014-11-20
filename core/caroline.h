@@ -28,13 +28,12 @@ class Metric;
 }
 
 class Cameras;
-class Config;
 class ImageCaptureManager;
 class OpticalFlowProcessor;
 
 class Caroline {
  public:
-  Caroline(base::CommandLine* command_line, Config* config);
+  explicit Caroline(base::CommandLine* command_line);
   virtual ~Caroline();
 
   virtual bool Init();
@@ -43,10 +42,6 @@ class Caroline {
 
   base::CommandLine* command_line() const {
     return command_line_;
-  }
-
-  core::Config* config() const {
-    return config_;
   }
 
   ImageCaptureManager* image_capture_manager() const {
@@ -66,7 +61,6 @@ class Caroline {
   void BuildScene(std::shared_ptr<DepthMap> depth_map);
 
   base::CommandLine* command_line_;
-  Config* config_;
   bool send_message_;
   bool receive_message_;
   std::unique_ptr<base::ThreadBundle> thread_bundle_;

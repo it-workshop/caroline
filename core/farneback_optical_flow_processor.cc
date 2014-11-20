@@ -8,10 +8,10 @@
 #include <utility>
 #include <vector>
 
-#include "core/config.h"
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/video/video.hpp"
+#include "json/value.h"
 
 namespace core {
 

@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "base/stream.h"
+#include "core/preferences_service.h"
 #include "google/protobuf/message_lite.h"
 #include "google/protobuf/io/coded_stream.h"
 #include "google/protobuf/io/zero_copy_stream_impl_lite.h"
@@ -23,19 +24,25 @@ const char kIStreamConfigFieldName[] = "brain";
 const char kCompressLevelConfigFieldName[] = "compression";
 const int  kDefaultCompressLevel = 95;
 
-} //namespace
+}  // namespace
 
-bool GlobalMessage::SetOStream(const core::Config* settings) {
-  const Json::Value* dictionary = settings->dictionary();
+bool GlobalMessage::SetOStream() {
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  if (!prefs) {
+    return false;
+  }
+
+  const Json::Value* dictionary = prefs->GetDict(std::string());
   if (!(dictionary && dictionary->isMember(kOStreamConfigFieldName))) {
     const Json::Value& address_node = (*dictionary)[kOStreamConfigFieldName];
-    if(!address_node.isString()) {
+    if (!address_node.isString()) {
       const std::string& ostream = address_node.asString();
       ostream_name_ = ostream;
       compress_level_ = kDefaultCompressLevel;
-      if(dictionary->isMember(kCompressLevelConfigFieldName)) {
-        const Json::Value compress_node = (*dictionary)[kCompressLevelConfigFieldName];
-        if(compress_node.isInt())
+      if (dictionary->isMember(kCompressLevelConfigFieldName)) {
+        const Json::Value compress_node =
+          (*dictionary)[kCompressLevelConfigFieldName];
+        if (compress_node.isInt())
           compress_level_ = compress_node.asInt();
       }
       ostream_ = base::Stream::Open(ostream_name_, base::Stream::kWrite);
@@ -45,9 +52,14 @@ bool GlobalMessage::SetOStream(const core::Config* settings) {
   return false;
 }
 
-bool GlobalMessage::SetIStream(const core::Config* settings) {
-  const Json::Value* dictionary = settings->dictionary();
-  if(dictionary && dictionary->isMember(kIStreamConfigFieldName)) {
+bool GlobalMessage::SetIStream() {
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  if (!prefs) {
+    return false;
+  }
+
+  const Json::Value* dictionary = prefs->GetDict(std::string());
+  if (dictionary && dictionary->isMember(kIStreamConfigFieldName)) {
     const Json::Value& address_node = (*dictionary)[kIStreamConfigFieldName];
     if (address_node.isString()) {
       const std::string istream = address_node.asString();
@@ -140,8 +152,10 @@ void GlobalMessage::GenPic(const std::vector<std::pair<cv::Mat,
   message->mutable_images()->mutable_right()->
       set_height(frameset[1].first.size().height);
 
-  message->mutable_images()->mutable_left()->set_data(std::string(left.begin(), left.end()));
-  message->mutable_images()->mutable_right()->set_data(std::string(right.begin(), right.end()));
+  message->mutable_images()->mutable_left()->set_data(
+    std::string(left.begin(), left.end()));
+  message->mutable_images()->mutable_right()->set_data(
+    std::string(right.begin(), right.end()));
   message->set_type(Message::IMAGES);
   this->MakeMessage(message.get());
 }

@@ -8,7 +8,6 @@
 #include "gtest/gtest.h"
 
 #include "core/cameras.h"
-#include "core/config.h"
 #include "core/quaternion.h"
 
 TEST(CamerasPropertiesTest, InitTest) {

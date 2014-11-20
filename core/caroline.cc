@@ -11,7 +11,7 @@
 
 #include "base/message_loop.h"
 #include "core/cameras.h"
-#include "core/config.h"
+#include "core/preferences_service.h"
 #include "core/depth_map.h"
 #include "core/depth_mesh.h"
 #include "core/image_capture_manager.h"
@@ -28,9 +28,8 @@ const std::string kMetricsConfigFieldName = "metrics";
 
 namespace core {
 
-Caroline::Caroline(base::CommandLine* command_line, Config* config)
+Caroline::Caroline(base::CommandLine* command_line)
   : command_line_(command_line),
-    config_(config),
     cameras_properties_(new Cameras),
     message_(new bitdata::GlobalMessage),
     send_message_(false),
@@ -41,13 +40,20 @@ Caroline::Caroline(base::CommandLine* command_line, Config* config)
 Caroline::~Caroline() {}
 
 bool Caroline::Init() {
-  image_capture_manager_ = ImageCaptureManager::Create(config_);
-  optical_flow_processor_ = OpticalFlowProcessor::Create(config_);
-  send_message_ = message_->SetOStream(config_);
+  image_capture_manager_ = ImageCaptureManager::Create();
+  optical_flow_processor_ = OpticalFlowProcessor::Create();
+  send_message_ = message_->SetOStream();
   if (send_message_)
     base::Logger::GetInstance()->AddObserver(message_.get());
-  receive_message_ = message_->SetIStream(config_);
-  const Json::Value* dictionary = config_->dictionary();
+  receive_message_ = message_->SetIStream();
+
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  if (!prefs) {
+    return false;
+  }
+
+  const Json::Value* dictionary = prefs->GetDict(std::string());
+
   if (dictionary && dictionary->isMember(kMetricsConfigFieldName)) {
     const Json::Value* metric_names = &(*dictionary)[kMetricsConfigFieldName];
     if (metric_names->isArray()) {
@@ -64,7 +70,7 @@ bool Caroline::Init() {
     }
   }
 
-  cameras_properties_->LoadFromConfig(config_);
+  cameras_properties_->LoadFromConfig();
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::Grab), this));

@@ -234,6 +234,7 @@ add_module(base STATIC
   base/at_exit.h
   base/command_line.cc
   base/command_line.h
+  base/crash_helper.h
   base/threadsafe_queue.h
   base/lock.cc
   base/lock.h
@@ -282,8 +283,6 @@ add_module(core STATIC
   core/cameras.h
   core/caroline.cc
   core/caroline.h
-  core/config.cc
-  core/config.h
   core/demo/flowdemo.cc
   core/demo/flowdemo.h
   core/demo/stereo_calib_demo.cc
@@ -337,6 +336,10 @@ add_module(core STATIC
   core/point_cloud.cc
   core/position.cc
   core/position.h
+  core/preferences.cc
+  core/preferences.h
+  core/preferences_service.cc
+  core/preferences_service.h
   core/return_codes.h
   core/rotation_matrix.cc
   core/rotation_matrix.h
@@ -396,7 +399,9 @@ add_application(unit_tests
   core/filter_unittest.cc
   core/metric_unittest.cc
   core/opencv_unittest.cc
-  core/opencv_unittest.cc
+  core/filter_unittest.cc
+  core/preferences_unittest.cc
+  core/preferences_service_unittest.cc
   core/recognise_unittest.cc
   core/scene_unittest.cc
   core/scene_unittest.cc

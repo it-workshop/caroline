@@ -59,10 +59,13 @@ class Logger {
     /// @returns ostream to write log into.
     std::ostream& stream() { return *stream_; }
 
+    void Flush();
+
    private:
     std::shared_ptr<std::ostringstream> stream_;
     std::shared_ptr<Logger> logger_;
     const bool visible_;
+    bool posted_;
   };
 
   // Observer class for log listeners.
