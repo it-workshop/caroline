@@ -15,18 +15,28 @@
 #include "core/preferences_service.h"
 #include "core/switches.h"
 
+namespace {
+
+std::string kStandardConfigName = "config.json";
+
+}  // namespace
+
 namespace core {
 
 std::unique_ptr<Caroline> CreateApplication(base::CommandLine* command_line) {
+  OpticalFlowProcessor::RegisterPreferences();
+  PrefService* prefs = PrefService::GetInstance();
+  if (command_line->HasSwitch(core::switches::kConfigSwitch)) {
+    prefs->LoadFromConfig(base::Path(
+      command_line->GetSwitchData(core::switches::kConfigSwitch)).spec());
+    prefs->WriteToConfig(base::Path(
+      command_line->GetSwitchData(core::switches::kConfigSwitch)).spec());
+  } else {
+    prefs->WriteToConfig(kStandardConfigName);
+  }
   if (command_line->HasSwitch(switches::kDemo)) {
     const std::string& demo = command_line->GetSwitchData(switches::kDemo);
     if (demo == demo::FlowDemo::kDemoName)
-      OpticalFlowProcessor::RegisterPreferences();
-      if (command_line->HasSwitch(core::switches::kConfigSwitch)) {
-        PrefService* prefs = PrefService::GetInstance();
-        prefs->LoadFromConfig(base::Path(
-          command_line->GetSwitchData(core::switches::kConfigSwitch)).spec());
-      }
       return std::unique_ptr<Caroline>(
           new demo::FlowDemo(command_line));
 

@@ -5,6 +5,8 @@
 
 #include "core/cameras.h"
 
+#include <string>
+
 #include "core/preferences_service.h"
 #include "core/json_matrix_helpers.h"
 #include "core/quaternion.h"
@@ -13,7 +15,7 @@ namespace core {
 
 namespace {
 
-const char kCamerasNode[] = "cameras";
+const std::string kCamerasNode = "cameras";
 const char kK1Node[] = "k1";
 const char kK2Node[] = "k2";
 const char kP1Node[] = "p1";
@@ -26,6 +28,16 @@ const char kTNode[] = "t";
 }  // namespace
 
 Cameras::Cameras() {
+}
+
+bool Cameras::RegisterPreferences() {
+  PrefService* prefs = PrefService::GetInstance();
+
+  if (!prefs)
+    return false;
+
+  if (!prefs->RegisterDict(kCamerasNode))
+    return false;
 }
 
 // static

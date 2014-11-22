@@ -37,7 +37,11 @@ bool PrefService::IsRegistered(const std::string& name) {
 }
 
 PrefService::PrefType PrefService::Type(const std::string& name) {
-  return Type(*prefs_->Get(name));
+  if (prefs_->Get(name)) {
+    return Type(*prefs_->Get(name));
+  } else {
+    return PrefType::NOT_REGISTERED;
+  }
 }
 
 PrefService::PrefType PrefService::Type(const Json::Value& value) {
