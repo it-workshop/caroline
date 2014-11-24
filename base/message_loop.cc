@@ -32,6 +32,8 @@ void  MessageLoop::Run() {
       task.callback();
 
     IdleTask();
+
+    ThreadBundle::Yield();
   }
 
   state_ = kStoppedState;

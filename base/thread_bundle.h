@@ -26,6 +26,10 @@ class ThreadBundle : public Singleton<ThreadBundle> {
   bool IsOnMainThread() const { return IsOnThread(Thread::kMainThread); }
   bool IsOnIOThread() const { return IsOnThread(Thread::kIoThread); }
 
+  void PostQuitTasks() const;
+
+  static void Yield();
+
  private:
   std::unique_ptr<Thread> main_thread_;
   std::unique_ptr<RealThread> io_thread_;
