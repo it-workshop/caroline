@@ -50,7 +50,8 @@ class Singleton {
  private:
   /// Remove instance.
   static void Remove() {
-    delete instance_;
+    if (instance_)
+      delete instance_;
   }
 
   /// Pointer to the instance.
