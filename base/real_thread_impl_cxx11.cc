@@ -5,6 +5,8 @@
 
 #include "base/real_thread_impl_cxx11.h"
 
+#include "base/thread_bundle.h"
+
 namespace base {
 
 RealThreadImplCxx11::RealThreadImplCxx11(const RealThread& thread)
@@ -34,6 +36,11 @@ std::unique_ptr<RealThread::Impl> RealThread::CreateImpl(
 // static
 RealThread::id_t RealThread::GetCurrentThreadId() {
   return std::this_thread::get_id();
+}
+
+// static
+void ThreadBundle::Yield() {
+  std::this_thread::yield();
 }
 
 }  // namespace base

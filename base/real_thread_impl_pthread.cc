@@ -4,8 +4,10 @@
 /// @author Aleksandr Derbenev <alex@technoworks.ru>
 
 #include <pthread.h>
+#include <sched.h>
 
 #include "base/real_thread_impl_pthread.h"
+#include "base/thread_bundle.h"
 
 namespace base {
 
@@ -38,6 +40,11 @@ std::unique_ptr<RealThread::Impl> RealThread::CreateImpl(
 // static
 RealThread::id_t RealThread::GetCurrentThreadId() {
   return pthread_self();
+}
+
+// static
+void ThreadBundle::Yield() {
+  sched_yield();
 }
 
 }  // namespace base
