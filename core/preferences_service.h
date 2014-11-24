@@ -59,6 +59,10 @@ class PrefService : public base::Singleton<PrefService>{
   /// @param[in] name Value name.
   /// @returns true, if successfully registered.
   bool RegisterDict(const std::string& name);
+  /// Try to register list value in storage.
+  /// @param[in] name Value name.
+  /// @returns true, if successfully registered.
+  bool RegisterList(const std::string& name);
   /// Try to register new property, and sets the default value.
   /// This function can be used for registration of composite objects.
   /// @param[in] type The type of new value.

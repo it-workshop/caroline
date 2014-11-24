@@ -12,6 +12,7 @@
 #include "core/demo/flowdemo.h"
 #include "core/demo/stereo_calib_demo.h"
 #include "core/optical_flow_processor.h"
+#include "core/image_capture_manager.h"
 #include "core/preferences_service.h"
 #include "core/switches.h"
 
@@ -25,15 +26,13 @@ namespace core {
 
 std::unique_ptr<Caroline> CreateApplication(base::CommandLine* command_line) {
   OpticalFlowProcessor::RegisterPreferences();
+  ImageCaptureManager::RegisterPreferences();
   PrefService* prefs = PrefService::GetInstance();
   if (command_line->HasSwitch(core::switches::kConfigSwitch)) {
     prefs->LoadFromConfig(base::Path(
       command_line->GetSwitchData(core::switches::kConfigSwitch)).spec());
-    prefs->WriteToConfig(base::Path(
-      command_line->GetSwitchData(core::switches::kConfigSwitch)).spec());
-  } else {
-    prefs->WriteToConfig(kDefaultConfigName);
   }
+  prefs->WriteToConfig(kDefaultConfigName);
   if (command_line->HasSwitch(switches::kDemo)) {
     const std::string& demo = command_line->GetSwitchData(switches::kDemo);
     if (demo == demo::FlowDemo::kDemoName)

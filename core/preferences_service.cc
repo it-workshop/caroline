@@ -81,6 +81,10 @@ bool PrefService::RegisterDict(const std::string& name) {
   return prefs_->Add(name, Json::Value(Json::objectValue));
 }
 
+bool PrefService::RegisterList(const std::string& name) {
+  return prefs_->Add(name, Json::Value(Json::arrayValue));
+}
+
 bool PrefService::Register(PrefType type, const std::string& name) {
   switch (type) {
   case PrefType::NOT_REGISTERED:
@@ -226,6 +230,14 @@ bool PrefService::LoadFromConfig(const std::string& filename) {
       if (pref_config.Get(curr_name)->isString()) {
         SetString(both_members.at(i),
           pref_config.Get(curr_name)->asString());
+      } else {
+        LOG(INFO) << "Can't update value. Mismatched types.";
+      }
+      break;
+    }
+    case PrefType::LIST: {
+      if (pref_config.Get(curr_name)->isArray()) {
+        *prefs_->Get(curr_name) = *pref_config.Get(curr_name);
       } else {
         LOG(INFO) << "Can't update value. Mismatched types.";
       }
