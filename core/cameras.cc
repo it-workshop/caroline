@@ -15,7 +15,7 @@ namespace core {
 
 namespace {
 
-const std::string kCamerasNode = "cameras";
+const char kCamerasNode[] = "cameras";
 const char kK1Node[] = "k1";
 const char kK2Node[] = "k2";
 const char kP1Node[] = "p1";

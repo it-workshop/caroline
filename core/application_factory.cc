@@ -17,7 +17,7 @@
 
 namespace {
 
-std::string kStandardConfigName = "config.json";
+std::string kDefaultConfigName = "config.json";
 
 }  // namespace
 
@@ -32,7 +32,7 @@ std::unique_ptr<Caroline> CreateApplication(base::CommandLine* command_line) {
     prefs->WriteToConfig(base::Path(
       command_line->GetSwitchData(core::switches::kConfigSwitch)).spec());
   } else {
-    prefs->WriteToConfig(kStandardConfigName);
+    prefs->WriteToConfig(kDefaultConfigName);
   }
   if (command_line->HasSwitch(switches::kDemo)) {
     const std::string& demo = command_line->GetSwitchData(switches::kDemo);
