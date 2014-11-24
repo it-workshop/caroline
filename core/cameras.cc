@@ -5,6 +5,8 @@
 
 #include "core/cameras.h"
 
+#include <string>
+
 #include "core/preferences_service.h"
 #include "core/json_matrix_helpers.h"
 #include "core/quaternion.h"
@@ -26,6 +28,16 @@ const char kTNode[] = "t";
 }  // namespace
 
 Cameras::Cameras() {
+}
+
+bool Cameras::RegisterPreferences() {
+  PrefService* prefs = PrefService::GetInstance();
+
+  if (!prefs)
+    return false;
+
+  if (!prefs->RegisterDict(kCamerasNode))
+    return false;
 }
 
 // static

@@ -20,6 +20,8 @@ class Cameras {
 
   virtual ~Cameras() {}
 
+  bool static RegisterPreferences();
+
   /// Comparasion operator.
   /// @param [in] that Object to compare with.
   /// @returns true if objects are equal.

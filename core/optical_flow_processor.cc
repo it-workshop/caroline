@@ -7,6 +7,7 @@
 
 #include <string>
 
+#include "core/cameras.h"
 #include "core/farneback_optical_flow_processor.h"
 #include "core/preferences_service.h"
 #include "core/lucas_kanade_optical_flow_processor.h"
@@ -58,7 +59,7 @@ bool OpticalFlowProcessor::RegisterPreferences() {
     + kNameSeparator + kAlgorithmNameNode, kLucasKanadeAlgorithmName))
     return false;
 
-  return true;
+  return Cameras::RegisterPreferences();
 }
 
 }  // namespace core
