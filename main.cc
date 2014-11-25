@@ -11,6 +11,7 @@
 #include "core/caroline.h"
 #include "core/preferences_service.h"
 #include "core/switches.h"
+#include "core/time_utils.h"
 #include "core/return_codes.h"
 
 /// Entry point of the program.
@@ -20,6 +21,7 @@
 int main(int argc, const char* argv[]) {
   base::AtExitManager at_exit_manager;
   base::PathService::Init(*argv);
+  new core::TimeLog();
 
   auto command_line(base::CommandLine::GetForCurrentProcess());
   base::CommandLine::ParseArgs(argv, command_line.get());
