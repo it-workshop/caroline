@@ -54,6 +54,7 @@ bool Caroline::Init() {
     return false;
   }
 
+
   const Json::Value* dictionary = prefs->GetDict(std::string());
 
   if (dictionary && dictionary->isMember(kMetricsConfigFieldName)) {
@@ -78,7 +79,7 @@ bool Caroline::Init() {
       std::bind(std::mem_fn(&Caroline::Grab), this));
 
   return image_capture_manager_ &&
-      image_capture_manager_->GetCapturesCount() < 2 &&
+      image_capture_manager_->GetCapturesCount() >= 2 &&
       optical_flow_processor_;
 }
 

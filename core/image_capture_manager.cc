@@ -10,6 +10,8 @@
 namespace {
 
 const char kTimeSettingsNode[] = "time";
+const char kTimeSettingsTypeNode[] = "time.controller_type";
+const char kTimeSettingsTypeDefault[] = "video";
 const char kCapturesNode[] = "captures";
 
 }  // namespace
@@ -25,6 +27,9 @@ bool ImageCaptureManager::RegisterPreferences() {
     return false;
 
   if (!prefs->RegisterDict(kTimeSettingsNode))
+    return false;
+
+  if (!prefs->RegisterString(kTimeSettingsTypeNode, kTimeSettingsTypeDefault))
     return false;
 
   if (!prefs->RegisterList(kCapturesNode))

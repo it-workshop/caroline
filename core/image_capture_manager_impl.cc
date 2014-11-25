@@ -67,7 +67,7 @@ ImageCaptureManager::Create() {
     return manager;
 
   const Json::Value* config_root = prefs->GetDict(std::string());
-  if (!config_root || config_root->isMember(kTimeSettingsNode))
+  if (!config_root || !config_root->isMember(kTimeSettingsNode))
     return manager;
 
   std::unique_ptr<TimeController> time_controller;
@@ -183,9 +183,15 @@ ImageCaptureManager::Create() {
           focus_length_double : kDefaultFocusLength);
     }
 
-    if (!image_capture)
-      continue;
+    if (image_capture) {
+      time_controller->AddCapture(image_capture.get());
+      captures.push_back(std::move(image_capture));
+    }
   }
+
+  if (!captures.empty())
+    manager.reset(new ImageCaptureManagerImpl(
+      std::move(time_controller), std::move(captures), captures[0]->type()));
 
   return manager;
 }
