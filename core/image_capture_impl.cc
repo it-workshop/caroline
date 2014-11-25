@@ -6,6 +6,7 @@
 #include "core/image_capture_impl.h"
 
 #include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
 
 #if CV_VERSION_MAJOR > 2 || (CV_VERSION_MAJOR == 2 && CV_VERSION_MINOR >= 4)
 #define CV_CAP_PROP_FORMAT cv::CAP_PROP_FORMAT
@@ -18,7 +19,7 @@ ImageCaptureImpl::ImageCaptureImpl(
     const std::string& source_name)
   : ImageCapture(type),
     capture_(new cv::VideoCapture(source_name)) {
-  if (!capture_->isOpened() || !capture_->set(CV_CAP_PROP_FORMAT, CV_8U))
+  if (!capture_->isOpened())
     capture_.reset();
 }
 
@@ -36,6 +37,11 @@ cv::Mat ImageCaptureImpl::GetNextImage() {
   cv::Mat frame;
   if (!capture_->retrieve(frame)) {
     return cv::Mat();
+  }
+  if (frame.type() != CV_8UC1) {
+    cv::Mat gray;
+    cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+    return gray;
   }
   return frame;
 }

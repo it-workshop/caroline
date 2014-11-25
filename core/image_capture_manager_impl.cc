@@ -183,8 +183,10 @@ ImageCaptureManager::Create() {
           focus_length_double : kDefaultFocusLength);
     }
 
-    if (image_capture)
+    if (image_capture) {
+      time_controller->AddCapture(image_capture.get());
       captures.push_back(std::move(image_capture));
+    }
   }
 
   if (!captures.empty())

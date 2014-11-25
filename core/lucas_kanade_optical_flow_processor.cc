@@ -162,12 +162,16 @@ LucasKanadeOpticalFlowProcessor::~LucasKanadeOpticalFlowProcessor() {}
 std::vector<std::pair<cv::Point2d, cv::Point2d>>
 LucasKanadeOpticalFlowProcessor::Process(
     const cv::Mat& first, const cv::Mat& second) const {
-  std::vector<cv::Point2d> corners;
+  std::vector<cv::Point2f> corners_first;
+  std::vector<cv::Point2f> corners_second;
   cv::goodFeaturesToTrack(
-      first, corners, static_cast<int>(max_corners_count_), corners_quality_,
-      corners_distance_);
+      first, corners_first, static_cast<int>(max_corners_count_),
+      corners_quality_, corners_distance_);
+  cv::goodFeaturesToTrack(
+      second, corners_second, static_cast<int>(max_corners_count_),
+      corners_quality_, corners_distance_);
   cv::cornerSubPix(
-      first, corners,
+      first, corners_first,
       cv::Size(
           static_cast<int>(sub_pix_search_window_half_width_),
           static_cast<int>(sub_pix_search_window_half_height_)),
@@ -177,20 +181,32 @@ LucasKanadeOpticalFlowProcessor::Process(
       cv::TermCriteria(
           cv::TermCriteria::MAX_ITER | cv::TermCriteria::EPS,
           static_cast<int>(sub_pix_iterations_), sub_pix_epsilon_));
-  std::vector<cv::Point2d> matches;
+  cv::cornerSubPix(
+      second, corners_second,
+      cv::Size(
+          static_cast<int>(sub_pix_search_window_half_width_),
+          static_cast<int>(sub_pix_search_window_half_height_)),
+      cv::Size(
+          static_cast<int>(sub_pix_zero_zone_half_width_),
+          static_cast<int>(sub_pix_zero_zone_half_height_)),
+      cv::TermCriteria(
+          cv::TermCriteria::MAX_ITER | cv::TermCriteria::EPS,
+          static_cast<int>(sub_pix_iterations_), sub_pix_epsilon_));
   std::vector<unsigned char> status;
-  cv::Mat errors;
+  std::vector<float> errors;
   cv::calcOpticalFlowPyrLK(
-      first, second, corners, matches, status, errors,
+      first, second, corners_first, corners_second, status, errors,
       cv::Size(static_cast<int>(window_width_),
           static_cast<int>(window_height_)), static_cast<int>(max_level_),
       cv::TermCriteria(
       cv::TermCriteria::MAX_ITER | (cv::TermCriteria::EPS),
       static_cast<int>(optical_flow_iterations_), optical_flow_epsilon_));
   std::vector<std::pair<cv::Point2d, cv::Point2d>> result;
-  for (size_t i = 0; i < corners.size(); ++i)
+  for (size_t i = 0; i < status.size(); ++i)
     if (status.at(i))
-      result.push_back(std::make_pair(corners[i], matches[i]));
+      result.push_back(std::make_pair(
+          cv::Point2d(corners_first[i]),
+          cv::Point2d(corners_second[i])));
   return result;
 }
 
