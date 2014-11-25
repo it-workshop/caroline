@@ -21,6 +21,8 @@ class ImageCaptureManager {
  public:
   virtual ~ImageCaptureManager();
 
+  static bool RegisterPreferences();
+
   static std::unique_ptr<ImageCaptureManager>
   Create();
 
