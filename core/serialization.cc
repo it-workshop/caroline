@@ -33,9 +33,9 @@ bool GlobalMessage::SetOStream() {
   }
 
   const Json::Value* dictionary = prefs->GetDict(std::string());
-  if (!(dictionary && dictionary->isMember(kOStreamConfigFieldName))) {
+  if (dictionary && dictionary->isMember(kOStreamConfigFieldName)) {
     const Json::Value& address_node = (*dictionary)[kOStreamConfigFieldName];
-    if (!address_node.isString()) {
+    if (address_node.isString()) {
       const std::string& ostream = address_node.asString();
       ostream_name_ = ostream;
       compress_level_ = kDefaultCompressLevel;
