@@ -34,8 +34,15 @@ class GlobalMessage : public base::Logger::Observer {
     return istream_name_;
   }
 
+  /// Register preferences for streams.
+  static void RegisterPreferences();
+
+  /// Load output stream parameters from pref service.
+  /// @returns true if stream was opened.
   bool SetOStream();
 
+  /// Load input stream parameters from pref service.
+  /// @returns true if stream was opened.
   bool SetIStream();
 
   /// Seriallize Depth map with protobuf.

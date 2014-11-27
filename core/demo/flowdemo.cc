@@ -64,6 +64,7 @@ bool FlowDemo::Init() {
   if (!Caroline::Init())
     return false;
 
+  // TODO(alex-ac): Refactor preferences.
   core::PrefService* prefs = core::PrefService::GetInstance();
   const Json::Value* dictionary = prefs->GetDict(std::string());
   if (!dictionary || !dictionary->isMember(kFlowDemoNode))
