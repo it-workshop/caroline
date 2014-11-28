@@ -26,8 +26,6 @@
 #include "opencv2/core/core.hpp"
 #include "core/time_performance_field_names.h"
 
-const std::string kMetricsConfigFieldName = "metrics";
-
 namespace core {
 
 Caroline::Caroline(base::CommandLine* command_line)
@@ -49,29 +47,7 @@ bool Caroline::Init() {
     base::Logger::GetInstance()->AddObserver(message_.get());
   receive_message_ = message_->SetIStream();
 
-  core::PrefService* prefs = core::PrefService::GetInstance();
-  if (!prefs) {
-    return false;
-  }
-
-
-  const Json::Value* dictionary = prefs->GetDict(std::string());
-
-  if (dictionary && dictionary->isMember(kMetricsConfigFieldName)) {
-    const Json::Value* metric_names = &(*dictionary)[kMetricsConfigFieldName];
-    if (metric_names->isArray()) {
-      for (size_t i = 0; i < metric_names->size(); i++) {
-        const Json::Value& name = metric_names[i];
-        if (name.isString()) {
-          std::unique_ptr<stat::Metric> metric =
-              stat::MetricFactory::Create(name.asString());
-          if (metric) {
-            metrics_.push_back(std::move(metric));
-          }
-        }
-      }
-    }
-  }
+  metrics_ = stat::MetricFactory::CreateFromPreferences();
 
   cameras_properties_->LoadFromConfig();
 

@@ -24,6 +24,13 @@ class MetricFactory {
   /// Creates the metric of type = name.
   /// @param[in] name Name of the created metric.
   static std::unique_ptr<Metric> Create(const std::string &name);
+
+  /// Register preferences for metric factory.
+  static void RegisterPreferences();
+
+  /// Creates all metrics from preferences.
+  /// @returns Vector that will be filled with metrics.
+  static std::vector<std::unique_ptr<Metric>> CreateFromPreferences();
 };
 
 }  // namespace stat

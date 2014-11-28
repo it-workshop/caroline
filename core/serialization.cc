@@ -26,47 +26,38 @@ const int  kDefaultCompressLevel = 95;
 
 }  // namespace
 
+// static
+void GlobalMessage::RegisterPreferences() {
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  DCHECK(prefs);
+
+  DCHECK(prefs->RegisterString(kOStreamConfigFieldName, std::string()));
+  DCHECK(prefs->RegisterInt(kCompressLevelConfigFieldName,
+                            kDefaultCompressLevel));
+  DCHECK(prefs->RegisterString(kIStreamConfigFieldName, std::string()));
+}
+
 bool GlobalMessage::SetOStream() {
   core::PrefService* prefs = core::PrefService::GetInstance();
-  if (!prefs) {
-    return false;
-  }
+  DCHECK(prefs);
 
-  const Json::Value* dictionary = prefs->GetDict(std::string());
-  if (dictionary && dictionary->isMember(kOStreamConfigFieldName)) {
-    const Json::Value& address_node = (*dictionary)[kOStreamConfigFieldName];
-    if (address_node.isString()) {
-      const std::string& ostream = address_node.asString();
-      ostream_name_ = ostream;
-      compress_level_ = kDefaultCompressLevel;
-      if (dictionary->isMember(kCompressLevelConfigFieldName)) {
-        const Json::Value compress_node =
-          (*dictionary)[kCompressLevelConfigFieldName];
-        if (compress_node.isInt())
-          compress_level_ = compress_node.asInt();
-      }
-      ostream_ = base::Stream::Open(ostream_name_, base::Stream::kWrite);
-      return true;
-    }
+  ostream_name_ = prefs->GetString(kOStreamConfigFieldName);
+  compress_level_ = prefs->GetInt(kCompressLevelConfigFieldName);
+  if (!ostream_name_.empty()) {
+    ostream_ = base::Stream::Open(ostream_name_, base::Stream::kWrite);
+    return true;
   }
   return false;
 }
 
 bool GlobalMessage::SetIStream() {
   core::PrefService* prefs = core::PrefService::GetInstance();
-  if (!prefs) {
-    return false;
-  }
+  DCHECK(prefs);
 
-  const Json::Value* dictionary = prefs->GetDict(std::string());
-  if (dictionary && dictionary->isMember(kIStreamConfigFieldName)) {
-    const Json::Value& address_node = (*dictionary)[kIStreamConfigFieldName];
-    if (address_node.isString()) {
-      const std::string istream = address_node.asString();
-      istream_name_ = istream;
-      istream_ = base::Stream::Open(istream_name_, base::Stream::kRead);
-      return true;
-    }
+  istream_name_ = prefs->GetString(kIStreamConfigFieldName);
+  if (!istream_name_.empty()) {
+    istream_ = base::Stream::Open(istream_name_, base::Stream::kRead);
+    return true;
   }
   return false;
 }

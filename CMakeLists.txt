@@ -234,7 +234,6 @@ add_module(base STATIC
   base/at_exit.h
   base/command_line.cc
   base/command_line.h
-  base/crash_helper.h
   base/threadsafe_queue.h
   base/lock.cc
   base/lock.h
@@ -294,6 +293,8 @@ add_module(core STATIC
   core/device_manager.cc
   core/device_manager.h
   core/device_manager_linux.cc
+  core/dummy_time_controller.cc
+  core/dummy_time_controller.h
   core/image_capture.cc
   core/image_capture.h
   core/image_capture_impl.cc
