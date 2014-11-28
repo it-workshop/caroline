@@ -9,34 +9,11 @@
 
 namespace {
 
-const char kTimeSettingsNode[] = "time";
-const char kTimeSettingsTypeNode[] = "time.controller_type";
-const char kTimeSettingsTypeDefault[] = "video";
-const char kCapturesNode[] = "captures";
-
 }  // namespace
 
 namespace core {
 
 ImageCaptureManager::~ImageCaptureManager() {}
-
-bool ImageCaptureManager::RegisterPreferences() {
-  PrefService* prefs = PrefService::GetInstance();
-
-  if (!prefs)
-    return false;
-
-  if (!prefs->RegisterDict(kTimeSettingsNode))
-    return false;
-
-  if (!prefs->RegisterString(kTimeSettingsTypeNode, kTimeSettingsTypeDefault))
-    return false;
-
-  if (!prefs->RegisterList(kCapturesNode))
-    return false;
-
-  return true;
-}
 
 }  // namespace core
 

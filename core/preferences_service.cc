@@ -9,7 +9,6 @@
 #include <memory>
 #include <string>
 
-#include "base/crash_helper.h"
 #include "base/logging.h"
 
 INSTANCE_SINGLETON(core::PrefService);
@@ -113,39 +112,33 @@ bool PrefService::Register(PrefType type, const std::string& name) {
 }
 
 bool PrefService::GetBool(const std::string& name) {
-  if (Type(name) == PrefType::BOOLEAN)
-    return prefs_->Get(name)->asBool();
-  CRASH() << "Not registered value!";
+  DCHECK_EQ(PrefType::BOOLEAN, Type(name)) << "Not registered value!";
+  return prefs_->Get(name)->asBool();
 }
 
 int PrefService::GetInt(const std::string& name) {
-  if (Type(name) == PrefType::INTEGER)
-    return prefs_->Get(name)->asInt();
-  CRASH() << "Not registered value!";
+  DCHECK_EQ(PrefType::INTEGER, Type(name)) << "Not registered value!";
+  return prefs_->Get(name)->asInt();
 }
 
 double PrefService::GetFloat(const std::string& name) {
-  if (Type(name) == PrefType::FLOAT)
-    return prefs_->Get(name)->asDouble();
-  CRASH() << "Not registered value!";
+  DCHECK_EQ(PrefType::FLOAT, Type(name)) << "Not registered value!";
+  return prefs_->Get(name)->asDouble();
 }
 
 std::string PrefService::GetString(const std::string& name) {
-  if (Type(name) == PrefType::STRING)
-    return prefs_->Get(name)->asString();
-  CRASH() << "Not registered value!";
+  DCHECK_EQ(PrefType::STRING, Type(name)) << "Not registered value!";
+  return prefs_->Get(name)->asString();
 }
 
 Json::Value* PrefService::GetDict(const std::string& name) {
-  if (Type(name) == PrefType::DICTIONARY)
-    return prefs_->Get(name);
-  CRASH() << "Not registered value!";
+  DCHECK_EQ(PrefType::DICTIONARY, Type(name)) << "Not registered value!";
+  return prefs_->Get(name);
 }
 
 Json::Value* PrefService::GetList(const std::string& name) {
-  if (Type(name) == PrefType::LIST)
-    return prefs_->Get(name);
-  CRASH() << "Not registered value!";
+  DCHECK_EQ(PrefType::LIST, Type(name)) << "Not registered value!";
+  return prefs_->Get(name);
 }
 
 bool PrefService::SetBool(const std::string& name, bool value) {
