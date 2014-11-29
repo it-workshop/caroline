@@ -32,7 +32,9 @@ ThreadBundle::ThreadBundle() {
       std::unique_ptr<MessageLoop>(new MessageLoop())));
 }
 
-ThreadBundle::~ThreadBundle() {}
+ThreadBundle::~ThreadBundle() {
+  PostQuitTasks();
+}
 
 const Thread* ThreadBundle::Get(Thread::Type type) const {
   switch (type) {
@@ -61,6 +63,14 @@ const Thread* ThreadBundle::GetCurrentThread() const {
     return worker_thread_.get();
 
   return main_thread_.get();
+}
+
+void ThreadBundle::PostQuitTasks() const {
+  auto task = ([] (MessageLoop* loop) { loop->Quit(); });
+  io_thread_->message_loop()->PostTask(FROM_HERE,
+      std::bind(task, io_thread_->message_loop()));
+  worker_thread_->message_loop()->PostTask(FROM_HERE,
+      std::bind(task, worker_thread_->message_loop()));
 }
 
 }  // namespace base

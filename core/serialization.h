@@ -13,7 +13,6 @@
 
 #include "base/stream.h"
 #include "base/logging.h"
-#include "core/config.h"
 #include "core/depth_map.h"
 #include "core/image_capture_impl.h"
 #include "core/mesh.h"
@@ -35,9 +34,16 @@ class GlobalMessage : public base::Logger::Observer {
     return istream_name_;
   }
 
-  bool SetOStream(const core::Config* settings);
+  /// Register preferences for streams.
+  static void RegisterPreferences();
 
-  bool SetIStream(const core::Config* settings);
+  /// Load output stream parameters from pref service.
+  /// @returns true if stream was opened.
+  bool SetOStream();
+
+  /// Load input stream parameters from pref service.
+  /// @returns true if stream was opened.
+  bool SetIStream();
 
   /// Seriallize Depth map with protobuf.
   /// @param[in] depth_map Depth map to seriallize.

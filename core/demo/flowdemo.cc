@@ -6,13 +6,14 @@
 
 #include "core/demo/flowdemo.h"
 
+#include <string>
 #include <utility>
 #include <algorithm>
 
-#include "core/config.h"
 #include "core/image_capture_manager.h"
 #include "core/optical_flow_processor.h"
 #include "core/position.h"
+#include "core/preferences_service.h"
 #include "core/time_controller.h"
 #include "opencv2/core/core.hpp"
 
@@ -48,8 +49,8 @@ void FlowDemo::DrawOptFlowMap() {
 // static
 const char FlowDemo::kDemoName[] = "flow";
 
-FlowDemo::FlowDemo(base::CommandLine* command_line, core::Config* config)
-  : Caroline(command_line, config),
+FlowDemo::FlowDemo(base::CommandLine* command_line)
+  : Caroline(command_line),
     resize_factor_x_(0.3),
     resize_factor_y_(0.3),
     color_(cv::Scalar(0, 255, 0)),
@@ -63,7 +64,9 @@ bool FlowDemo::Init() {
   if (!Caroline::Init())
     return false;
 
-  const Json::Value* dictionary = config()->dictionary();
+  // TODO(alex-ac): Refactor preferences.
+  core::PrefService* prefs = core::PrefService::GetInstance();
+  const Json::Value* dictionary = prefs->GetDict(std::string());
   if (!dictionary || !dictionary->isMember(kFlowDemoNode))
     return false;
 

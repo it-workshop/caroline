@@ -5,9 +5,9 @@
 
 #include "core/cameras.h"
 
-#include <iostream>
+#include <string>
 
-#include "core/config.h"
+#include "core/preferences_service.h"
 #include "core/json_matrix_helpers.h"
 #include "core/quaternion.h"
 
@@ -28,6 +28,16 @@ const char kTNode[] = "t";
 }  // namespace
 
 Cameras::Cameras() {
+}
+
+bool Cameras::RegisterPreferences() {
+  PrefService* prefs = PrefService::GetInstance();
+
+  if (!prefs)
+    return false;
+
+  if (!prefs->RegisterDict(kCamerasNode))
+    return false;
 }
 
 // static
@@ -53,12 +63,12 @@ cv::Matx34d Cameras::ProjectiveMatrix(const Quaternion& quat,
     2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y), pos.z);
 }
 
-bool Cameras::LoadFromConfig(Config* config) {
-  if (!config || !config->dictionary() ||
-      !config->dictionary()->isMember(kCamerasNode))
+bool Cameras::LoadFromConfig() {
+  PrefService* prefs = PrefService::GetInstance();
+  if (!prefs)
     return false;
 
-  const Json::Value& properties = (*config->dictionary())[kCamerasNode];
+  const Json::Value& properties = *prefs->GetDict(kCamerasNode);
   if (!properties.isObject())
     return false;
 
@@ -99,7 +109,11 @@ bool Cameras::LoadFromConfig(Config* config) {
   return true;
 }
 
-void Cameras::SaveToConfig(Config* config) const {
+void Cameras::SaveToConfig() const {
+  PrefService* prefs = PrefService::GetInstance();
+  if (!prefs)
+    return;
+
   Json::Value properties(Json::objectValue);
   properties[kK1Node] = MatxToJson(K1());
   properties[kK2Node] = MatxToJson(K2());
@@ -109,7 +123,7 @@ void Cameras::SaveToConfig(Config* config) const {
   properties[kD2Node] = MatToJson(D2());
   properties[kRNode] = MatxToJson(R());
   properties[kTNode] = MatxToJson(T());
-  (*config->dictionary())[kCamerasNode] = properties;
+  (*prefs->GetDict(kCamerasNode)) = properties;
 }
 
 }  // namespace core

@@ -11,7 +11,7 @@
 
 #include "base/message_loop.h"
 #include "core/cameras.h"
-#include "core/config.h"
+#include "core/preferences_service.h"
 #include "core/depth_map.h"
 #include "core/depth_mesh.h"
 #include "core/image_capture_manager.h"
@@ -22,15 +22,14 @@
 #include "core/scene3d.h"
 #include "core/serialization.h"
 #include "core/time_controller.h"
+#include "core/time_utils.h"
 #include "opencv2/core/core.hpp"
-
-const std::string kMetricsConfigFieldName = "metrics";
+#include "core/time_performance_field_names.h"
 
 namespace core {
 
-Caroline::Caroline(base::CommandLine* command_line, Config* config)
+Caroline::Caroline(base::CommandLine* command_line)
   : command_line_(command_line),
-    config_(config),
     cameras_properties_(new Cameras),
     message_(new bitdata::GlobalMessage),
     send_message_(false),
@@ -41,36 +40,22 @@ Caroline::Caroline(base::CommandLine* command_line, Config* config)
 Caroline::~Caroline() {}
 
 bool Caroline::Init() {
-  image_capture_manager_ = ImageCaptureManager::Create(config_);
-  optical_flow_processor_ = OpticalFlowProcessor::Create(config_);
-  send_message_ = message_->SetOStream(config_);
+  image_capture_manager_ = ImageCaptureManager::Create();
+  optical_flow_processor_ = OpticalFlowProcessor::Create();
+  send_message_ = message_->SetOStream();
   if (send_message_)
     base::Logger::GetInstance()->AddObserver(message_.get());
-  receive_message_ = message_->SetIStream(config_);
-  const Json::Value* dictionary = config_->dictionary();
-  if (dictionary && dictionary->isMember(kMetricsConfigFieldName)) {
-    const Json::Value* metric_names = &(*dictionary)[kMetricsConfigFieldName];
-    if (metric_names->isArray()) {
-      for (size_t i = 0; i < metric_names->size(); i++) {
-        const Json::Value& name = metric_names[i];
-        if (name.isString()) {
-          std::unique_ptr<stat::Metric> metric =
-              stat::MetricFactory::Create(name.asString());
-          if (metric) {
-            metrics_.push_back(std::move(metric));
-          }
-        }
-      }
-    }
-  }
+  receive_message_ = message_->SetIStream();
 
-  cameras_properties_->LoadFromConfig(config_);
+  metrics_ = stat::MetricFactory::CreateFromPreferences();
+
+  cameras_properties_->LoadFromConfig();
 
   base::MessageLoop::GetCurrent()->PostTask(FROM_HERE,
       std::bind(std::mem_fn(&Caroline::Grab), this));
 
   return image_capture_manager_ &&
-      image_capture_manager_->GetCapturesCount() < 2 &&
+      image_capture_manager_->GetCapturesCount() >= 2 &&
       optical_flow_processor_;
 }
 
@@ -80,6 +65,7 @@ int Caroline::Run() {
 }
 
 void Caroline::Grab() {
+  Clock GrabClock(kGrabPerformance);
   if (!image_capture_manager_->GetTimeController()->Grab()) {
     error_code_ = RETURN_OK;
     base::MessageLoop::GetCurrent()->Quit();
@@ -100,6 +86,7 @@ void Caroline::Grab() {
 
 void Caroline::CalculateOpticalFlow(
     std::vector<std::pair<cv::Mat, Position>> frameset) {
+  Clock FlowClock(kFlowPerformance);
   auto optical_flow = optical_flow_processor_->Process(
       frameset.at(0).first, frameset.at(1).first);
 
@@ -114,6 +101,7 @@ void Caroline::CalculateOpticalFlow(
 void Caroline::CalculateDepthMap(
     std::vector<std::pair<cv::Mat, Position>> frameset,
     std::vector<std::pair<cv::Point2d, cv::Point2d>> optical_flow) {
+  Clock MapCalcClock(kMapCalculationPerformance);
   int w = frameset.at(0).first.size().width;
   int h = frameset.at(0).first.size().height;
 
@@ -141,7 +129,6 @@ void Caroline::CalculateDepthMap(
 
   auto depth_map = DepthMap::BuildMap(
         optical_flow, *cameras_properties_, w, h);
-
   if (!metrics_.empty()) {
     std::vector<cv::Mat> src;
     src.push_back(depth_map->AsCVMat());
@@ -159,6 +146,8 @@ void Caroline::CalculateDepthMap(
 }
 
 void Caroline::BuildScene(std::shared_ptr<DepthMap> depth_map) {
+  Clock BuildSceneClock(kSceneBuildingPerformance);
+
   std::unique_ptr<Mesh> mesh(new DepthMesh(*depth_map, 0, INT_MAX));
   std::unique_ptr<Scene3D> scene(new Scene3D);
 

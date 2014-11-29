@@ -10,25 +10,30 @@
 #include <vector>
 #include <utility>
 
-#include "core/config.h"
+#include "base/logging.h"
+#include "core/dummy_time_controller.h"
 #include "core/image_capture_impl.h"
 #include "core/image_time_controller.h"
 #include "core/position.h"
+#include "core/preferences_service.h"
 #include "core/video_time_controller.h"
 #include "opencv2/core/core.hpp"
+#include "json/value.h"
 
 namespace core {
 
 namespace {
 
 // {
-const char kTimeSettingsNode[] = "time";
 const char kCapturesNode[] = "captures";
 //   "time": {
-const char kTimeControllerNode[] = "controller_type";
-const char kTimeFpsNode[] = "fps";
+const char kTimeSettingsNode[] = "time";
+const char kTimeControllerNode[] = "time.controller_type";
+const char kTimeFpsNode[] = "time.fps";
 //     "controller_type":
 const char kTimeControllerTypeImage[] = "image";
+const char kTimeControllerTypeVideo[] = "video";
+const char kTimeControllerTypeDummy[] = "dummy";
 //   }
 //   "captures": [
 //   {
@@ -55,47 +60,48 @@ const double kDpiToDpmMultiplier = 39.37;
 }  // namespace
 
 // static
-std::unique_ptr<ImageCaptureManager>
-ImageCaptureManager::Create(const Config* config) {
-  std::unique_ptr<ImageCaptureManager> manager;
-  if (!config)
-    return manager;
+void ImageCaptureManager::RegisterPreferences() {
+  PrefService* prefs = PrefService::GetInstance();
+  DCHECK(prefs);
 
-  const Json::Value* config_root = config->dictionary();
-  if (!config_root || config_root->isMember(kTimeSettingsNode))
-    return manager;
+  DCHECK(prefs->RegisterDict(kTimeSettingsNode));
+  DCHECK(prefs->RegisterString(kTimeControllerNode,
+                               kTimeControllerTypeDummy));
+  DCHECK(prefs->RegisterInt(kTimeFpsNode, 1));
+
+  DCHECK(prefs->RegisterList(kCapturesNode));
+}
+
+// static
+std::unique_ptr<ImageCaptureManager>
+ImageCaptureManager::Create() {
+  std::unique_ptr<ImageCaptureManager> manager;
+
+  PrefService* prefs = PrefService::GetInstance();
+  DCHECK(prefs);
 
   std::unique_ptr<TimeController> time_controller;
-  const Json::Value& time_settings = (*config_root)[kTimeSettingsNode];
-  if (time_settings.isObject() && time_settings.isMember(kTimeControllerNode)) {
-    const Json::Value& controller_type = time_settings[kTimeControllerNode];
-    if (controller_type.isString()) {
-      const std::string& type_string = controller_type.asString();
-      if (type_string == kTimeControllerTypeImage) {
-        if (time_settings.isMember(kTimeFpsNode)) {
-          const Json::Value& fps = time_settings[kTimeFpsNode];
-          time_controller.reset(
-              new ImageTimeController(fps.isUInt() ? fps.asUInt() : 1));
-        } else {
-          time_controller.reset(
-              new ImageTimeController(1));
-        }
-      }
-    }
-  }
-  if (!time_controller)
-    time_controller.reset(new VideoTimeController());
 
-  const Json::Value& captures_list = (*config_root)[kCapturesNode];
-  if (!captures_list.isArray() || captures_list.empty())
-    return manager;
+  const std::string& time_controller_type =
+      prefs->GetString(kTimeControllerNode);
+  const int fps = prefs->GetInt(kTimeFpsNode);
+  if (time_controller_type == kTimeControllerTypeImage)
+    time_controller.reset(new ImageTimeController(fps));
+  else if (time_controller_type == kTimeControllerTypeVideo)
+    time_controller.reset(new VideoTimeController());
+  else if (time_controller_type == kTimeControllerTypeDummy)
+    time_controller.reset(new DummyTimeController());
+
+  DCHECK(time_controller) << "Unknown time controller type preference.";
+
+  Json::Value* captures_list = prefs->GetList(kCapturesNode);
 
   std::vector<std::unique_ptr<ImageCapture>> captures;
-  for (auto it = captures_list.begin(),
-      end = captures_list.end(); it != end; ++it) {
-    const Json::Value& capture = *it;
-    if (!capture.isObject())
+  for (const Json::Value& capture : *captures_list) {
+    if (!capture.isObject()) {
+      LOG(WARNING) << "Capture preference must be an object.";
       continue;
+    }
 
     std::string capture_type_string;
     if (capture.isMember(kCaptureTypeNode)) {
@@ -178,9 +184,15 @@ ImageCaptureManager::Create(const Config* config) {
           focus_length_double : kDefaultFocusLength);
     }
 
-    if (!image_capture)
-      continue;
+    if (image_capture) {
+      time_controller->AddCapture(image_capture.get());
+      captures.push_back(std::move(image_capture));
+    }
   }
+
+  if (!captures.empty())
+    manager.reset(new ImageCaptureManagerImpl(
+      std::move(time_controller), std::move(captures), captures[0]->type()));
 
   return manager;
 }

@@ -8,7 +8,7 @@
 
 template <class T>
 struct Wrapper {
-  Wrapper(const T& t)
+  explicit Wrapper(const T& t)
     : object(t) {}
   bool operator==(const Wrapper<T>& that) const {
     return object == that.object;

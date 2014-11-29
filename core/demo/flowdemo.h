@@ -21,7 +21,7 @@ namespace demo {
 
 class FlowDemo : public core::Caroline {
  public:
-  FlowDemo(base::CommandLine* command_line, core::Config* config);
+  explicit FlowDemo(base::CommandLine* command_line);
   virtual ~FlowDemo();
 
   virtual bool Init() override;

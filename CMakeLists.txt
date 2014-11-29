@@ -282,8 +282,6 @@ add_module(core STATIC
   core/cameras.h
   core/caroline.cc
   core/caroline.h
-  core/config.cc
-  core/config.h
   core/demo/flowdemo.cc
   core/demo/flowdemo.h
   core/demo/stereo_calib_demo.cc
@@ -295,6 +293,8 @@ add_module(core STATIC
   core/device_manager.cc
   core/device_manager.h
   core/device_manager_linux.cc
+  core/dummy_time_controller.cc
+  core/dummy_time_controller.h
   core/image_capture.cc
   core/image_capture.h
   core/image_capture_impl.cc
@@ -337,6 +337,10 @@ add_module(core STATIC
   core/point_cloud.cc
   core/position.cc
   core/position.h
+  core/preferences.cc
+  core/preferences.h
+  core/preferences_service.cc
+  core/preferences_service.h
   core/return_codes.h
   core/rotation_matrix.cc
   core/rotation_matrix.h
@@ -354,6 +358,8 @@ add_module(core STATIC
   core/triangulation.h
   core/time_controller.cc
   core/time_controller.h
+  core/time_utils.cc
+  core/time_utils.h
   core/quaternion.cc
   core/quaternion.h
   core/video_time_controller.cc
@@ -394,10 +400,13 @@ add_application(unit_tests
   core/filter_unittest.cc
   core/metric_unittest.cc
   core/opencv_unittest.cc
-  core/opencv_unittest.cc
+  core/filter_unittest.cc
+  core/preferences_unittest.cc
+  core/preferences_service_unittest.cc
   core/recognise_unittest.cc
   core/scene_unittest.cc
   core/scene_unittest.cc
+  core/time_utils_unittest.cc
   unit_tests_main.cc
   )
 target_link_libraries(unit_tests

@@ -7,6 +7,7 @@
 
 namespace base {
 
+const char Logger::kLevelNone[] = "none";
 const char Logger::kLevelError[] = "error";
 const char Logger::kLevelWarning[] = "warning";
 const char Logger::kLevelInfo[] = "info";
@@ -15,13 +16,23 @@ const char Logger::kLevelDebug[] = "debug";
 Logger::Message::Message(std::shared_ptr<Logger> logger, bool visible)
   : logger_(std::move(logger)),
     visible_(visible),
+    posted_(false),
     stream_(new std::ostringstream()) {}
 
 Logger::Message::~Message() {
+  Flush();
+}
+
+void Logger::Message::Flush() {
+  if (posted_) {
+    return;
+  }
+
   if (visible_ && !stream_->str().empty()) {
     *stream_ << '\n';
     logger_->PostMessage(stream_->str());
   }
+  posted_ = true;
 }
 
 Logger::Logger()

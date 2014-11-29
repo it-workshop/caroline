@@ -35,6 +35,8 @@ class Logger {
     LOG_DEBUG
   };
   // Constants for level names in the --enable-logging switch.
+  /// Logging-off parameter.
+  static const char kLevelNone[];
   /// Error level parameter.
   static const char kLevelError[];
   /// Warning level parameter.
@@ -59,10 +61,13 @@ class Logger {
     /// @returns ostream to write log into.
     std::ostream& stream() { return *stream_; }
 
+    void Flush();
+
    private:
     std::shared_ptr<std::ostringstream> stream_;
     std::shared_ptr<Logger> logger_;
     const bool visible_;
+    bool posted_;
   };
 
   // Observer class for log listeners.
@@ -164,6 +169,40 @@ class Logger {
     (base::Logger::GetInstance()\
         ->AddMessage(base::Logger::LOG_ ## level)\
         .stream() << __LOG_PREFIX(level))
+
+class CrashHelper {
+ public:
+  CrashHelper()
+    : message_(Logger::GetInstance()->AddMessage(Logger::LOG_ERROR)) {}
+
+  ~CrashHelper() {
+    message_.Flush();
+    int* ptr = nullptr;
+    *ptr = 0;
+  }
+
+  std::ostream& stream() { return message_.stream(); }
+
+ private:
+  Logger::Message message_;
+};
+
+
+#define __DCHECK_IMPL ::base::CrashHelper().stream() << __LOG_PREFIX(ERROR)
+#define DCHECK(value) if (!value) __DCHECK_IMPL "DCHECK: " #value " "
+
+#define DCHECK_EQ(a, b) if ((a) != (b)) \
+    __DCHECK_IMPL "DCHECK_EQ: " #a " != " #b " "
+#define DCHECK_NE(a, b) if ((a) == (b)) \
+    __DCHECK_IMPL "DCHECK_NE: " #a " == " #b " "
+#define DCHECK_GT(a, b) if ((a) <= (b)) \
+    __DCHECK_IMPL "DCHECK_GT: " #a " <= " #b " "
+#define DCHECK_GE(a, b) if ((a) < (b)) \
+    __DCHECK_IMPL "DCHECK_GE: " #a " <= " #b " "
+#define DCHECK_LT(a, b) if ((a) >= (b)) \
+    __DCHECK_IMPL "DCHECK_LT: " #a " >= " #b " "
+#define DCHECK_LE(a, b) if ((a) > (b)) \
+    __DCHECK_IMPL "DCHECK_LE: " #a " > " #b " "
 
 }  // namespace base
 

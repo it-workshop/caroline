@@ -5,8 +5,15 @@
 
 #include "core/image_capture_manager.h"
 
+#include "core/preferences_service.h"
+
+namespace {
+
+}  // namespace
+
 namespace core {
 
 ImageCaptureManager::~ImageCaptureManager() {}
 
 }  // namespace core
+

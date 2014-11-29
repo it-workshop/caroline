@@ -12,7 +12,7 @@
 
 #include "core/camera_calibration.h"
 #include "core/caroline.h"
-#include "core/config.h"
+#include "json/value.h"
 
 namespace base {
 
@@ -24,7 +24,7 @@ namespace demo {
 
 class StereoCalibDemo : public core::Caroline {
  public:
-  StereoCalibDemo(base::CommandLine* command_line, core::Config* config);
+  explicit StereoCalibDemo(base::CommandLine* command_line);
 
   virtual bool Init() override;
 

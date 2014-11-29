@@ -14,7 +14,6 @@
 
 namespace core {
 
-class Config;
 class Position;
 class TimeController;
 
@@ -22,8 +21,11 @@ class ImageCaptureManager {
  public:
   virtual ~ImageCaptureManager();
 
+  /// Register preferences for manager.
+  static void RegisterPreferences();
+
   static std::unique_ptr<ImageCaptureManager>
-  Create(const core::Config* config);
+  Create();
 
   virtual ImageCapture::Type GetType() const = 0;
   virtual size_t GetCapturesCount() const = 0;

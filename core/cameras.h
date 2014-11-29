@@ -20,6 +20,8 @@ class Cameras {
 
   virtual ~Cameras() {}
 
+  bool static RegisterPreferences();
+
   /// Comparasion operator.
   /// @param [in] that Object to compare with.
   /// @returns true if objects are equal.
@@ -30,13 +32,11 @@ class Cameras {
                                       const cv::Point3d& pos);
 
   /// Apply parameters from config, if any.
-  /// @param [in] config Configuration object.
   /// @returns true on success.
-  bool LoadFromConfig(Config* config);
+  bool LoadFromConfig();
 
   /// Save parameters into config.
-  /// @param [in] config Configuration object.
-  void SaveToConfig(Config* config) const;
+  void SaveToConfig() const;
 
   void set_K1(const cv::Matx33d& K1) { K1_ = K1; }
   void set_K2(const cv::Matx33d& K2) { K2_ = K2; }

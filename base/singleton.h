@@ -50,7 +50,8 @@ class Singleton {
  private:
   /// Remove instance.
   static void Remove() {
-    delete instance_;
+    if (instance_)
+      delete instance_;
   }
 
   /// Pointer to the instance.
@@ -59,6 +60,7 @@ class Singleton {
   DISALLOW_COPY_AND_ASSIGN(Singleton);
 };
 
+/// Write this before any namespaces. Write full name of type in (Type).
 #define INSTANCE_SINGLETON(Type) \
     namespace base { \
     template<> \

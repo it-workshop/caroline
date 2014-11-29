@@ -9,8 +9,9 @@
 #include "base/path_service.h"
 #include "core/application_factory.h"
 #include "core/caroline.h"
-#include "core/config.h"
+#include "core/preferences_service.h"
 #include "core/switches.h"
+#include "core/time_utils.h"
 #include "core/return_codes.h"
 
 /// Entry point of the program.
@@ -20,20 +21,17 @@
 int main(int argc, const char* argv[]) {
   base::AtExitManager at_exit_manager;
   base::PathService::Init(*argv);
+  new core::TimeLog();
 
   auto command_line(base::CommandLine::GetForCurrentProcess());
   base::CommandLine::ParseArgs(argv, command_line.get());
 
-  auto config = core::Config::GetInstance();
-  if (command_line->HasSwitch(core::switches::kConfigSwitch))
-    config->set_path(base::Path(
-        command_line->GetSwitchData(core::switches::kConfigSwitch)));
-  config->Load();
+  core::PrefService::Init();
 
   if (command_line->HasSwitch(core::switches::kEnableLogging)) {
     std::string level =
         command_line->GetSwitchData(core::switches::kEnableLogging);
-    base::Logger::Level minimal_level = base::Logger::LOG_NONE;
+    base::Logger::Level minimal_level = base::Logger::LOG_INFO;
     if (base::Logger::kLevelError == level)
       minimal_level = base::Logger::LOG_ERROR;
     else if (base::Logger::kLevelWarning == level)
@@ -42,13 +40,15 @@ int main(int argc, const char* argv[]) {
       minimal_level = base::Logger::LOG_INFO;
     else if (base::Logger::kLevelDebug == level)
       minimal_level = base::Logger::LOG_DEBUG;
+    else if (base::Logger::kLevelNone == level)
+      minimal_level = base::Logger::LOG_NONE;
     std::string file =
         command_line->GetSwitchData(core::switches::kLogFile);
     base::Logger::Init(file, minimal_level);
   }
 
   std::unique_ptr<core::Caroline> application(
-      core::CreateApplication(command_line.get(), config.get()));
+      core::CreateApplication(command_line.get()));
 
   if (!application->Init())
     return core::RETURN_APPLICATION_INIT_FAIL;
