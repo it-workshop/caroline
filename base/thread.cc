@@ -13,8 +13,12 @@ namespace base {
 
 Thread::Thread(Type type, std::unique_ptr<MessageLoop>&& message_loop)
   : type_(type),
+    message_loop_is_owned_(true),
     message_loop_(std::move(message_loop)) {}
 
-Thread::~Thread() {}
+Thread::~Thread() {
+  if (!message_loop_is_owned_)
+    message_loop_.release();
+}
 
 }  // namespace base

@@ -34,7 +34,7 @@ Caroline::Caroline(base::CommandLine* command_line)
     message_(new bitdata::GlobalMessage),
     send_message_(false),
     receive_message_(false),
-    thread_bundle_(new base::ThreadBundle())  {
+    thread_bundle_(base::ThreadBundle::Create())  {
 }
 
 Caroline::~Caroline() {}

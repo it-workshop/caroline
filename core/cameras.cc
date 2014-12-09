@@ -7,6 +7,8 @@
 
 #include <string>
 
+#include "base/logging.h"
+
 #include "core/preferences_service.h"
 #include "core/json_matrix_helpers.h"
 #include "core/quaternion.h"
@@ -30,14 +32,12 @@ const char kTNode[] = "t";
 Cameras::Cameras() {
 }
 
-bool Cameras::RegisterPreferences() {
+void Cameras::RegisterPreferences() {
   PrefService* prefs = PrefService::GetInstance();
 
-  if (!prefs)
-    return false;
+  DCHECK(prefs);
 
-  if (!prefs->RegisterDict(kCamerasNode))
-    return false;
+  DCHECK(prefs->RegisterDict(kCamerasNode));
 }
 
 // static

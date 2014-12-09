@@ -5,7 +5,6 @@
 
 #include "base/threadsafe_queue.h"
 
-#include "base/real_thread.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 

@@ -30,7 +30,7 @@ class OpticalFlowProcessor {
       const cv::Mat& first,
       const cv::Mat& second) const = 0;
 
-  static bool RegisterPreferences();
+  static void RegisterPreferences();
 };
 
 }  // namespace core

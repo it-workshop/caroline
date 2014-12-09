@@ -11,8 +11,6 @@
 
 #include "base/macro.h"
 
-#include "base/threadsafe_queue.h"
-
 namespace base {
 
 class MessageLoop {
@@ -29,47 +27,18 @@ class MessageLoop {
   MessageLoop();
   virtual ~MessageLoop();
 
-  void Run();
+  virtual void Run() = 0;
 
-  void PostTask(const CalledFrom& called_from,
-      const std::function<void()>& callback);
-  void PostTask(const CalledFrom& called_from,
-      std::function<void()>&& callback);
+  virtual void PostTask(const CalledFrom& called_from,
+      const std::function<void()>& callback) = 0;
+  virtual void PostTask(const CalledFrom& called_from,
+      std::function<void()>&& callback) = 0;
 
-  void Quit();
+  virtual void Quit() = 0;
 
   static MessageLoop* GetCurrent();
 
- protected:
-  virtual void IdleTask();
-
  private:
-  enum State {
-    kNotStartedState,
-    kRunningState,
-    kStoppingState,
-    kStoppedState
-  };
-
-  State state_;
-
-  struct Task {
-    Task() = default;
-    Task(const std::function<void()>& callback,
-        const CalledFrom& called_from)
-      : callback(callback),
-        called_from(called_from) {}
-    Task(std::function<void()>&& callback,
-        const CalledFrom& called_from)
-      : callback(callback),
-        called_from(called_from) {}
-
-    std::function<void()> callback;
-    CalledFrom called_from;
-  };
-
-  ThreadSafeQueue<Task> task_queue_;
-
   DISALLOW_COPY_AND_ASSIGN(MessageLoop);
 };
 

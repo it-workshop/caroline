@@ -19,7 +19,7 @@ if (APPLE)
   set (default_use_lock_cxx11_atomics OFF)
   set (default_use_lock_pthread_mutex ON)
   set (default_use_lock_pthread_spinlock OFF)
-  set (default_use_thread_cxx11 OFF)
+  set (default_use_thread_cxx11 ON)
   set (default_use_thread_pthread ON)
 elseif (UNIX)
   set (default_use_own_opencv OFF)
@@ -27,7 +27,7 @@ elseif (UNIX)
   set (default_use_lock_cxx11_atomics OFF)
   set (default_use_lock_pthread_mutex ON)
   set (default_use_lock_pthread_spinlock OFF)
-  set (default_use_thread_cxx11 OFF)
+  set (default_use_thread_cxx11 ON)
   set (default_use_thread_pthread ON)
 else ()
   message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
@@ -180,10 +180,9 @@ endif ()
 
 if (use_thread_cxx11)
   add_definitions(-DUSE_THREAD_CXX11)
-elseif (use_thread_pthread)
+endif ()
+if (use_thread_pthread)
   add_definitions(-DUSE_THREAD_PTHREAD)
-else ()
-  message (SEND_ERROR "One of use_thread_* options must be enabled.")
 endif ()
 
 # enumerate third party libraries for linking.
@@ -218,17 +217,28 @@ target_link_libraries(api
 add_dependencies(api protoc)
 
 # base module. Infrastructure code that will be used in the project.
+set (conditional_thread_sources)
 if (use_thread_cxx11)
-  set (conditional_thread_sources
-    base/real_thread_impl_cxx11.cc
-    base/real_thread_impl_cxx11.h
-    )
-elseif (use_thread_pthread)
-  set (conditional_thread_sources
-    base/real_thread_impl_pthread.cc
-    base/real_thread_impl_pthread.h
-    )
+  list (APPEND conditional_thread_sources
+    base/thread_bundle_cxx11.cc
+    base/thread_bundle_cxx11.h
+    base/thread_cxx11.cc
+    base/thread_cxx11.h
+    base/thread_id_impl_cxx11.cc
+    base/thread_id_impl_cxx11.h
+  )
 endif ()
+if (use_thread_pthread)
+  list (APPEND conditional_thread_sources
+    base/thread_bundle_pthread.cc
+    base/thread_bundle_pthread.h
+    base/thread_id_impl_pthread.cc
+    base/thread_id_impl_pthread.h
+    base/thread_pthread.cc
+    base/thread_pthread.h
+  )
+endif ()
+
 add_module(base STATIC
   base/at_exit.cc
   base/at_exit.h
@@ -244,6 +254,8 @@ add_module(base STATIC
   base/main_thread.h
   base/message_loop.cc
   base/message_loop.h
+  base/message_loop_impl.cc
+  base/message_loop_impl.h
   base/path.cc
   base/path.h
   base/path_impl_posix.cc
@@ -252,18 +264,28 @@ add_module(base STATIC
   base/path_service.h
   base/path_service_posix.cc
   base/path_service_posix.h
-  base/real_thread.cc
-  base/real_thread.h
   base/stream.cc
   base/stream.h
   base/stream_net_posix.cc
   base/stream_net_posix.h
   base/stream_pipe_posix.cc
   base/stream_pipe_posix.h
+  base/switches.cc
+  base/switches.h
+  base/testing/fake_thread.cc
+  base/testing/fake_thread.h
+  base/testing/message_loop.cc
+  base/testing/message_loop.h
+  base/testing/thread_bundle.cc
+  base/testing/thread_bundle.h
   base/thread.cc
   base/thread.h
   base/thread_bundle.cc
   base/thread_bundle.h
+  base/thread_id.cc
+  base/thread_id.h
+  base/thread_id_impl_none.cc
+  base/thread_id_impl_none.h
   base/utils_posix.cc
   base/utils_posix.h
   ${conditional_thread_sources}
@@ -394,7 +416,6 @@ add_application(unit_tests
   base/command_line_unittest.cc
   base/threadsafe_queue_unittest.cc
   base/path_service_unittest_posix.cc
-  base/real_thread_unittest.cc
   base/stream_unittest.cc
   core/cam_calib_unittest.cc
   core/cameras_unittest.cc

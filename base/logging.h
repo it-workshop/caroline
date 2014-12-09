@@ -204,9 +204,12 @@ class CrashHelper {
 #define DCHECK_LE(a, b) if ((a) > (b)) \
     __DCHECK_IMPL "DCHECK_LE: " #a " > " #b " "
 
+#define NOTREACHED() __DCHECK_IMPL "NOTREACHED() "
+
 }  // namespace base
 
 // Prevent shared pointer from instance in each file that uses logging.
 extern template class std::shared_ptr<base::Logger>;
 
 #endif  // BASE_LOGGING_H_
+

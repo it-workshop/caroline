@@ -20,7 +20,7 @@ class Cameras {
 
   virtual ~Cameras() {}
 
-  bool static RegisterPreferences();
+  static void RegisterPreferences();
 
   /// Comparasion operator.
   /// @param [in] that Object to compare with.

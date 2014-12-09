@@ -7,6 +7,7 @@
 
 #include <string>
 
+#include "base/logging.h"
 #include "core/cameras.h"
 #include "core/farneback_optical_flow_processor.h"
 #include "core/preferences_service.h"
@@ -49,17 +50,15 @@ OpticalFlowProcessor::Create() {
   return std::unique_ptr<OpticalFlowProcessor>();
 }
 
-bool OpticalFlowProcessor::RegisterPreferences() {
+void OpticalFlowProcessor::RegisterPreferences() {
   core::PrefService* pref = core::PrefService::GetInstance();
 
-  if (!pref->RegisterDict(kOpticalFlowNode))
-    return false;
+  DCHECK(pref->RegisterDict(kOpticalFlowNode));
 
-  if (!pref->RegisterString(kOpticalFlowNode
-    + kNameSeparator + kAlgorithmNameNode, kLucasKanadeAlgorithmName))
-    return false;
+  DCHECK(pref->RegisterString(kOpticalFlowNode
+    + kNameSeparator + kAlgorithmNameNode, kLucasKanadeAlgorithmName));
 
-  return Cameras::RegisterPreferences();
+  Cameras::RegisterPreferences();
 }
 
 }  // namespace core
